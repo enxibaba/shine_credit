@@ -1,0 +1,43 @@
+/* 
+  Localizable.strings
+  AAILivenessDemo
+
+  Created by Advance.ai on 2019/2/22.
+  Copyright © 2019 Advance.ai. All rights reserved.
+*/
+"pls_blink" = "Sila kelip mata anda";
+"pls_open_eye" = "sila buka mata anda";
+"pls_open_mouth" = "Sila buka mulut anda dan kemudian tutup";
+"pls_turn_head" = "Sila pusingkan kepala anda ke kiri atau kanan (Kurangkan 30 Darjah)";
+"pls_hold_phone_v" = "Sila pegang telefon anda dengan tegak";
+"low_light" = "Sila ke lokasi lebih terang";
+"high_light" = "Sila ke lokasi lebih gelap";
+"no_camera_permission" = "Kamera anda tidak buka, sila buka kebenaran";
+"Yes" = "Ya";
+"Cancel" = "Batal";
+"try_again" = "Sila gunakan sekali lagi";
+"detection_success" = "Pengesahan liveness berjaya";
+"move_center" = "Sila posisi wajah anda ke tengah bingkai wajah";
+"stay_still" = "Sila jangan begerak dan mulakan ujian percubaan";
+"frontal" = "Sila menghadap skrin telefon";
+"detection_fail" = "Liveness detection tidak berjaya, sila cuba sekali lagi";
+"time_out" = "Masa sudah tamat";
+"no_face" = "Sila posisi wajah anda di bingkai wajah";
+"auth_check" = "Sila tunggu hingga selesai";
+"move_closer" = "Sila gerakkan muka anda lebih dekat ke skrin";
+"move_further" = "Gerakkan Muka Anda lebih jauh dari skrin";
+"face_occ" = "Jangan tutup muka anda";
+
+"fail_reason_prepare_timeout" = "Masa anda sudah tamat,\nsila ikut arahan yang diberi";
+"fail_reason_timeout" = "Masa anda sudah tamat,\nsila ikut arahan yang diberi";
+"fail_reason_facemiss_blink_mouth" = "Wajah anda tidak dikesan,\nsila mengurangkan gerakan dan sila alih ke lokasi lebih terang";
+"fail_reason_facemiss_pos_yaw" = "Wajah anda tidak dikesan,\nsila mengurangkan gerakan anda dan";
+"fail_reason_muti_face" = "Pelbagai wajah dikesan";
+"fail_reason_auth_failed" = "Kebenaran tidak berjaya, sila periksa rangkaian anda";
+"fail_reason_bad_network" = "Sila periksa rangkaian anda";
+"fail_reason_much_action" = "Pelbagai gerakan dikesan";
+
+"face_move_upper" = "Tolong angkat muka ke atas";
+"face_move_down" = "Tolong alihkan muka ke bawah";
+"face_move_left" = "Tolong alihkan muka ke kiri";
+"face_move_right" = "Tolong alihkan muka ke kanan";

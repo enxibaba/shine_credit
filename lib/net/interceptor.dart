@@ -1,0 +1,115 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:shine_credit/net/http_api.dart';
+import 'package:shine_credit/net/http_utils.dart';
+import 'package:shine_credit/utils/toast_uitls.dart';
+import 'package:sp_util/sp_util.dart';
+
+import '../main.dart';
+import '../res/constant.dart';
+import '../utils/other_utils.dart';
+
+class AuthInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final String accessToken = SpUtil.getString(Constant.accessToken).nullSafe;
+    if (accessToken.isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $accessToken';
+    }
+    options.headers['Accept'] = 'application/json';
+    options.headers['Accept-Charset'] = 'utf8';
+    options.headers['Content-Type'] = 'application/json';
+    options.headers['channelCode'] = 'AB';
+    options.headers['gpsAdId'] = '';
+    super.onRequest(options, handler);
+  }
+}
+
+class TokenInterceptor extends QueuedInterceptor {
+  Dio? _tokenDio;
+
+  Future<String?> getToken() async {
+    final Map<String, String> params = <String, String>{};
+    params['refreshToken'] = SpUtil.getString(Constant.refreshToken).nullSafe;
+    try {
+      _tokenDio ??= Dio();
+      _tokenDio!.options = DioUtils.instance.dio.options;
+      final Response<dynamic> response =
+          await _tokenDio!.post<dynamic>(HttpApi.refreshToken, data: params);
+      if (response.statusCode == 200) {
+        return (json.decode(response.data.toString())
+            as Map<String, dynamic>)['accessToken'] as String;
+      }
+    } catch (e) {
+      log.w('刷新Token失败！');
+    }
+    return null;
+  }
+
+  @override
+  Future<void> onResponse(
+      Response<dynamic> response, ResponseInterceptorHandler handler) async {
+    //401代表token过期
+    if (response.statusCode == 401) {
+      log.i('-----------自动刷新Token------------');
+      final String? accessToken = await getToken(); // 获取新的accessToken
+      log.w('-----------NewToken: $accessToken ------------');
+      SpUtil.putString(Constant.accessToken, accessToken.nullSafe);
+
+      if (accessToken != null) {
+        // 重新请求失败接口
+        final RequestOptions request = response.requestOptions;
+        request.headers['Authorization'] = 'Bearer $accessToken';
+
+        final Options options = Options(
+          headers: request.headers,
+          method: request.method,
+        );
+
+        try {
+          log.w('----------- 重新请求接口 ------------');
+
+          /// 避免重复执行拦截器，使用tokenDio
+          final Response<dynamic> response = await _tokenDio!.request<dynamic>(
+            request.path,
+            data: request.data,
+            queryParameters: request.queryParameters,
+            cancelToken: request.cancelToken,
+            options: options,
+            onReceiveProgress: request.onReceiveProgress,
+          );
+          return handler.next(response);
+        } on DioError catch (e) {
+          return handler.reject(e);
+        }
+      }
+    }
+    super.onResponse(response, handler);
+  }
+}
+
+class ErrorMessageInterceptor extends Interceptor {
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    super.onResponse(response, handler);
+    //获取请求的extra参数，根据参数判断是否需要toasst异常信息
+    final bool showError =
+        response.requestOptions.extra['showErrorMsg'] as bool;
+    //自定义的业务错误
+    if (response.data['code'] != 0 && showError) {
+      ToastUtils.show(response.data['msg'] as String);
+    }
+  }
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) {
+    super.onError(err, handler);
+    //获取请求的extra参数，根据参数判断是否需要toast异常信息
+    final bool showError = err.requestOptions.extra['showErrorMsg'] as bool;
+    //http状态码!=200-300
+    if (showError) {
+      ToastUtils.show('网络错误');
+    }
+  }
+}

@@ -1,0 +1,43 @@
+/* 
+  Localizable.strings
+  AAILivenessDemo
+
+  Created by Advance.ai on 2019/2/22.
+  Copyright © 2019 Advance.ai. All rights reserved.
+*/
+"pls_blink" = "Parpadee.";
+"pls_open_eye" = "por favor abre tus ojos";
+"pls_open_mouth" = "Abra la boca y ciérrela.";
+"pls_turn_head" = "Gire la cabeza hacia la izquierda o hacia la derecha (<30 grados).";
+"pls_hold_phone_v" = "Mantenga verticalmente el móvil.";
+"low_light" = "Encuentre un lugar con más iluminación.";
+"high_light" = "Encuentre un lugar con menos iluminación.";
+"no_camera_permission" = "La cámara no está encendida, active los permisos de ella.";
+"Yes" = "Sí";
+"Cancel" = "Cancelar";
+"try_again" = "Utilizar de nuevo";
+"detection_success" = "Detección de vivacidad exitosa";
+"move_center" = "Muévese la cara al centro del marco.";
+"stay_still" = "Manténgase inmóvil e inicie la prueba.";
+"frontal" = "Por favor, mire hacia la pantalla del teléfono";
+"detection_fail" = "La detección de vivacidad se ha fallado, inténtela de nuevo.";
+"time_out" = "Se ha acabado el tiempo.";
+"no_face" = "Póngase la cara en el marco.";
+"auth_check" = "Espere.";
+"move_closer" = "Muévese la cara más cerca de la pantalla.";
+"move_further" = "Aléjese la cara de la pantalla.";
+"face_occ" = "Por favor no te cubras la cara";
+
+"fail_reason_prepare_timeout" = "Se ha acabado el tiempo, siga las instrucciones.";
+"fail_reason_timeout" = "Se ha acabado el tiempo, siga las instrucciones.";
+"fail_reason_facemiss_blink_mouth" = "No se ha detectado ningún rostro. Evite el movimiento rápido e encuentre un lugar con mejor iluminación.";
+"fail_reason_facemiss_pos_yaw" = "No se ha detectado ningún rostro. Evite el movimiento rápido y no mueva mucho la cabeza (> 45 grados).";
+"fail_reason_muti_face" = "Múltiples rostros detectados";
+"fail_reason_auth_failed" = "La autorización se ha fallado, examine la red.";
+"fail_reason_bad_network" = "Examine la red.";
+"fail_reason_much_action" = "Múltiples movimientos detectados";
+
+"face_move_upper" = "Mueve la cara hacia arriba";
+"face_move_down" = "Mueve la cara hacia abajo";
+"face_move_left" = "Por favor, mueva la cara a la izquierda";
+"face_move_right" = "Por favor, mueva la cara a la derecha";

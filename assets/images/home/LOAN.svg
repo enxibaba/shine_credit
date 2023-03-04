@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="58px" viewBox="0 0 58 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>画板 1</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="58" height="58"></rect>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="产品列表" transform="translate(-61.000000, -1186.000000)">
+            <g id="画板-1" transform="translate(61.000000, 1186.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="路径"></g>
+                <path d="M14,28 C20.62,28 26,22.62 26,16 C26,9.38 20.62,4 14,4 C7.38,4 2,9.38 2,16 C2,22.62 7.38,28 14,28 Z" id="路径" fill="#CCCCCC" opacity="0.2" mask="url(#mask-2)"></path>
+                <path d="M29,6 C42.2,6 53,16.8 53,30 C53,43.2 42.2,54 29,54 C15.8,54 5,43.2 5,30 C5,16.8 15.8,6 29,6 Z M29,12 C19,12 11,20 11,30 C11,40 19,48 29,48 C39,48 47,40 47,30 C47,20 39,12 29,12 Z" id="分组-1" fill="#CCCCCC" mask="url(#mask-2)"></path>
+                <path d="M29,21.6 L37.4,30 L29,38.4 L20.6,30 L29,21.6 Z M29,27.2 L26.2,30 L29,32.8 L31.8,30 L29,27.2 Z" id="分组-2" fill="#CCCCCC" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

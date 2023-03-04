@@ -1,0 +1,47 @@
+group 'ai.advance.liveness_plugin'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.3'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+        repositories {
+            maven {
+                url 'http://public-n3.advai.net/repository/maven-releases/'
+                // allowInsecureProtocol = true
+            }
+        }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+dependencies {
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    // Version list:http://public-n3.advai.net/repository/maven-releases/ai/advance/mobile-sdk/android/liveness-detection-flutter/maven-metadata.xml
+    api 'ai.advance.mobile-sdk.android:liveness-detection-flutter:2.0.2.1'
+}
