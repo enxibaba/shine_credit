@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/res/styles.dart';
+import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 
 class PermissionListTitle extends StatelessWidget {
@@ -20,7 +21,12 @@ class PermissionListTitle extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        LoadAssetImage(icon, width: 30, height: 30),
+        LoadAssetImage(
+          icon,
+          width: 30,
+          height: 30,
+          format: ImageFormat.webp,
+        ),
         Gaps.hGap16,
         Expanded(
           child: Column(

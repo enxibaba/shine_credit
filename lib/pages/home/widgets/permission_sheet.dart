@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shine_credit/main.dart';
 import 'package:shine_credit/pages/home/widgets/permission_list_title.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
@@ -73,6 +75,25 @@ class BottomToolBar extends StatefulWidget {
 class _BottomToolBarState extends State<BottomToolBar> {
   var _isAgree = false;
 
+  final _promiseList = [
+    Permission.contacts,
+    Permission.camera,
+    Permission.photos,
+  ];
+
+  Future<void> requestPermission() async {
+    for (final element in _promiseList) {
+      final status = await element.request();
+      if (status.isGranted) {
+        log.d('$element Permission granted');
+      } else {
+        log.d('$element Permission denied');
+      }
+    }
+
+    widget.action!();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -98,11 +119,13 @@ class _BottomToolBarState extends State<BottomToolBar> {
             ),
           ],
         ),
+        Gaps.vGap10,
         ElevatedButton(
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colours.app_main),
+              minimumSize: MaterialStateProperty.all(const Size(0, 48)),
               shape: MaterialStateProperty.all(const StadiumBorder())),
-          onPressed: _isAgree ? widget.action : null,
+          onPressed: _isAgree ? requestPermission : null,
           child: const Text('please read the above contents'),
         )
       ]),

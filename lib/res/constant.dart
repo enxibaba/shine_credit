@@ -14,8 +14,10 @@ class Constant {
   static const String keyGuide = 'keyGuide';
   static const String isAgree = 'isAgree';
   static const String phone = 'phone';
+  static const String userId = 'userId';
   static const String accessToken = 'accessToken';
   static const String refreshToken = 'refreshToken';
+  static const String accessTokenExpire = 'accessTokenExpire';
 
   static const String theme = 'AppTheme';
   static const String locale = 'locale';

@@ -164,7 +164,10 @@ class _LoginPageState extends ConsumerState<LoginPage>
             ],
           ),
           Gaps.vGap16,
-          MyDecoratedButton(radius: 24, text: 'Request', onPressed: _verify)
+          MyDecoratedButton(
+              radius: 24,
+              text: 'Request',
+              onPressed: _clickable ? _login : null)
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shine_credit/res/colors.dart';
 import '../res/dimens.dart';
 import '../res/gaps.dart';
 import '../utils/theme_utils.dart';
@@ -18,7 +19,16 @@ class StateLayout extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         if (type == StateType.loading)
-          const CupertinoActivityIndicator(radius: 16.0)
+          Column(
+            children: const [
+              Gaps.vGap24,
+              CupertinoActivityIndicator(radius: 26.0),
+              Gaps.vGap16,
+              Text('Please wait a moment...',
+                  style: TextStyle(
+                      fontSize: Dimens.font_sp16, color: Colours.text_gray))
+            ],
+          )
         else if (type != StateType.empty)
           Opacity(
             opacity: context.isDark ? 0.5 : 1,

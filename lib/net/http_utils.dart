@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:shine_credit/net/http_api.dart';
 import 'package:shine_credit/net/interceptor.dart';
+import 'package:shine_credit/net/pretty_dio_logger.dart';
+import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/service/http_service.dart';
 
 class DioUtils {
@@ -13,10 +15,10 @@ class DioUtils {
     _dio.interceptors.add(TokenInterceptor());
     _dio.interceptors.add(ErrorMessageInterceptor());
 
-    // if (!Constant.inProduction) {
-    //   _dio.interceptors
-    //       .add(PrettyDioLogger(requestHeader: true, requestBody: true));
-    // }
+    if (!Constant.inProduction) {
+      _dio.interceptors
+          .add(PrettyDioLogger(requestHeader: true, requestBody: true));
+    }
 
     _client = RestClient(_dio, baseUrl: HttpApi.baseUrl);
   }

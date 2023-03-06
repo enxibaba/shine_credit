@@ -1,10 +1,14 @@
+// ignore_for_file: strict_raw_type
+
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:shine_credit/net/http_api.dart';
 import 'package:shine_credit/net/http_utils.dart';
+import 'package:shine_credit/state/auth.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:sp_util/sp_util.dart';
+import 'package:tuple/tuple.dart';
 
 import '../main.dart';
 import '../res/constant.dart';
@@ -29,7 +33,7 @@ class AuthInterceptor extends Interceptor {
 class TokenInterceptor extends QueuedInterceptor {
   Dio? _tokenDio;
 
-  Future<String?> getToken() async {
+  Future<Tuple2<String?, int?>?> getToken() async {
     final Map<String, String> params = <String, String>{};
     params['refreshToken'] = SpUtil.getString(Constant.refreshToken).nullSafe;
     try {
@@ -38,54 +42,52 @@ class TokenInterceptor extends QueuedInterceptor {
       final Response<dynamic> response =
           await _tokenDio!.post<dynamic>(HttpApi.refreshToken, data: params);
       if (response.statusCode == 200) {
-        return (json.decode(response.data.toString())
-            as Map<String, dynamic>)['accessToken'] as String;
+        final refreshTokenInfo =
+            json.decode(response.data.toString()) as Map<String, dynamic>;
+        return Tuple2(refreshTokenInfo['accessToken'] as String,
+            refreshTokenInfo['expiresTime'] as int);
       }
     } catch (e) {
       log.w('刷新Token失败！');
+      container.read(authNotifierProvider.notifier).logout();
     }
     return null;
   }
 
   @override
-  Future<void> onResponse(
-      Response<dynamic> response, ResponseInterceptorHandler handler) async {
-    //401代表token过期
-    if (response.statusCode == 401) {
-      log.i('-----------自动刷新Token------------');
-      final String? accessToken = await getToken(); // 获取新的accessToken
-      log.w('-----------NewToken: $accessToken ------------');
-      SpUtil.putString(Constant.accessToken, accessToken.nullSafe);
-
-      if (accessToken != null) {
-        // 重新请求失败接口
-        final RequestOptions request = response.requestOptions;
-        request.headers['Authorization'] = 'Bearer $accessToken';
-
-        final Options options = Options(
-          headers: request.headers,
-          method: request.method,
-        );
-
-        try {
-          log.w('----------- 重新请求接口 ------------');
-
-          /// 避免重复执行拦截器，使用tokenDio
-          final Response<dynamic> response = await _tokenDio!.request<dynamic>(
-            request.path,
-            data: request.data,
-            queryParameters: request.queryParameters,
-            cancelToken: request.cancelToken,
-            options: options,
-            onReceiveProgress: request.onReceiveProgress,
-          );
-          return handler.next(response);
-        } on DioError catch (e) {
-          return handler.reject(e);
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    final String accessToken = SpUtil.getString(Constant.accessToken).nullSafe;
+    print('onRequest RequestInterceptorHandler: $accessToken');
+    if (accessToken.isEmpty) {
+      super.onRequest(options, handler);
+    } else {
+      final int expiresTime = SpUtil.getInt(Constant.accessTokenExpire)!;
+      print('Time:');
+      print(expiresTime);
+      print(DateTime.now().millisecondsSinceEpoch);
+      if (expiresTime > DateTime.now().millisecondsSinceEpoch) {
+        super.onRequest(options, handler);
+      } else {
+        log.i('-----------自动刷新Token------------');
+        final Tuple2<String?, int?>? accessTokenInfo =
+            await getToken(); // 获取新的accessToken
+        log.w('-----------NewToken: $accessToken ------------');
+        SpUtil.putString(Constant.accessToken, accessToken.nullSafe);
+        if (accessTokenInfo != null) {
+          SpUtil.putString(Constant.accessToken, accessTokenInfo.item1 ?? '');
+          SpUtil.putInt(Constant.accessTokenExpire, accessTokenInfo.item2 ?? 0);
+          // 重新请求失败接口
+          options.headers['Authorization'] = 'Bearer $accessToken';
+          try {
+            log.w('----------- 重新请求接口 ------------');
+            return handler.next(options);
+          } on DioError catch (e) {
+            return handler.reject(e);
+          }
         }
       }
     }
-    super.onResponse(response, handler);
   }
 }
 

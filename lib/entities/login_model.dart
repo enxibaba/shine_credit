@@ -15,11 +15,11 @@ class LoginModel {
 
   String? accessToken;
 
-  num? expiresTime;
+  int? expiresTime;
 
   String? refreshToken;
 
-  num? userId;
+  int? userId;
 
   Map<String, dynamic> toJson() => _$LoginModelToJson(this);
 }

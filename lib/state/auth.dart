@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shine_credit/entities/login_model.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/constant.dart';
-import 'package:shine_credit/utils/other_utils.dart';
 import 'package:sp_util/sp_util.dart';
 
 import '../entities/user.dart';
@@ -15,8 +13,6 @@ part 'auth.g.dart';
 /// This notifier holds and handles the authentication state of the application
 @riverpod
 class AuthNotifier extends _$AuthNotifier {
-  static const _sharedUserfsKey = 'user';
-
   @override
   Future<User> build() async {
     _persistenceRefreshLogic();
@@ -34,12 +30,18 @@ class AuthNotifier extends _$AuthNotifier {
           "Couldn't find the authentication token",
         );
       }
-
       return await _loginWithToken();
     } catch (_, __) {
-      await SpUtil.remove(Constant.accessToken);
+      await removeUserInfo();
       return const User.signedOut();
     }
+  }
+
+  Future<void> removeUserInfo() async {
+    await SpUtil.remove(Constant.accessToken);
+    await SpUtil.remove(Constant.refreshToken);
+    await SpUtil.remove(Constant.accessTokenExpire);
+    await SpUtil.remove(Constant.userId);
   }
 
   /// Mock of a request performed on logout (might be common, or not, whatevs).
@@ -62,8 +64,10 @@ class AuthNotifier extends _$AuthNotifier {
       if (user != null &&
           user.accessToken != null &&
           user.accessToken!.isNotEmpty) {
-        SpUtil.putString(Constant.accessToken, user.accessToken!);
-        SpUtil.putObject(_sharedUserfsKey, user);
+        await SpUtil.putInt(Constant.userId, user.userId!);
+        await SpUtil.putString(Constant.accessToken, user.accessToken!);
+        await SpUtil.putString(Constant.refreshToken, user.refreshToken!);
+        await SpUtil.putInt(Constant.accessTokenExpire, user.expiresTime!);
         return User.signedIn(
             userId: user.userId!,
             refreshToken: user.refreshToken!,
@@ -76,18 +80,21 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   Future<User> _loginWithToken() async {
-    final login = SpUtil.getObj(_sharedUserfsKey,
-        (v) => LoginModel.fromJson(v as Map<String, dynamic>));
-    if (login == null) {
+    final userId = SpUtil.getInt(Constant.userId)!;
+    final accessToken = SpUtil.getString(Constant.accessToken)!;
+    final refreshToken = SpUtil.getString(Constant.refreshToken)!;
+    final accessTokenExpire = SpUtil.getInt(Constant.accessTokenExpire)!;
+
+    if (accessToken.isEmpty) {
       throw const UnauthorizedException(
         "Couldn't find the authentication token",
       );
     } else {
       return User.signedIn(
-          userId: login.userId!,
-          refreshToken: login.refreshToken!,
-          token: login.accessToken!,
-          expiresTime: login.expiresTime!);
+          userId: userId,
+          refreshToken: refreshToken,
+          token: accessToken,
+          expiresTime: accessTokenExpire);
     }
   }
 
@@ -101,7 +108,7 @@ class AuthNotifier extends _$AuthNotifier {
         return;
       }
       if (next.hasError) {
-        SpUtil.remove(Constant.accessToken);
+        removeUserInfo();
         return;
       }
 
@@ -112,7 +119,7 @@ class AuthNotifier extends _$AuthNotifier {
           SpUtil.putString(Constant.accessToken, signedIn.token);
         },
         signedOut: (signedOut) {
-          SpUtil.remove(Constant.accessToken);
+          removeUserInfo();
         },
       );
     });

@@ -36,5 +36,11 @@ class HttpApi {
   static const String uploadFile = 'app-api/member/infra/file/upload';
 
   /// 检查更新
-  static const String checkUpdate = 'app-api/member/version/check';
+  static const String checkUpdate = 'app-api/version/check';
+
+  /// 获取风控上传内容
+  static const String configInit = 'app-api/config/init';
+
+  /// 获取Looan产品信息
+  static const String loanNoAuthInfo = 'app-api/loan/getFrontPageMes';
 }

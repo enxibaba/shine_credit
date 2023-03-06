@@ -67,7 +67,7 @@ class _SplashPageState extends State<SplashPage> {
 
   void _initSplash() {
     /// 判断是否同意隐私协议
-    if (!SpUtil.getBool(Constant.isAgree, defValue: true)!) {
+    if (!SpUtil.getBool(Constant.isAgree)!) {
       _showPopup();
     } else {
       Future.delayed(const Duration(milliseconds: 1000)).then((_) {

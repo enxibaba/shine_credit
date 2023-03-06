@@ -19,10 +19,10 @@ class AccountPage extends ConsumerStatefulWidget {
 
 class _AccountPageState extends ConsumerState<AccountPage> {
   final _actionList = [
-    {'title': 'Authentication Page', 'icon': 'account/loan'},
-    {'title': 'About Us', 'icon': 'account/card'},
-    {'title': 'My Settings', 'icon': 'account/contact'},
-    {'title': 'Contact Us', 'icon': 'account/address'},
+    {'title': 'Authentication Page', 'icon': 'home/account_auth_icon'},
+    {'title': 'About Us', 'icon': 'home/account_about_icon'},
+    {'title': 'My Settings', 'icon': 'home/account_setting_icon'},
+    {'title': 'Contact Us', 'icon': 'home/account_contact_icon'},
   ];
 
   List<Widget> buildActionList() {
@@ -31,7 +31,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
       list.add(SelectedItem(
           onTap: () {},
           leading: LoadAssetImage(_actionList[index]['icon']!,
-              width: 30, height: 30),
+              width: 26, height: 26),
           title: _actionList[index]['title']!));
 
       if (index != _actionList.length - 1) {
@@ -57,11 +57,11 @@ class _AccountPageState extends ConsumerState<AccountPage> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 24),
                 child: AspectRatio(
-                  aspectRatio: 18 / 11.2,
-                  child: LoadAssetImage('login/login_bg',
+                  aspectRatio: 36 / 19,
+                  child: LoadAssetImage('home/account_bg',
                       width: double.infinity,
                       fit: BoxFit.fill,
-                      format: ImageFormat.webp),
+                      format: ImageFormat.png),
                 ),
               ),
               Positioned(
@@ -90,8 +90,10 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               onPressed: () {
                                 log.d('edit');
                               },
-                              icon: const LoadAssetImage('home/account_edit',
-                                  width: 12, height: 12)),
+                              icon: const LoadAssetImage(
+                                  'home/account_modify_icon',
+                                  width: 12,
+                                  height: 12)),
                         ),
                       ],
                     ),
@@ -107,8 +109,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: SelectedItem(
                     onTap: () {},
-                    leading: const Icon(Icons.credit_card,
-                        color: Colours.app_main, size: 30),
+                    leading: const LoadAssetImage('home/account_loan_icon',
+                        width: 26, height: 26),
                     title: 'Loan Records'),
               )
             ],

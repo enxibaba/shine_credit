@@ -19,7 +19,7 @@ rootProject.allprojects {
         repositories {
             maven {
                 url 'http://public-n3.advai.net/repository/maven-releases/'
-                // allowInsecureProtocol = true
+                allowInsecureProtocol = true
             }
         }
     }

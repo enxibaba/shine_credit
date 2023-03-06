@@ -73,12 +73,16 @@ class _RestClient implements RestClient {
   Future<ApiResult<LoginModel?>> checkUpdate({
     required deviceType,
     required innerVersionord,
-    headers,
+    required tenantId,
+    required appCode,
   }) async {
     const _extra = <String, dynamic>{'showErrorMsg': true};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'tenant-id': tenantId,
+      r'appCode': appCode,
+    };
+    _headers.removeWhere((k, v) => v == null);
     final _data = FormData();
     _data.fields.add(MapEntry(
       'deviceType',
@@ -96,7 +100,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              'app-api/member/version/check',
+              'app-api/version/check',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -106,6 +110,65 @@ class _RestClient implements RestClient {
       (json) => json == null
           ? null
           : LoginModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<LoginModel?>> configInit({headers}) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<LoginModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/config/init',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<LoginModel?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : LoginModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<NoAuthLoanModel?>> loanNoAuthInfo(
+      {required tenantId}) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<NoAuthLoanModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/loan/getFrontPageMes',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<NoAuthLoanModel?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : NoAuthLoanModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

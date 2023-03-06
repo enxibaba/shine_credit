@@ -8,9 +8,9 @@ part of 'login_model.dart';
 
 LoginModel _$LoginModelFromJson(Map<String, dynamic> json) => LoginModel(
       json['accessToken'] as String?,
-      json['expiresTime'] as num?,
+      json['expiresTime'] as int?,
       json['refreshToken'] as String?,
-      json['userId'] as num?,
+      json['userId'] as int?,
     );
 
 Map<String, dynamic> _$LoginModelToJson(LoginModel instance) =>

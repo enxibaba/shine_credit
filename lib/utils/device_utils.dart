@@ -18,6 +18,8 @@ class Device {
 
   static late AndroidDeviceInfo _androidInfo;
 
+  static String get platformName => Platform.operatingSystem;
+
   static Future<void> initDeviceInfo() async {
     if (isAndroid) {
       final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();

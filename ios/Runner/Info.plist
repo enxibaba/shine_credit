@@ -47,14 +47,23 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Use the camera to detect the face movements</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Use the motion sensor to get the phone orientation</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
     <key>NSAllowsArbitraryLoads</key>
     <true/>
 	</dict>
+
+	<!-- Permission options for the `photos` group -->
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>photos</string>
+
+	<!-- Permission options for the `camera` group -->
+	<key>NSCameraUsageDescription</key>
+	<string>Use the camera to detect the face movements</string>
+
+  <!-- Permission options for the `contacts` group -->
+  <key>NSContactsUsageDescription</key>
+  <string>contacts</string>
+
 </dict>
 </plist>
