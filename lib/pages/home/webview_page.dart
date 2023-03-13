@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -59,6 +60,7 @@ class _WebViewPageState extends State<WebViewPage> {
       child: Scaffold(
         appBar: MyAppBar(
           centerTitle: widget.title,
+          backgroundColor: Colours.app_main,
         ),
         body: Stack(
           children: [

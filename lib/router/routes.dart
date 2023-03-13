@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shine_credit/entities/person_auth_model.dart';
 import 'package:shine_credit/entities/uri_info.dart';
-import 'package:shine_credit/main.dart';
+import 'package:shine_credit/pages/auth/auth_list_page.dart';
+import 'package:shine_credit/pages/auth/auth_step_first.dart';
+import 'package:shine_credit/pages/auth/auth_step_first_detail.dart';
 import 'package:shine_credit/pages/home/home_page.dart';
 import 'package:shine_credit/pages/home/splash_page.dart';
 import 'package:shine_credit/pages/home/webview_page.dart';
 import 'package:shine_credit/pages/login/login_page.dart';
-import 'package:shine_credit/pages/login/sms_login_page.dart';
 
 part 'routes.g.dart';
 
@@ -23,9 +25,7 @@ class SplashRoute extends GoRouteData {
   }
 }
 
-@TypedGoRoute<LoginRoute>(path: LoginRoute.path, routes: [
-  TypedGoRoute<SMSLoginRoute>(path: SMSLoginRoute.path),
-])
+@TypedGoRoute<LoginRoute>(path: LoginRoute.path, routes: [])
 class LoginRoute extends GoRouteData {
   const LoginRoute();
   static const path = '/login';
@@ -60,9 +60,7 @@ class WebViewRoute extends GoRouteData {
   }
 }
 
-@TypedGoRoute<HomeRoute>(path: HomeRoute.path, routes: [
-  TypedGoRoute<UserRoute>(path: UserRoute.path),
-])
+@TypedGoRoute<HomeRoute>(path: HomeRoute.path, routes: [])
 class HomeRoute extends GoRouteData {
   const HomeRoute();
   static const path = '/home';
@@ -79,19 +77,39 @@ class HomeRoute extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) => const HomePage();
 }
 
-class SMSLoginRoute extends GoRouteData {
-  const SMSLoginRoute();
-  static const path = 'sms-login';
+@TypedGoRoute<LoanAutoRoute>(path: LoanAutoRoute.path, routes: [
+  TypedGoRoute<LoanAutoStepFirstRoute>(
+      path: LoanAutoStepFirstRoute.path,
+      routes: [
+        TypedGoRoute<LoanAutoStepFirstDetailRoute>(
+            path: LoanAutoStepFirstDetailRoute.path),
+      ])
+])
+class LoanAutoRoute extends GoRouteData {
+  const LoanAutoRoute();
+  static const path = '/auth-list';
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const SMSLoginPage();
+      const AuthListPage();
 }
 
-class UserRoute extends GoRouteData {
-  const UserRoute();
-  static const path = 'user';
+class LoanAutoStepFirstRoute extends GoRouteData {
+  const LoanAutoStepFirstRoute();
+  static const path = 'step-first';
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const UserPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const AuthStepFirst();
+}
+
+class LoanAutoStepFirstDetailRoute extends GoRouteData {
+  LoanAutoStepFirstDetailRoute({this.$extra});
+  static const path = 'detail';
+
+  final PersonAuthModel? $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      AuthStepFirstDetail(authModel: $extra);
 }

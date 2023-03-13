@@ -33,7 +33,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://api.shineloa.com/';
+    baseUrl ??= 'http://147.139.33.203:48080/';
   }
 
   final Dio _dio;
@@ -56,6 +56,35 @@ class _RestClient implements RestClient {
             .compose(
               _dio.options,
               'app-api/member/auth/login',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<LoginModel?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : LoginModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<LoginModel?>> logWithSmsCode({required info}) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(info);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<LoginModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/member/auth/sms-login',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -115,14 +144,14 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<ApiResult<LoginModel?>> configInit({headers}) async {
+  Future<ApiResult<AuthConfigModel>> configInit({required tenantId}) async {
     const _extra = <String, dynamic>{'showErrorMsg': false};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResult<LoginModel>>(Options(
+        _setStreamType<ApiResult<AuthConfigModel>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -134,11 +163,9 @@ class _RestClient implements RestClient {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResult<LoginModel?>.fromJson(
+    final value = ApiResult<AuthConfigModel>.fromJson(
       _result.data!,
-      (json) => json == null
-          ? null
-          : LoginModel.fromJson(json as Map<String, dynamic>),
+      (json) => AuthConfigModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
@@ -150,7 +177,7 @@ class _RestClient implements RestClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'tenant-id': tenantId};
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResult<NoAuthLoanModel>>(Options(
       method: 'POST',
@@ -169,6 +196,208 @@ class _RestClient implements RestClient {
       (json) => json == null
           ? null
           : NoAuthLoanModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<LoanProductModel?>> loanProductList(
+      {required tenantId}) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<LoanProductModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/loan/getProductList',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<LoanProductModel?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : LoanProductModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<dynamic>> refreshToken({
+    required refreshToken,
+    required tenantId,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = FormData();
+    _data.fields.add(MapEntry(
+      'refreshToken',
+      refreshToken,
+    ));
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ApiResult<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/app-api/member/auth/refresh-token',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<dynamic>.fromJson(
+      _result.data!,
+      (json) => json as dynamic,
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<LoanAuthModel?>> userAuthStatus({required tenantId}) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<LoanAuthModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/certification/getUserCertificationStatus',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<LoanAuthModel?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : LoanAuthModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<UploadFileModel>> uploadFileAuth({
+    required path,
+    file,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    _data.fields.add(MapEntry(
+      'path',
+      path,
+    ));
+    if (file != null) {
+      _data.files.add(MapEntry(
+        'file',
+        MultipartFile.fromFileSync(
+          file.path,
+          filename: file.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<UploadFileModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+            .compose(
+              _dio.options,
+              'app-api/infra/file/upload',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<UploadFileModel>.fromJson(
+      _result.data!,
+      (json) => UploadFileModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<PersonAuthModel?>> ocrImagesInfo({
+    required body,
+    required tenantId,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<PersonAuthModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/kyc/ocr',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<PersonAuthModel?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : PersonAuthModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<dynamic>> updateAdJustInfo({
+    required tenantId,
+    required info,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(info);
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ApiResult<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/kyc/submitAdjustInfo',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<dynamic>.fromJson(
+      _result.data!,
+      (json) => json as dynamic,
     );
     return value;
   }

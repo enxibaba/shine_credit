@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shine_credit/entities/login_model.dart';
+import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/constant.dart';
+import 'package:shine_credit/utils/other_utils.dart';
 import 'package:sp_util/sp_util.dart';
 
 import '../entities/user.dart';
@@ -38,10 +40,7 @@ class AuthNotifier extends _$AuthNotifier {
   }
 
   Future<void> removeUserInfo() async {
-    await SpUtil.remove(Constant.accessToken);
-    await SpUtil.remove(Constant.refreshToken);
-    await SpUtil.remove(Constant.accessTokenExpire);
-    await SpUtil.remove(Constant.userId);
+    await Utils.clearUserInfo();
   }
 
   /// Mock of a request performed on logout (might be common, or not, whatevs).
@@ -79,12 +78,41 @@ class AuthNotifier extends _$AuthNotifier {
     });
   }
 
+  Future<void> loginWithCode(String phone, String code) async {
+    state = await AsyncValue.guard<User>(() async {
+      final response = await DioUtils.instance.client.logWithSmsCode(info: {
+        'mobile': phone,
+        'code': code,
+        'adjustId': '1',
+        'androidId': ''
+      });
+      final LoginModel? user = response.data;
+
+      if (user != null &&
+          user.accessToken != null &&
+          user.accessToken!.isNotEmpty) {
+        await SpUtil.putInt(Constant.userId, user.userId!);
+        await SpUtil.putString(Constant.accessToken, user.accessToken!);
+        await SpUtil.putString(Constant.refreshToken, user.refreshToken!);
+        await SpUtil.putInt(Constant.accessTokenExpire, user.expiresTime!);
+        return User.signedIn(
+            userId: user.userId!,
+            refreshToken: user.refreshToken!,
+            token: user.accessToken!,
+            expiresTime: user.expiresTime!);
+      } else {
+        return const User.signedOut();
+      }
+    });
+  }
+
   Future<User> _loginWithToken() async {
     final userId = SpUtil.getInt(Constant.userId)!;
     final accessToken = SpUtil.getString(Constant.accessToken)!;
     final refreshToken = SpUtil.getString(Constant.refreshToken)!;
     final accessTokenExpire = SpUtil.getInt(Constant.accessTokenExpire)!;
-
+    log.e(
+        'userId: $userId accessToken: $accessToken refreshToken: $refreshToken');
     if (accessToken.isEmpty) {
       throw const UnauthorizedException(
         "Couldn't find the authentication token",
@@ -133,4 +161,4 @@ class UnauthorizedException implements Exception {
 }
 
 /// Mock of the duration of a network request
-const networkRoundTripTime = Duration(milliseconds: 750);
+const networkRoundTripTime = Duration(milliseconds: 100);

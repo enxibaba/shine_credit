@@ -7,14 +7,12 @@ import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/utils/device_utils.dart';
 import 'package:shine_credit/utils/handle_error_utils.dart';
+import 'package:sp_util/sp_util.dart';
+
 import 'utils/state_logger.dart';
 
 final log = Logger(
   printer: PrettyPrinter(),
-);
-
-final container = ProviderContainer(
-  observers: [const StateLogger()],
 );
 
 Future<void> main() async {
@@ -33,15 +31,18 @@ Future<void> main() async {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
 
+  await SpUtil.getInstance();
+
   /// 异常处理
   handleError(() => runApp(
         // 为了让widget能够读取到provider，我们需要在整个应用外面套上一个
         // 名为 "ProviderScope"的widget。
         // 我们的这些provider会在这里保存。
-        ProviderScope(
-          observers: const [StateLogger()],
-          parent: container,
-          child: const MyApp(),
+        const ProviderScope(
+          observers: [
+            StateLogger(),
+          ],
+          child: MyApp(),
         ),
       ));
 }
@@ -66,19 +67,8 @@ class MyApp extends ConsumerWidget {
       routerConfig: router,
       title: 'Shine Credit',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colours.app_main,
       ),
-    );
-  }
-}
-
-class UserPage extends StatelessWidget {
-  const UserPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('User Page')),
     );
   }
 }

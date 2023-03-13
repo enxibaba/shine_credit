@@ -6,7 +6,7 @@ import 'package:shine_credit/router/routes.dart';
 
 part 'router.g.dart';
 
-final _key = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
+final navigatorKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
 
 /// This simple provider caches our GoRouter.
 /// This provider will never rebuild by design.
@@ -15,7 +15,7 @@ GoRouter router(RouterRef ref) {
   final notifier = ref.watch(routerNotifierProvider.notifier);
 
   return GoRouter(
-    navigatorKey: _key,
+    navigatorKey: navigatorKey,
     refreshListenable: notifier,
     debugLogDiagnostics: true,
     initialLocation: SplashRoute.path,

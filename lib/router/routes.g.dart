@@ -11,6 +11,7 @@ List<GoRoute> get $appRoutes => [
       $loginRoute,
       $webViewRoute,
       $homeRoute,
+      $loanAutoRoute,
     ];
 
 GoRoute get $splashRoute => GoRouteData.$route(
@@ -25,23 +26,17 @@ extension $SplashRouteExtension on SplashRoute {
         '/splash',
       );
 
-  void go(BuildContext context) => context.go(location, extra: this);
+  void go(BuildContext context) => context.go(location);
 
-  void push(BuildContext context) => context.push(location, extra: this);
+  void push(BuildContext context) => context.push(location);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: this);
+      context.pushReplacement(location);
 }
 
 GoRoute get $loginRoute => GoRouteData.$route(
       path: '/login',
       factory: $LoginRouteExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'sms-login',
-          factory: $SMSLoginRouteExtension._fromState,
-        ),
-      ],
     );
 
 extension $LoginRouteExtension on LoginRoute {
@@ -51,27 +46,12 @@ extension $LoginRouteExtension on LoginRoute {
         '/login',
       );
 
-  void go(BuildContext context) => context.go(location, extra: this);
+  void go(BuildContext context) => context.go(location);
 
-  void push(BuildContext context) => context.push(location, extra: this);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: this);
-}
-
-extension $SMSLoginRouteExtension on SMSLoginRoute {
-  static SMSLoginRoute _fromState(GoRouterState state) => const SMSLoginRoute();
-
-  String get location => GoRouteData.$location(
-        '/login/sms-login',
-      );
-
-  void go(BuildContext context) => context.go(location, extra: this);
-
-  void push(BuildContext context) => context.push(location, extra: this);
+  void push(BuildContext context) => context.push(location);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: this);
+      context.pushReplacement(location);
 }
 
 GoRoute get $webViewRoute => GoRouteData.$route(
@@ -88,23 +68,17 @@ extension $WebViewRouteExtension on WebViewRoute {
         '/webview/${Uri.encodeComponent(params)}',
       );
 
-  void go(BuildContext context) => context.go(location, extra: this);
+  void go(BuildContext context) => context.go(location);
 
-  void push(BuildContext context) => context.push(location, extra: this);
+  void push(BuildContext context) => context.push(location);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: this);
+      context.pushReplacement(location);
 }
 
 GoRoute get $homeRoute => GoRouteData.$route(
       path: '/home',
       factory: $HomeRouteExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'user',
-          factory: $UserRouteExtension._fromState,
-        ),
-      ],
     );
 
 extension $HomeRouteExtension on HomeRoute {
@@ -114,25 +88,77 @@ extension $HomeRouteExtension on HomeRoute {
         '/home',
       );
 
-  void go(BuildContext context) => context.go(location, extra: this);
+  void go(BuildContext context) => context.go(location);
 
-  void push(BuildContext context) => context.push(location, extra: this);
+  void push(BuildContext context) => context.push(location);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: this);
+      context.pushReplacement(location);
 }
 
-extension $UserRouteExtension on UserRoute {
-  static UserRoute _fromState(GoRouterState state) => const UserRoute();
+GoRoute get $loanAutoRoute => GoRouteData.$route(
+      path: '/auth-list',
+      factory: $LoanAutoRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'step-first',
+          factory: $LoanAutoStepFirstRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'detail',
+              factory: $LoanAutoStepFirstDetailRouteExtension._fromState,
+            ),
+          ],
+        ),
+      ],
+    );
+
+extension $LoanAutoRouteExtension on LoanAutoRoute {
+  static LoanAutoRoute _fromState(GoRouterState state) => const LoanAutoRoute();
 
   String get location => GoRouteData.$location(
-        '/home/user',
+        '/auth-list',
       );
 
-  void go(BuildContext context) => context.go(location, extra: this);
+  void go(BuildContext context) => context.go(location);
 
-  void push(BuildContext context) => context.push(location, extra: this);
+  void push(BuildContext context) => context.push(location);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: this);
+      context.pushReplacement(location);
+}
+
+extension $LoanAutoStepFirstRouteExtension on LoanAutoStepFirstRoute {
+  static LoanAutoStepFirstRoute _fromState(GoRouterState state) =>
+      const LoanAutoStepFirstRoute();
+
+  String get location => GoRouteData.$location(
+        '/auth-list/step-first',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+extension $LoanAutoStepFirstDetailRouteExtension
+    on LoanAutoStepFirstDetailRoute {
+  static LoanAutoStepFirstDetailRoute _fromState(GoRouterState state) =>
+      LoanAutoStepFirstDetailRoute(
+        $extra: state.extra as PersonAuthModel?,
+      );
+
+  String get location => GoRouteData.$location(
+        '/auth-list/step-first/detail',
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  void push(BuildContext context) => context.push(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
 }

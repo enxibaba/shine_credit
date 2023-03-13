@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shine_credit/pages/account/account_page.dart';
-import 'package:shine_credit/pages/loan/loan_auth_page.dart';
 import 'package:shine_credit/pages/loan/loan_page.dart';
 import 'package:shine_credit/pages/repayment/repayment_page.dart';
 import 'package:shine_credit/res/colors.dart';
@@ -37,9 +36,10 @@ final List<String> _appBarTitles = [
 
 final pageListProvider = Provider<List<Widget>>((ref) {
   final isLogin = ref.watch(isLoginProvider);
+
   if (isLogin) {
     return <Widget>[
-      const LoanAuthPage(),
+      const LoanPage(),
       const RepayMentPage(),
       const Text('Product'),
       const AccountPage(),

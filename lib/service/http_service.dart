@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart' hide Headers;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:shine_credit/entities/auth_config_model.dart';
+import 'package:shine_credit/entities/loan_auth_model.dart';
+import 'package:shine_credit/entities/loan_product_model.dart';
 import 'package:shine_credit/entities/login_model.dart';
 import 'package:shine_credit/entities/no_auth_loan_model.dart';
+import 'package:shine_credit/entities/person_auth_model.dart';
+import 'package:shine_credit/entities/upload_file_model.dart';
 import 'package:shine_credit/net/http_api.dart';
 import 'package:shine_credit/service/api_result.dart';
 
@@ -18,6 +25,12 @@ abstract class RestClient {
     @Body() required Map<String, dynamic> info,
   });
 
+  @POST(HttpApi.loginByCode)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<LoginModel?>> logWithSmsCode({
+    @Body() required Map<String, dynamic> info,
+  });
+
   @POST(HttpApi.checkUpdate)
   @Extra({'showErrorMsg': true})
   Future<ApiResult<LoginModel?>> checkUpdate({
@@ -29,14 +42,55 @@ abstract class RestClient {
 
   @POST(HttpApi.configInit)
   @Extra({'showErrorMsg': false})
-  Future<ApiResult<LoginModel?>> configInit({
-    @Headers() Map<String, dynamic>? headers,
+  Future<ApiResult<AuthConfigModel>> configInit({
+    @Header('tenant-id') required String tenantId,
   });
 
   @POST(HttpApi.loanNoAuthInfo)
   @Extra({'showErrorMsg': false})
   Future<ApiResult<NoAuthLoanModel?>> loanNoAuthInfo({
     @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.loanProductList)
+  @Extra({'showErrorMsg': false})
+  Future<ApiResult<LoanProductModel?>> loanProductList({
+    @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.refreshToken)
+  @Extra({'showErrorMsg': false})
+  Future<ApiResult<dynamic>> refreshToken({
+    @Part() required String refreshToken,
+    @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.userAuthStatus)
+  @Extra({'showErrorMsg': false})
+  Future<ApiResult<LoanAuthModel?>> userAuthStatus({
+    @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.uploadFileAuth)
+  @MultiPart()
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<UploadFileModel>> uploadFileAuth({
+    @Part() required String path,
+    @Part() File? file,
+  });
+
+  @POST(HttpApi.ocrImageInfo)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<PersonAuthModel?>> ocrImagesInfo({
+    @Body() required Map<String, dynamic> body,
+    @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.updateAdJustInfo)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<dynamic>> updateAdJustInfo({
+    @Header('tenant-id') required String tenantId,
+    @Body(nullToAbsent: true) required Map<String, dynamic> info,
   });
 }
 

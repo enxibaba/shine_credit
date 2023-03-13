@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:shine_credit/res/constant.dart';
+import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/utils/theme_utils.dart';
+import 'package:shine_credit/widgets/exit_dialog.dart';
+import 'package:sp_util/sp_util.dart';
+
+typedef GenericTypesCallback<T> = void Function(T);
 
 class Utils {
+  static BuildContext? get ctx => navigatorKey.currentContext;
   // /// 打开链接
   // static Future<void> launchWebURL(String url) async {
   //   final Uri uri = Uri.parse(url);
@@ -22,6 +29,14 @@ class Utils {
   //     Toast.show('拨号失败！');
   //   }
   // }
+
+  /// 清除用户信息
+  static Future<void> clearUserInfo() async {
+    await SpUtil.remove(Constant.userId);
+    await SpUtil.remove(Constant.accessToken);
+    await SpUtil.remove(Constant.refreshToken);
+    await SpUtil.remove(Constant.accessTokenExpire);
+  }
 
   static KeyboardActionsConfig getKeyboardActionsConfig(
       BuildContext context, List<FocusNode> list) {
@@ -107,4 +122,17 @@ Widget _buildDialogTransitions(
 /// String 空安全处理
 extension StringExtension on String? {
   String get nullSafe => this ?? '';
+}
+
+/// token过期 退出登录
+void showTokenExpireAlert() {
+  if (Utils.ctx != null) {
+    showElasticDialog<void>(
+      context: Utils.ctx!,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const ExitDialog();
+      },
+    );
+  }
 }

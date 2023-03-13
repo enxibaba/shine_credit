@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/styles.dart';
-
-typedef VoidIntCallback = void Function(bool);
+import 'package:shine_credit/utils/other_utils.dart';
 
 class HeaderBar extends StatefulWidget {
   const HeaderBar({super.key, required this.callback});
 
-  final VoidIntCallback callback;
+  final GenericTypesCallback<bool> callback;
 
   @override
   State<HeaderBar> createState() => _HeaderBarState();

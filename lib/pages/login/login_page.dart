@@ -97,12 +97,22 @@ class _LoginPageState extends ConsumerState<LoginPage>
     final String name = _nameController.text;
     final String password = _passwordController.text;
     ToastUtils.showLoading();
-    ref
-        .watch(authNotifierProvider.notifier)
-        .login(name, password)
-        .whenComplete(() => {
-              ToastUtils.cancelToast(),
-            });
+
+    if (_isLogin) {
+      ref
+          .watch(authNotifierProvider.notifier)
+          .login(name, password)
+          .whenComplete(() => {
+                ToastUtils.cancelToast(),
+              });
+    } else {
+      ref
+          .watch(authNotifierProvider.notifier)
+          .loginWithCode(name, password)
+          .whenComplete(() => {
+                ToastUtils.cancelToast(),
+              });
+    }
   }
 
   Future<bool> _getCode() {

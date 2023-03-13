@@ -6,7 +6,7 @@ part of 'router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$routerHash() => r'c6ed7c3a17a0c50da0549a6fa2a0cb6830bcaa60';
+String _$routerHash() => r'b6d905cfb668efb2939507c8888327facfcf0d09';
 
 /// This simple provider caches our GoRouter.
 /// This provider will never rebuild by design.

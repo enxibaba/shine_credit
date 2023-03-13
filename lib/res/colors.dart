@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class Colours {
   static const Color app_main = Color(0xFF0B6DFF);
   static const Color dark_app_main = Color(0xFF3F7AE0);
+  static const Color app_main_light_bg = Color(0xFFEDF4FF);
 
   static const Color bg_color = Color(0xFFFFFFFF);
   static const Color dark_bg_color = Color(0xFF18191A);

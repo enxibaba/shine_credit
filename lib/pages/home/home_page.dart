@@ -36,7 +36,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> checkUpdate() async {
     final packageInfo = await PackageInfo.fromPlatform();
-    log.e(packageInfo.toString());
+    log.d(packageInfo.toString());
     DioUtils.instance.client
         .checkUpdate(
             deviceType: Device.platformName,

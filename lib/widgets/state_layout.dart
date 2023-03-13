@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shine_credit/res/colors.dart';
+import 'package:shine_credit/utils/image_utils.dart';
 import '../res/dimens.dart';
 import '../res/gaps.dart';
 import '../utils/theme_utils.dart';
@@ -35,6 +36,7 @@ class StateLayout extends StatelessWidget {
             child: LoadAssetImage(
               'state/${type.img}',
               width: 120,
+              format: ImageFormat.png,
             ),
           ),
         const SizedBox(
