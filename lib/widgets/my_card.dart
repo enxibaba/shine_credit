@@ -8,12 +8,16 @@ class MyCard extends StatelessWidget {
       required this.child,
       this.color,
       this.shadowColor,
-      this.margin});
+      this.margin,
+      this.radius = 8.0,
+      this.blurRadius = 8.0});
 
   final Widget child;
   final Color? color;
   final Color? shadowColor;
   final EdgeInsetsGeometry? margin;
+  final double radius;
+  final double blurRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +33,12 @@ class MyCard extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(radius),
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: sColor, offset: const Offset(0.0, 2.0), blurRadius: 8.0),
+                color: sColor,
+                offset: const Offset(0.0, 2.0),
+                blurRadius: blurRadius),
           ],
         ),
         child: child,

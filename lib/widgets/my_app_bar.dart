@@ -16,6 +16,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.actionName = '',
       this.backImg = 'ic_back_black',
       this.backImgColor,
+      this.actionWidget,
       this.onPressed,
       this.isBack = true});
 
@@ -26,6 +27,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backImgColor;
   final String actionName;
   final VoidCallback? onPressed;
+  final Widget? actionWidget;
   final bool isBack;
 
   @override
@@ -37,28 +39,34 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark;
 
-    final Widget action = actionName.isNotEmpty
+    final Widget action = actionWidget != null
         ? Positioned(
             right: 0.0,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                buttonTheme: const ButtonThemeData(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  minWidth: 60.0,
-                ),
-              ),
-              child: MyButton(
-                key: const Key('actionName'),
-                fontSize: Dimens.font_sp14,
-                minWidth: null,
-                text: actionName,
-                textColor: context.isDark ? Colours.dark_text : Colours.text,
-                backgroundColor: Colors.transparent,
-                onPressed: onPressed,
-              ),
-            ),
+            child: actionWidget!,
           )
-        : Gaps.empty;
+        : actionName.isNotEmpty
+            ? Positioned(
+                right: 0.0,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    buttonTheme: const ButtonThemeData(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      minWidth: 60.0,
+                    ),
+                  ),
+                  child: MyButton(
+                    key: const Key('actionName'),
+                    fontSize: Dimens.font_sp14,
+                    minWidth: null,
+                    text: actionName,
+                    textColor:
+                        context.isDark ? Colours.dark_text : Colours.text,
+                    backgroundColor: Colors.transparent,
+                    onPressed: onPressed,
+                  ),
+                ),
+              )
+            : Gaps.empty;
 
     final Widget back = isBack
         ? IconButton(

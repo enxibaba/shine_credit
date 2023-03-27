@@ -80,3 +80,45 @@ class SelectedItem extends StatelessWidget {
     );
   }
 }
+
+class SelectedContentItem extends StatelessWidget {
+  const SelectedContentItem({
+    super.key,
+    this.onTap,
+    this.showLine = false,
+    required this.child,
+    this.radius,
+    this.padding,
+  });
+
+  final Widget child;
+  final GestureTapCallback? onTap;
+  final bool showLine;
+  final double? radius;
+  final EdgeInsets? padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius:
+            radius != null ? BorderRadius.all(Radius.circular(radius!)) : null,
+        onTap: onTap,
+        splashColor: Colours.app_main_light_bg,
+        child: Container(
+          padding: padding,
+          decoration: showLine
+              ? BoxDecoration(
+                  border: Border(
+                    bottom: Divider.createBorderSide(context,
+                        width: 0.6, color: Colours.line),
+                  ),
+                )
+              : null,
+          child: child,
+        ),
+      ),
+    );
+  }
+}

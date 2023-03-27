@@ -12,6 +12,11 @@ List<GoRoute> get $appRoutes => [
       $webViewRoute,
       $homeRoute,
       $loanAutoRoute,
+      $aboutUsRoute,
+      $mineSettingRoute,
+      $contactUsRoute,
+      $changeNickNameRoute,
+      $repayMentDetailRoute,
     ];
 
 GoRoute get $splashRoute => GoRouteData.$route(
@@ -110,6 +115,14 @@ GoRoute get $loanAutoRoute => GoRouteData.$route(
             ),
           ],
         ),
+        GoRouteData.$route(
+          path: 'step-second',
+          factory: $LoanAutoStepSecondRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'step-third',
+          factory: $LoanAutoStepThirdRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -161,4 +174,164 @@ extension $LoanAutoStepFirstDetailRouteExtension
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location, extra: $extra);
+}
+
+extension $LoanAutoStepSecondRouteExtension on LoanAutoStepSecondRoute {
+  static LoanAutoStepSecondRoute _fromState(GoRouterState state) =>
+      const LoanAutoStepSecondRoute();
+
+  String get location => GoRouteData.$location(
+        '/auth-list/step-second',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+extension $LoanAutoStepThirdRouteExtension on LoanAutoStepThirdRoute {
+  static LoanAutoStepThirdRoute _fromState(GoRouterState state) =>
+      const LoanAutoStepThirdRoute();
+
+  String get location => GoRouteData.$location(
+        '/auth-list/step-third',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+GoRoute get $aboutUsRoute => GoRouteData.$route(
+      path: '/about-us',
+      factory: $AboutUsRouteExtension._fromState,
+    );
+
+extension $AboutUsRouteExtension on AboutUsRoute {
+  static AboutUsRoute _fromState(GoRouterState state) => const AboutUsRoute();
+
+  String get location => GoRouteData.$location(
+        '/about-us',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+GoRoute get $mineSettingRoute => GoRouteData.$route(
+      path: '/mine-setting',
+      factory: $MineSettingRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'modify-pwd',
+          factory: $ModifyPwdRouteExtension._fromState,
+        ),
+      ],
+    );
+
+extension $MineSettingRouteExtension on MineSettingRoute {
+  static MineSettingRoute _fromState(GoRouterState state) =>
+      const MineSettingRoute();
+
+  String get location => GoRouteData.$location(
+        '/mine-setting',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+extension $ModifyPwdRouteExtension on ModifyPwdRoute {
+  static ModifyPwdRoute _fromState(GoRouterState state) =>
+      const ModifyPwdRoute();
+
+  String get location => GoRouteData.$location(
+        '/mine-setting/modify-pwd',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+GoRoute get $contactUsRoute => GoRouteData.$route(
+      path: '/contact-us',
+      factory: $ContactUsRouteExtension._fromState,
+    );
+
+extension $ContactUsRouteExtension on ContactUsRoute {
+  static ContactUsRoute _fromState(GoRouterState state) =>
+      const ContactUsRoute();
+
+  String get location => GoRouteData.$location(
+        '/contact-us',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+GoRoute get $changeNickNameRoute => GoRouteData.$route(
+      path: '/change-nick-name',
+      factory: $ChangeNickNameRouteExtension._fromState,
+    );
+
+extension $ChangeNickNameRouteExtension on ChangeNickNameRoute {
+  static ChangeNickNameRoute _fromState(GoRouterState state) =>
+      const ChangeNickNameRoute();
+
+  String get location => GoRouteData.$location(
+        '/change-nick-name',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+GoRoute get $repayMentDetailRoute => GoRouteData.$route(
+      path: '/repayment-detail/:id',
+      factory: $RepayMentDetailRouteExtension._fromState,
+    );
+
+extension $RepayMentDetailRouteExtension on RepayMentDetailRoute {
+  static RepayMentDetailRoute _fromState(GoRouterState state) =>
+      RepayMentDetailRoute(
+        state.params['id']!,
+      );
+
+  String get location => GoRouteData.$location(
+        '/repayment-detail/${Uri.encodeComponent(id)}',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
 }

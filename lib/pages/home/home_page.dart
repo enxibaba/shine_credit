@@ -36,13 +36,11 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> checkUpdate() async {
     final packageInfo = await PackageInfo.fromPlatform();
-    log.d(packageInfo.toString());
     DioUtils.instance.client
-        .checkUpdate(
-            deviceType: Device.platformName,
-            innerVersionord: packageInfo.buildNumber,
-            tenantId: '1',
-            appCode: 0)
+        .checkUpdate(body: {
+          'deviceType': Device.platformName,
+          'innerVersionord': packageInfo.buildNumber,
+        }, tenantId: '1', appCode: 0)
         .then((value) => log.d(value))
         .catchError((error) => log.d(error));
   }
@@ -51,6 +49,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final barItemList = ref.watch(barItemsProvider);
     final pageList = ref.watch(pageListProvider);
+
+    ref.listen(homeProvider, (previous, next) {
+      _pageController.jumpToPage(next);
+    });
 
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(

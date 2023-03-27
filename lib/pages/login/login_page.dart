@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -123,6 +124,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: defaultTargetPlatform != TargetPlatform.iOS,
       body: MyScrollView(
           keyboardConfig: Utils.getKeyboardActionsConfig(
               context, <FocusNode>[_nodeText1, _nodeText2]),

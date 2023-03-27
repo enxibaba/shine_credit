@@ -4,8 +4,13 @@ import 'package:dio/dio.dart' hide Headers;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:shine_credit/entities/auth_config_model.dart';
+import 'package:shine_credit/entities/diction_model.dart';
+import 'package:shine_credit/entities/liveness_check_result.dart';
+import 'package:shine_credit/entities/liveness_license_info.dart';
 import 'package:shine_credit/entities/loan_auth_model.dart';
 import 'package:shine_credit/entities/loan_product_model.dart';
+import 'package:shine_credit/entities/loan_record_detail.dart';
+import 'package:shine_credit/entities/loan_record_model.dart';
 import 'package:shine_credit/entities/login_model.dart';
 import 'package:shine_credit/entities/no_auth_loan_model.dart';
 import 'package:shine_credit/entities/person_auth_model.dart';
@@ -34,15 +39,14 @@ abstract class RestClient {
   @POST(HttpApi.checkUpdate)
   @Extra({'showErrorMsg': true})
   Future<ApiResult<LoginModel?>> checkUpdate({
-    @Part() required String deviceType,
-    @Part() required String innerVersionord,
+    @Body() required Map<String, dynamic> body,
     @Header('tenant-id') required String tenantId,
     @Header('appCode') required int appCode,
   });
 
   @POST(HttpApi.configInit)
   @Extra({'showErrorMsg': false})
-  Future<ApiResult<AuthConfigModel>> configInit({
+  Future<ApiResult<AuthConfigModel?>> configInit({
     @Header('tenant-id') required String tenantId,
   });
 
@@ -91,6 +95,50 @@ abstract class RestClient {
   Future<ApiResult<dynamic>> updateAdJustInfo({
     @Header('tenant-id') required String tenantId,
     @Body(nullToAbsent: true) required Map<String, dynamic> info,
+  });
+
+  @POST(HttpApi.liveNessLicense)
+  @Extra({'showErrorMsg': false})
+  Future<ApiResult<LivenessLicenseInfo>> liveNessLicense({
+    @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.liveNessCheckResult)
+  @Extra({'showErrorMsg': false})
+  Future<ApiResult<LivenessCheckResult>> liveNessCheckResult({
+    @Header('tenant-id') required String tenantId,
+    @Part() required String livenessId,
+  });
+
+  @POST(HttpApi.requestDictData)
+  @Extra({'showErrorMsg': false})
+  Future<ApiResult<List<DictionModel>>> requestDictData(
+      {@Header('tenant-id') required String tenantId,
+      @Body() required Map<String, dynamic> body});
+
+  @POST(HttpApi.uploadEmergencyContacts)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<dynamic>> uploadEmergencyContacts(
+      {@Header('tenant-id') required String tenantId,
+      @Body() required Map<String, dynamic> body});
+
+  @POST(HttpApi.uploadBankCard)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<dynamic>> uploadBankCard(
+      {@Header('tenant-id') required String tenantId,
+      @Body() required Map<String, dynamic> body});
+
+  @POST(HttpApi.getLoanRecord)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<List<LoanRecordModel>>> getLoanRecord({
+    @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.getRepayMentDetail)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<LoanRecordDetail?>> getRepayMentDetail({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
   });
 }
 

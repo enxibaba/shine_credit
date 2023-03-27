@@ -6,6 +6,7 @@ class Colours {
   static const Color app_main = Color(0xFF0B6DFF);
   static const Color dark_app_main = Color(0xFF3F7AE0);
   static const Color app_main_light_bg = Color(0xFFEDF4FF);
+  static const Color app_wait = Color(0xFFFF9900);
 
   static const Color bg_color = Color(0xFFFFFFFF);
   static const Color dark_bg_color = Color(0xFF18191A);
@@ -33,7 +34,7 @@ class Colours {
   static const Color line = Color(0xFFEEEEEE);
   static const Color dark_line = Color(0xFF3A3C3D);
 
-  static const Color red = Color(0xFFFF4759);
+  static const Color red = Color(0xFFFF0000);
   static const Color dark_red = Color(0xFFE03E4E);
 
   static const Color text_disabled = Color(0xFFD4E2FA);

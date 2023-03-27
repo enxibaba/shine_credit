@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
@@ -17,7 +17,11 @@ class AccountPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _AccountPageState();
 }
 
-class _AccountPageState extends ConsumerState<AccountPage> {
+class _AccountPageState extends ConsumerState<AccountPage>
+    with AutomaticKeepAliveClientMixin<AccountPage> {
+  @override
+  bool get wantKeepAlive => true;
+
   final _actionList = [
     {'title': 'Authentication Page', 'icon': 'home/account_auth_icon'},
     {'title': 'About Us', 'icon': 'home/account_about_icon'},
@@ -29,7 +33,22 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     final list = <Widget>[];
     for (var index = 0; index < _actionList.length; index++) {
       list.add(SelectedItem(
-          onTap: () {},
+          onTap: () {
+            switch (index) {
+              case 0:
+                const LoanAutoRoute().push(context);
+                break;
+              case 1:
+                const AboutUsRoute().push(context);
+                break;
+              case 2:
+                const MineSettingRoute().push(context);
+                break;
+              case 3:
+                const ContactUsRoute().push(context);
+                break;
+            }
+          },
           leading: LoadAssetImage(_actionList[index]['icon']!,
               width: 26, height: 26),
           title: _actionList[index]['title']!));
@@ -43,6 +62,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         appBar: const MyAppBar(
           isBack: false,
@@ -87,9 +107,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         Positioned(
                           right: -10,
                           child: IconButton(
-                              onPressed: () {
-                                log.d('edit');
-                              },
+                              onPressed: () =>
+                                  const ChangeNickNameRoute().push(context),
                               icon: const LoadAssetImage(
                                   'home/account_modify_icon',
                                   width: 12,

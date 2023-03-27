@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shine_credit/res/colors.dart';
 import 'dimens.dart';
 
 class Gaps {
@@ -32,12 +33,12 @@ class Gaps {
 //    child: const DecoratedBox(decoration: BoxDecoration(color: Colours.line)),
 //  );
 
-  static const Widget line = Divider();
+  static const Widget line = Divider(color: Colours.line);
 
   static const Widget vLine = SizedBox(
     width: 0.6,
     height: 24.0,
-    child: VerticalDivider(),
+    child: VerticalDivider(color: Colours.line),
   );
 
   static const Widget empty = SizedBox.shrink();

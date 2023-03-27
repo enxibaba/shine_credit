@@ -100,8 +100,7 @@ class _RestClient implements RestClient {
 
   @override
   Future<ApiResult<LoginModel?>> checkUpdate({
-    required deviceType,
-    required innerVersionord,
+    required body,
     required tenantId,
     required appCode,
   }) async {
@@ -112,15 +111,8 @@ class _RestClient implements RestClient {
       r'appCode': appCode,
     };
     _headers.removeWhere((k, v) => v == null);
-    final _data = FormData();
-    _data.fields.add(MapEntry(
-      'deviceType',
-      deviceType,
-    ));
-    _data.fields.add(MapEntry(
-      'innerVersionord',
-      innerVersionord,
-    ));
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResult<LoginModel>>(Options(
       method: 'POST',
@@ -144,7 +136,7 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<ApiResult<AuthConfigModel>> configInit({required tenantId}) async {
+  Future<ApiResult<AuthConfigModel?>> configInit({required tenantId}) async {
     const _extra = <String, dynamic>{'showErrorMsg': false};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'tenant-id': tenantId};
@@ -163,9 +155,11 @@ class _RestClient implements RestClient {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResult<AuthConfigModel>.fromJson(
+    final value = ApiResult<AuthConfigModel?>.fromJson(
       _result.data!,
-      (json) => AuthConfigModel.fromJson(json as Map<String, dynamic>),
+      (json) => json == null
+          ? null
+          : AuthConfigModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
@@ -398,6 +392,232 @@ class _RestClient implements RestClient {
     final value = ApiResult<dynamic>.fromJson(
       _result.data!,
       (json) => json as dynamic,
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<LivenessLicenseInfo>> liveNessLicense(
+      {required tenantId}) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<LivenessLicenseInfo>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/kyc/fetch/liveNessLicense',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<LivenessLicenseInfo>.fromJson(
+      _result.data!,
+      (json) => LivenessLicenseInfo.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<LivenessCheckResult>> liveNessCheckResult({
+    required tenantId,
+    required livenessId,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = FormData();
+    _data.fields.add(MapEntry(
+      'livenessId',
+      livenessId,
+    ));
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<LivenessCheckResult>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/kyc/check/liveNess',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<LivenessCheckResult>.fromJson(
+      _result.data!,
+      (json) => LivenessCheckResult.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<List<DictionModel>>> requestDictData({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<List<DictionModel>>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/common/getDictData',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<List<DictionModel>>.fromJson(
+      _result.data!,
+      (json) => json is List<dynamic>
+          ? json
+              .map<DictionModel>(
+                  (i) => DictionModel.fromJson(i as Map<String, dynamic>))
+              .toList()
+          : List.empty(),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<dynamic>> uploadEmergencyContacts({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ApiResult<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/certification/uploadEmergencyContacts',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<dynamic>.fromJson(
+      _result.data!,
+      (json) => json as dynamic,
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<dynamic>> uploadBankCard({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ApiResult<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/certification/uploadBankCard',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<dynamic>.fromJson(
+      _result.data!,
+      (json) => json as dynamic,
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<List<LoanRecordModel>>> getLoanRecord(
+      {required tenantId}) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<List<LoanRecordModel>>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/loan/getLoanRecord',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<List<LoanRecordModel>>.fromJson(
+      _result.data!,
+      (json) => json is List<dynamic>
+          ? json
+              .map<LoanRecordModel>(
+                  (i) => LoanRecordModel.fromJson(i as Map<String, dynamic>))
+              .toList()
+          : List.empty(),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<LoanRecordDetail?>> getRepayMentDetail({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<LoanRecordDetail>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/repay/getRepaymentDetails',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<LoanRecordDetail?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : LoanRecordDetail.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

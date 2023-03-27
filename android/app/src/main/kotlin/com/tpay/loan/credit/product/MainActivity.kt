@@ -1,4 +1,4 @@
-package com.example.shine_credit
+package com.tpay.loan.credit.product
 
 import io.flutter.embedding.android.FlutterActivity
 

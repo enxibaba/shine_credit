@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:liveness_plugin/liveness_plugin.dart';
 import 'package:shine_credit/entities/loan_auth_model.dart';
+import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
+import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
+import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
@@ -20,15 +24,11 @@ class AuthListPage extends StatefulWidget {
   State<AuthListPage> createState() => _AuthListPageState();
 }
 
-class _AuthListPageState extends State<AuthListPage> {
+class _AuthListPageState extends State<AuthListPage>
+    with LivenessDetectionCallback {
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<LoanAuthModel?> requestData() async {
-    final model = await DioUtils.instance.client.userAuthStatus(tenantId: '1');
-    return model.data;
   }
 
   @override
@@ -81,19 +81,21 @@ class _AuthListPageState extends State<AuthListPage> {
                       title: 'Face Authentication',
                       check:
                           loanAuthModel.userCertification!.faceAuthentication!,
-                      onTap: () => {}),
+                      onTap: _checkLicense),
                   Gaps.vGap15,
                   LoanAuthActionItem(
                       image: 'auth/auth_contact',
                       title: 'Emergency Contact',
                       check: loanAuthModel.userCertification!.emergencyContact!,
-                      onTap: () => {}),
+                      onTap: () =>
+                          const LoanAutoStepSecondRoute().push(context)),
                   Gaps.vGap15,
                   LoanAuthActionItem(
                       image: 'auth/auth_bank',
                       title: 'Bank Card',
-                      check: loanAuthModel.userCertification!.emergencyContact!,
-                      onTap: () => {}),
+                      check: loanAuthModel.userCertification!.bandCard!,
+                      onTap: () =>
+                          const LoanAutoStepThirdRoute().push(context)),
                   const Expanded(child: ColoredBox(color: Colours.bg_gray_)),
                   MyDecoratedButton(
                       onPressed: () => {}, text: 'Get loan', radius: 24)
@@ -102,6 +104,58 @@ class _AuthListPageState extends State<AuthListPage> {
         )
       ],
     );
+  }
+
+  Future<LoanAuthModel?> requestData() async {
+    final model = await DioUtils.instance.client.userAuthStatus(tenantId: '1');
+    return model.data;
+  }
+
+  Future<String?> getLivenessLicense(bool loading) async {
+    if (loading) {
+      ToastUtils.showLoading();
+    }
+    try {
+      final model =
+          await DioUtils.instance.client.liveNessLicense(tenantId: '1');
+      if (loading) {
+        ToastUtils.cancelToast();
+      }
+      return model.data.license;
+    } catch (e) {
+      if (loading) {
+        ToastUtils.cancelToast();
+      }
+      return null;
+    }
+  }
+
+  Future<void> _checkLicense() async {
+    // if (livenessLicenseKey.isEmpty) {
+    //   final tmp = await getLivenessLicense(true);
+    //   if (tmp.nullSafe.isEmpty) {
+    //     return;
+    //   }
+    // }
+
+    final String? result =
+        await LivenessPlugin.setLicenseAndCheck(Constant.livenessLicenseKey);
+    log.d(result);
+    if ('SUCCESS' == result) {
+      // license is valid
+      startLivenessDetection();
+    } else {
+      // license is invalid, expired/format error /appId is invalid
+    }
+  }
+
+  void startLivenessDetection() {
+    LivenessPlugin.startLivenessDetection(this);
+  }
+
+  @override
+  void onGetDetectionResult(bool isSuccess, Map? resultMap) {
+    log.d('isSuccess: $isSuccess', resultMap?.toString());
   }
 }
 
@@ -163,7 +217,7 @@ class LoanAuthActionItem extends StatelessWidget {
     return MyCard(
         child: SelectedItem(
       leading: LoadAssetImage(image, width: 25, height: 25),
-      title: 'Face Authentication',
+      title: title,
       trailing: LoadAssetImage(check ? 'checked_icon' : 'un_check_icon',
           width: 18, height: 18),
       onTap: check ? null : onTap,

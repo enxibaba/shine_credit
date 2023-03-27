@@ -124,6 +124,15 @@ extension StringExtension on String? {
   String get nullSafe => this ?? '';
 }
 
+extension StringExtensions on String {
+  String clearSymbolFormat() {
+    if (isEmpty) {
+      return '';
+    }
+    return replaceAll(RegExp(r'[\n()\- ]'), '');
+  }
+}
+
 /// token过期 退出登录
 void showTokenExpireAlert() {
   if (Utils.ctx != null) {

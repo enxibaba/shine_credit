@@ -61,4 +61,31 @@ class HttpApi {
 
   /// update Info
   static const String updateAdJustInfo = 'app-api/kyc/submitAdjustInfo';
+
+  /// get liveNessLicense info
+  static const String liveNessLicense = 'app-api/kyc/fetch/liveNessLicense';
+
+  /// get liveNessLicense check result
+  static const String liveNessCheckResult = 'app-api/kyc/check/liveNess';
+
+  /// 获取字典接口
+  /// type: "contact_type" 获取联系人类型
+  /// type: "bank_card_type" 获取银行卡类型
+  static const String requestDictData = 'app-api/common/getDictData';
+
+  /// 上传紧急联系人
+  static const String uploadEmergencyContacts =
+      'app-api/certification/uploadEmergencyContacts';
+
+  /// 认证银行卡信息
+  static const String uploadBankCard = 'app-api/certification/uploadBankCard';
+
+  /// 获取用户借款记录
+  static const String getLoanRecord = 'app-api/loan/getLoanRecord';
+
+  /// 更新用户头像
+  static const String updateAvatar = 'app-api/userCenter/update-avatar';
+
+  /// 查询借款记录详情
+  static const String getRepayMentDetail = 'app-api/repay/getRepaymentDetails';
 }

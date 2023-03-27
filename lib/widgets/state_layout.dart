@@ -9,10 +9,12 @@ import '../utils/theme_utils.dart';
 import 'load_image.dart';
 
 class StateLayout extends StatelessWidget {
-  const StateLayout({super.key, required this.type, this.hintText});
+  const StateLayout(
+      {super.key, required this.type, this.hintText, this.retryCallback});
 
   final StateType type;
   final String? hintText;
+  final VoidCallback? retryCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,13 @@ class StateLayout extends StatelessWidget {
               .titleSmall
               ?.copyWith(fontSize: Dimens.font_sp14),
         ),
+        if (type != StateType.loading && type != StateType.empty)
+          TextButton(
+            onPressed: retryCallback,
+            child: const Text('Retry',
+                style: TextStyle(
+                    fontSize: Dimens.font_sp14, color: Colours.app_main)),
+          ),
         Gaps.vGap50,
       ],
     );
@@ -74,5 +83,5 @@ extension StateTypeExtension on StateType {
         '',
       ][index];
 
-  String get hintText => <String>['无网络连接', '', ''][index];
+  String get hintText => <String>['some error', '', ''][index];
 }

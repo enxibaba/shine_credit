@@ -9,10 +9,10 @@ import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/utils/image_utils.dart';
+import 'package:shine_credit/widgets/future_builder_widget.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_card.dart';
-import 'package:shine_credit/widgets/state_layout.dart';
 
 class LoanUnAuthPage extends ConsumerStatefulWidget {
   LoanUnAuthPage(this.authConfigModel, {super.key});
@@ -42,20 +42,11 @@ class _LoanUnAuthPageState extends ConsumerState<LoanUnAuthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colours.bg_gray,
-        body: FutureBuilder(
-          builder:
-              (BuildContext context, AsyncSnapshot<NoAuthLoanModel?> snapshot) {
-            if (snapshot.hasData) {
-              return _buildBody(snapshot.data!);
-            } else {
-              return StateLayout(
-                  type: snapshot.hasError
-                      ? StateType.network
-                      : StateType.loading);
-            }
-          },
-          future: requestData(),
-        ));
+        body: FutureBuilderWidget(
+            futureFunc: requestData,
+            builder: (context, data) {
+              return _buildBody(data!);
+            }));
   }
 
   Widget _buildBody(NoAuthLoanModel noAuthLoanModel) {

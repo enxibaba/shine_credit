@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shine_credit/pages/account/account_page.dart';
 import 'package:shine_credit/pages/loan/loan_page.dart';
+import 'package:shine_credit/pages/product/product.dart';
 import 'package:shine_credit/pages/repayment/repayment_page.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
@@ -41,7 +42,7 @@ final pageListProvider = Provider<List<Widget>>((ref) {
     return <Widget>[
       const LoanPage(),
       const RepayMentPage(),
-      const Text('Product'),
+      const ProductPage(),
       const AccountPage(),
     ];
   } else {

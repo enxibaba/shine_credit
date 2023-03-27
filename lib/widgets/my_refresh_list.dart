@@ -18,6 +18,7 @@ class RefreshListView extends StatefulWidget {
     this.pageSize = 10,
     this.padding,
     this.itemExtent,
+    this.emptyWidget,
   });
 
   final RefreshCallback onRefresh;
@@ -26,6 +27,7 @@ class RefreshListView extends StatefulWidget {
   final bool hasMore;
   final IndexedWidgetBuilder itemBuilder;
   final StateType stateType;
+  final Widget? emptyWidget;
 
   /// 一页的数量，默认为10
   final int pageSize;
@@ -51,7 +53,9 @@ class _RefreshListViewState extends State<RefreshListView> {
     final Widget child = RefreshIndicator(
       onRefresh: widget.onRefresh,
       child: widget.itemCount == 0
-          ? StateLayout(type: widget.stateType)
+          ? (widget.emptyWidget != null)
+              ? widget.emptyWidget!
+              : StateLayout(type: widget.stateType)
           : ListView.builder(
               itemCount: widget.loadMore == null
                   ? widget.itemCount
@@ -123,7 +127,7 @@ class MoreWidget extends StatelessWidget {
           if (hasMore) Gaps.hGap5,
 
           /// 只有一页的时候，就不显示FooterView了
-          Text(hasMore ? '正在加载中...' : (itemCount < pageSize ? '' : '没有了呦~'),
+          Text(hasMore ? 'loading...' : (itemCount < pageSize ? '' : 'no more'),
               style: style),
         ],
       ),
