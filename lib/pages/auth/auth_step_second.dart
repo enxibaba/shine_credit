@@ -35,14 +35,21 @@ class _AuthStepSecondState extends State<AuthStepSecond> {
   @override
   void initState() {
     super.initState();
-    requestDic();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      requestDic();
+    });
   }
 
   /// 获取联系人关系数字字典
   Future<void> requestDic() async {
-    final tmp = await DioUtils.instance.client
-        .requestDictData(tenantId: '1', body: {'dictType': 'contact_type'});
-    _relationList = tmp.data;
+    ToastUtils.showLoading();
+    try {
+      final tmp = await DioUtils.instance.client
+          .requestDictData(tenantId: '1', body: {'dictType': 'contact_type'});
+      _relationList = tmp.data;
+    } finally {
+      ToastUtils.cancelToast();
+    }
   }
 
   /// 选择联系人电话
@@ -67,6 +74,10 @@ class _AuthStepSecondState extends State<AuthStepSecond> {
 
   /// 显示联系人关系弹窗
   void _showPopup(bool isFirst, DictionModel? select) {
+    if (_relationList.isEmpty) {
+      ToastUtils.show('Please wait for the data to be loaded');
+      return;
+    }
     showModalBottomSheet(
         isDismissible: true,
         enableDrag: true,
@@ -135,7 +146,7 @@ class _AuthStepSecondState extends State<AuthStepSecond> {
           (contact2?.phoneNumber?.number ?? '').clearSymbolFormat(),
     };
 
-    ToastUtils.showLoading(msg: 'Uploading...');
+    ToastUtils.showLoading();
 
     try {
       final result = await DioUtils.instance.client

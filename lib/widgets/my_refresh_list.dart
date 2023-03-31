@@ -57,6 +57,7 @@ class _RefreshListViewState extends State<RefreshListView> {
               ? widget.emptyWidget!
               : StateLayout(type: widget.stateType)
           : ListView.builder(
+              physics: const BouncingScrollPhysics(),
               itemCount: widget.loadMore == null
                   ? widget.itemCount
                   : widget.itemCount + 1,
@@ -119,7 +120,7 @@ class MoreWidget extends StatelessWidget {
         ? TextStyles.textGray14
         : const TextStyle(color: Color(0x8A000000));
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

@@ -157,6 +157,8 @@ class _RepayMentDetailState extends State<RepayMentDetail> {
                               Gaps.vGap15,
                               OutlinedButton(
                                   style: ButtonStyle(
+                                      minimumSize: MaterialStateProperty.all(
+                                          const Size(double.infinity, 48)),
                                       side: MaterialStateProperty.all(
                                           const BorderSide(
                                               color: Colours.app_main)),

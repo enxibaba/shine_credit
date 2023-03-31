@@ -9,14 +9,17 @@ part of 'loan_product_model.dart';
 LoanProductModel _$LoanProductModelFromJson(Map<String, dynamic> json) =>
     LoanProductModel(
       (json['amountDetails'] as List<dynamic>?)
-          ?.map((e) => LoanAmountDetails.fromJson(e as Map<String, dynamic>))
-          .toList(),
+              ?.map(
+                  (e) => LoanAmountDetails.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       json['failMessage'] as String?,
-      json['loanStatus'] as bool?,
+      json['loanStatus'] as bool? ?? false,
       (json['product'] as List<dynamic>?)
-          ?.map((e) => LoanProduct.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      (json['tenure'] as List<dynamic>?)?.map((e) => e as num).toList(),
+              ?.map((e) => LoanProduct.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      (json['tenure'] as List<dynamic>?)?.map((e) => e as num).toList() ?? [],
     );
 
 Map<String, dynamic> _$LoanProductModelToJson(LoanProductModel instance) =>
@@ -31,8 +34,9 @@ Map<String, dynamic> _$LoanProductModelToJson(LoanProductModel instance) =>
 LoanAmountDetails _$LoanAmountDetailsFromJson(Map<String, dynamic> json) =>
     LoanAmountDetails(
       (json['amount'] as num?)?.toDouble(),
-      json['check'] as bool?,
-      (json['productIds'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      json['check'] as bool? ?? false,
+      (json['productIds'] as List<dynamic>?)?.map((e) => e as int).toList() ??
+          [],
     );
 
 Map<String, dynamic> _$LoanAmountDetailsToJson(LoanAmountDetails instance) =>

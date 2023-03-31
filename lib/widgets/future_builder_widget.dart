@@ -5,7 +5,11 @@
 //   4、支持提供一个 emptyBuilder 用于显示数据为空的状态, 如果没有提供则使用默认的 Text('No Data')
 //   4、支持提供一个 dispose 用于销毁状态
 
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:shine_credit/res/colors.dart';
+import 'package:shine_credit/res/dimens.dart';
+import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/widgets/my_button.dart';
 
 class FutureBuilderWidget<T> extends StatefulWidget {
   const FutureBuilderWidget({
@@ -26,16 +30,16 @@ class FutureBuilderWidget<T> extends StatefulWidget {
   final void Function()? dispose;
 
   @override
-  _FutureBuilderWidgetState<T> createState() => _FutureBuilderWidgetState<T>();
+  FutureBuilderWidgetState<T> createState() => FutureBuilderWidgetState<T>();
 }
 
-class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
+class FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
   late Future<T> _future;
 
   @override
   void initState() {
     super.initState();
-    _future = widget.futureFunc();
+    _future = widget.futureFunc().catchError(_handleError);
   }
 
   @override
@@ -51,22 +55,65 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return widget.loadingBuilder?.call(context) ??
-              const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return widget.errorBuilder?.call(context, snapshot.error!, _retry) ??
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(snapshot.error.toString()),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _retry,
-                    child: const Text('Retry'),
-                  ),
-                ],
+              Container(
+                alignment: Alignment.center,
+                color: Colours.bg_gray_,
+                child: Column(
+                  children: const [
+                    Spacer(),
+                    Gaps.vGap16,
+                    CupertinoActivityIndicator(radius: 24.0),
+                    Gaps.vGap16,
+                    Text('Please wait a moment...',
+                        style: TextStyle(
+                            fontSize: Dimens.font_sp16,
+                            color: Colours.text_gray)),
+                    Spacer()
+                  ],
+                ),
               );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: widget.errorBuilder?.call(context, snapshot.error!, retry) ??
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Gaps.vGap16,
+                    const Text('Some Error, Please Retry',
+                        style: TextStyle(fontSize: 16)),
+                    Gaps.vGap16,
+                    MyDecoratedButton(
+                      radius: 24,
+                      minWidth: 100,
+                      onPressed: retry,
+                      text: 'Retry',
+                    ),
+                  ],
+                ),
+          );
         } else if (!snapshot.hasData) {
-          return widget.emptyBuilder?.call(context) ?? const Text('No Data');
+          if (widget.emptyBuilder == null) {
+            return Center(
+              child:
+                  widget.errorBuilder?.call(context, snapshot.error!, retry) ??
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Gaps.vGap16,
+                          const Text('Some Error, Please Retry',
+                              style: TextStyle(fontSize: 16)),
+                          Gaps.vGap16,
+                          MyDecoratedButton(
+                            radius: 24,
+                            minWidth: 100,
+                            onPressed: retry,
+                            text: 'Retry',
+                          ),
+                        ],
+                      ),
+            );
+          }
+          return widget.emptyBuilder!.call(context);
         } else {
           return widget.builder(context, snapshot.data as T);
         }
@@ -74,9 +121,13 @@ class _FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
     );
   }
 
-  void _retry() {
+  void retry() {
     setState(() {
-      _future = widget.futureFunc();
+      _future = widget.futureFunc().catchError(_handleError);
     });
+  }
+
+  void _handleError(e) {
+    print('Error: $e');
   }
 }

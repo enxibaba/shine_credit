@@ -2,7 +2,7 @@ class HttpApi {
   /// 正式环境BaseUrl
   static const String baseUrlProd = 'http://api.shineloa.com/';
 
-  static const String baseUrlPTest = 'http://147.139.33.203:48080/';
+  static const String baseUrlPTest = 'http://147.139.7.97:48080/';
 
   /// 测试环境BaseUrl
   static const String baseUrlTest = 'http://testapi.shineloa.com/';
@@ -88,4 +88,22 @@ class HttpApi {
 
   /// 查询借款记录详情
   static const String getRepayMentDetail = 'app-api/repay/getRepaymentDetails';
+
+  /// 修改用户昵称
+  static const String updateNickName = 'app-api/userCenter/update-nickname';
+
+  /// 获取用户信息
+  static const String getNickName = 'app-api/userCenter/get';
+
+  /// 获取产品列表
+  static const String getProductList = 'app-api/loan/getProductAppList';
+
+  /// 修改密码
+  static const String settingPwd = 'app-api/member/auth/update-password';
+
+  /// calculate order price
+  static const String calculateOrder = 'app-api/loan/calculateOrderInf';
+
+  /// apply order
+  static const String applyOrder = 'app-api/loan/applyOrder';
 }

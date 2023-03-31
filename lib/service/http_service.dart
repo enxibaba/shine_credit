@@ -12,8 +12,11 @@ import 'package:shine_credit/entities/loan_product_model.dart';
 import 'package:shine_credit/entities/loan_record_detail.dart';
 import 'package:shine_credit/entities/loan_record_model.dart';
 import 'package:shine_credit/entities/login_model.dart';
+import 'package:shine_credit/entities/nick_model.dart';
 import 'package:shine_credit/entities/no_auth_loan_model.dart';
 import 'package:shine_credit/entities/person_auth_model.dart';
+import 'package:shine_credit/entities/product_model.dart';
+import 'package:shine_credit/entities/repayment_index_model.dart';
 import 'package:shine_credit/entities/upload_file_model.dart';
 import 'package:shine_credit/net/http_api.dart';
 import 'package:shine_credit/service/api_result.dart';
@@ -38,7 +41,7 @@ abstract class RestClient {
 
   @POST(HttpApi.checkUpdate)
   @Extra({'showErrorMsg': true})
-  Future<ApiResult<LoginModel?>> checkUpdate({
+  Future<ApiResult<dynamic>> checkUpdate({
     @Body() required Map<String, dynamic> body,
     @Header('tenant-id') required String tenantId,
     @Header('appCode') required int appCode,
@@ -58,7 +61,7 @@ abstract class RestClient {
 
   @POST(HttpApi.loanProductList)
   @Extra({'showErrorMsg': false})
-  Future<ApiResult<LoanProductModel?>> loanProductList({
+  Future<ApiResult<LoanProductModel>> loanProductList({
     @Header('tenant-id') required String tenantId,
   });
 
@@ -104,11 +107,10 @@ abstract class RestClient {
   });
 
   @POST(HttpApi.liveNessCheckResult)
-  @Extra({'showErrorMsg': false})
-  Future<ApiResult<LivenessCheckResult>> liveNessCheckResult({
-    @Header('tenant-id') required String tenantId,
-    @Part() required String livenessId,
-  });
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<LivenessCheckResult>> liveNessCheckResult(
+      {@Header('tenant-id') required String tenantId,
+      @Body() required Map<String, dynamic> body});
 
   @POST(HttpApi.requestDictData)
   @Extra({'showErrorMsg': false})
@@ -137,6 +139,47 @@ abstract class RestClient {
   @POST(HttpApi.getRepayMentDetail)
   @Extra({'showErrorMsg': true})
   Future<ApiResult<LoanRecordDetail?>> getRepayMentDetail({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST(HttpApi.updateNickName)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<dynamic>> updateNickName({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST(HttpApi.getNickName)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<NickModel?>> getNickName({
+    @Header('tenant-id') required String tenantId,
+  });
+
+  @POST(HttpApi.getProductList)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<Product>> getProductList({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST(HttpApi.settingPwd)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<dynamic>> settingPwd({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST(HttpApi.calculateOrder)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<RepaymentIndexModel>> calculateOrder({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST(HttpApi.applyOrder)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<LoanProduct>> applyOrder({
     @Header('tenant-id') required String tenantId,
     @Body() required Map<String, dynamic> body,
   });

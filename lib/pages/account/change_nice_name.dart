@@ -1,52 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/utils/other_utils.dart';
-import 'package:shine_credit/widgets/change_notifier_manage.dart';
+import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_scroll_view.dart';
 
 class ChangeNickNamePage extends StatefulWidget {
-  const ChangeNickNamePage({super.key});
+  const ChangeNickNamePage({super.key, required this.name});
+
+  final String name;
 
   @override
   State<ChangeNickNamePage> createState() => _ChangeNickNamePageState();
 }
 
-class _ChangeNickNamePageState extends State<ChangeNickNamePage>
-    with ChangeNotifierMixin<ChangeNickNamePage> {
+class _ChangeNickNamePageState extends State<ChangeNickNamePage> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _nodeText1 = FocusNode();
 
-  bool _clickable = false;
-
-  @override
-  Map<ChangeNotifier, List<VoidCallback>?>? changeNotifier() {
-    final List<VoidCallback> callbacks = <VoidCallback>[_verify];
-    return <ChangeNotifier, List<VoidCallback>?>{
-      _controller: callbacks,
-      _nodeText1: null,
-    };
-  }
-
-  void _verify() {
+  Future<void> _changeNiceName() async {
     final String name = _controller.text;
 
-    bool clickable = true;
-    if (name.isEmpty || name.length < 6) {
-      clickable = false;
+    if (name.isEmpty) {
+      ToastUtils.show('NickName cannot be empty');
+      return;
     }
 
-    /// 状态不一样再刷新，避免不必要的setState
-    if (clickable != _clickable) {
-      setState(() {
-        _clickable = clickable;
-      });
+    if (name == widget.name) {
+      ToastUtils.show('NickName cannot be the same as the original one');
+      return;
+    }
+
+    ToastUtils.showLoading(msg: 'Updating...');
+    try {
+      final result = await DioUtils.instance.client
+          .updateNickName(tenantId: '1', body: {'nickName': _controller.text});
+
+      if (result.code == 0) {
+        ToastUtils.show('update Success');
+        if (context.mounted) {
+          final isBack = await Navigator.maybePop(context);
+          if (!isBack) {
+            await SystemNavigator.pop();
+          }
+        }
+      }
+    } finally {
+      ToastUtils.cancelToast();
     }
   }
 
-  void _setPwd() {}
+  @override
+  void initState() {
+    _controller.text = widget.name;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +72,7 @@ class _ChangeNickNamePageState extends State<ChangeNickNamePage>
             text: 'OK',
             textColor: Colors.white,
             backgroundColor: Colors.transparent,
-            onPressed: _clickable ? _setPwd : null,
+            onPressed: _changeNiceName,
           ),
         ),
         body: MyScrollView(
@@ -69,7 +81,7 @@ class _ChangeNickNamePageState extends State<ChangeNickNamePage>
           ]),
           padding: const EdgeInsets.all(15),
           children: [
-            PwdTextField(
+            NickNameTextField(
               hintText: 'Please enter your nickname',
               controller: _controller,
               focusNode: _nodeText1,
@@ -79,8 +91,8 @@ class _ChangeNickNamePageState extends State<ChangeNickNamePage>
   }
 }
 
-class PwdTextField extends StatelessWidget {
-  const PwdTextField({
+class NickNameTextField extends StatelessWidget {
+  const NickNameTextField({
     super.key,
     required this.controller,
     this.maxLength = 16,
@@ -128,6 +140,9 @@ class PwdTextField extends StatelessWidget {
               keyboardType: keyboardType,
               maxLength: maxLength,
               obscureText: isInputPwd,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+              ],
               style: const TextStyle(fontSize: 15),
               decoration: InputDecoration(
                 hintText: hintText,

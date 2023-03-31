@@ -240,19 +240,20 @@ GoRoute get $mineSettingRoute => GoRouteData.$route(
     );
 
 extension $MineSettingRouteExtension on MineSettingRoute {
-  static MineSettingRoute _fromState(GoRouterState state) =>
-      const MineSettingRoute();
+  static MineSettingRoute _fromState(GoRouterState state) => MineSettingRoute(
+        $extra: state.extra as NickModel?,
+      );
 
   String get location => GoRouteData.$location(
         '/mine-setting',
       );
 
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
 
-  void push(BuildContext context) => context.push(location);
+  void push(BuildContext context) => context.push(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 }
 
 extension $ModifyPwdRouteExtension on ModifyPwdRoute {
@@ -293,16 +294,18 @@ extension $ContactUsRouteExtension on ContactUsRoute {
 }
 
 GoRoute get $changeNickNameRoute => GoRouteData.$route(
-      path: '/change-nick-name',
+      path: '/change-nick-name/:name',
       factory: $ChangeNickNameRouteExtension._fromState,
     );
 
 extension $ChangeNickNameRouteExtension on ChangeNickNameRoute {
   static ChangeNickNameRoute _fromState(GoRouterState state) =>
-      const ChangeNickNameRoute();
+      ChangeNickNameRoute(
+        state.params['name']!,
+      );
 
   String get location => GoRouteData.$location(
-        '/change-nick-name',
+        '/change-nick-name/${Uri.encodeComponent(name)}',
       );
 
   void go(BuildContext context) => context.go(location);

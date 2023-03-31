@@ -16,10 +16,10 @@ class _ExitDialogState extends ConsumerState<ExitDialog> {
   @override
   Widget build(BuildContext context) {
     return BaseDialog(
-      title: '提示',
+      title: 'Warning',
       child: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Text('您确定要退出登录吗？', style: TextStyles.textSize16),
+        child: Text('You Should login in', style: TextStyles.textSize16),
       ),
       onPressed: () async {
         await ref.watch(authNotifierProvider.notifier).logout();

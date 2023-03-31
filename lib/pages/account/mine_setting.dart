@@ -1,25 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shine_credit/entities/nick_model.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/state/auth.dart';
 import 'package:shine_credit/state/home.dart';
+import 'package:shine_credit/utils/image_utils.dart';
+import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_card.dart';
+import 'package:sp_util/sp_util.dart';
 
 class MineSettingPage extends ConsumerStatefulWidget {
-  const MineSettingPage({super.key});
+  const MineSettingPage(this.nickModel, {super.key});
+
+  final NickModel? nickModel;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _MineSettingPageState();
 }
 
-class _MineSettingPageState extends ConsumerState<MineSettingPage> {
+class _MineSettingPageState extends ConsumerState<MineSettingPage>
+    with RouteAware {
+  bool hasSetPwd = SpUtil.getInt(Constant.initPwdStatus)! == 1;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    setState(() {
+      hasSetPwd = SpUtil.getInt(Constant.initPwdStatus)! == 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLogin = ref.watch(isLoginProvider);
@@ -34,18 +69,19 @@ class _MineSettingPageState extends ConsumerState<MineSettingPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Column(children: [
-                    const CircleAvatar(
-                        radius: 37.5,
-                        backgroundImage: AssetImage('assets/images/logo.webp')),
+                    LoadAssetImage(isLogin ? 'user_default' : 'user_unlogin',
+                        width: 75, height: 75, format: ImageFormat.png),
                     Gaps.vGap15,
-                    const Text(
-                      '121321231',
-                      style: TextStyle(fontSize: 15, color: Colours.text),
+                    Text(
+                      widget.nickModel?.nickname ??
+                          SpUtil.getString(Constant.phone)!,
+                      style: const TextStyle(fontSize: 15, color: Colours.text),
                     ),
                     Gaps.vGap5,
-                    const Text(
-                      '121321231',
-                      style: TextStyle(fontSize: 12, color: Colours.text_gray),
+                    Text(
+                      SpUtil.getString(Constant.phone)!,
+                      style: const TextStyle(
+                          fontSize: 12, color: Colours.text_gray),
                     ),
                     Gaps.vGap24,
                     MyCard(
@@ -94,12 +130,15 @@ class _MineSettingPageState extends ConsumerState<MineSettingPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 20),
                             child: Row(
-                              children: const [
-                                Text('Reset the login password',
-                                    style: TextStyle(
+                              children: [
+                                Text(
+                                    hasSetPwd
+                                        ? 'Reset the login password'
+                                        : 'Set a login password',
+                                    style: const TextStyle(
                                         fontSize: Dimens.font_sp15,
                                         color: Colours.text)),
-                                Spacer(),
+                                const Spacer(),
                               ],
                             ),
                           ),

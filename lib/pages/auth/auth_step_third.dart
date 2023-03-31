@@ -20,6 +20,8 @@ import 'package:shine_credit/widgets/my_card.dart';
 import 'package:shine_credit/widgets/my_scroll_view.dart';
 import 'package:shine_credit/widgets/selected_item.dart';
 
+import '../../main.dart';
+
 class AuthStepThird extends StatefulWidget {
   const AuthStepThird({super.key});
 
@@ -64,7 +66,7 @@ class _AuthStepThirdState extends State<AuthStepThird> {
           return SafeArea(
             child: Container(
               padding: const EdgeInsets.only(top: 20),
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.8,
               decoration: BoxDecoration(
                   color: context.backgroundColor,
                   borderRadius: const BorderRadius.only(
@@ -123,12 +125,14 @@ class _AuthStepThirdState extends State<AuthStepThird> {
       'accountNumber': accountNumber,
     };
 
-    ToastUtils.showLoading(msg: 'Uploading...');
+    ToastUtils.showLoading();
 
     try {
       final result = await DioUtils.instance.client
           .uploadBankCard(tenantId: '1', body: params);
+
       if (result.code == 0) {
+        ToastUtils.cancelToast();
         if (context.mounted) {
           final isBack = await Navigator.maybePop(context);
           if (!isBack) {
@@ -136,8 +140,9 @@ class _AuthStepThirdState extends State<AuthStepThird> {
           }
         }
       }
-    } finally {
-      ToastUtils.cancelToast();
+    } catch (e) {
+        log.d(e);
+        ToastUtils.show('something error, please try later');
     }
   }
 
@@ -157,26 +162,6 @@ class _AuthStepThirdState extends State<AuthStepThird> {
             ]),
             padding: const EdgeInsets.all(15),
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            bottomButton: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        LoadAssetImage('important', width: 15, height: 15),
-                        Gaps.hGap10,
-                        Text('Please confirm all information is true ',
-                            style: TextStyle(
-                                fontSize: Dimens.font_sp15,
-                                color: Colours.red)),
-                      ],
-                    ),
-                    Gaps.vGap15,
-                    MyDecoratedButton(
-                        onPressed: () => {}, text: 'Next', radius: 24),
-                  ],
-                )),
             children: [
               const AuthDetailHeader(),
               Gaps.vGap15,
@@ -229,6 +214,19 @@ class _AuthStepThirdState extends State<AuthStepThird> {
               const Text(Constant.bankTips,
                   style: TextStyle(
                       fontSize: Dimens.font_sp14, color: Colours.text_regular)),
+              Gaps.vGap32,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  LoadAssetImage('important', width: 15, height: 15),
+                  Gaps.hGap10,
+                  Text('Please confirm all information is true ',
+                      style: TextStyle(
+                          fontSize: Dimens.font_sp15, color: Colours.red)),
+                ],
+              ),
+              Gaps.vGap15,
+              MyDecoratedButton(onPressed: _verify, text: 'Next', radius: 24),
             ]));
   }
 }

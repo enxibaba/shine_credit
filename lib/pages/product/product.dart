@@ -1,9 +1,13 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:shine_credit/entities/product_model.dart';
 import 'package:shine_credit/main.dart';
+import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/utils/other_utils.dart';
+import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_refresh_list.dart';
@@ -19,19 +23,41 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage>
     with AutomaticKeepAliveClientMixin<ProductPage> {
   int _page = 1;
-  final int _maxPage = 3;
+  num _maxPage = 3;
   final StateType _stateType = StateType.loading;
 
-  final List<dynamic> _list = [];
+  List<ProductListItem> _list = [];
+  List<String> _bannerList = [];
 
-  Future<dynamic> _onRefresh() async {
-    log.d('_onRefresh');
-    await Future.delayed(const Duration(seconds: 2), () {
+  Future<void> _onRefresh() async {
+    try {
+      final data = await DioUtils.instance.client
+          .getProductList(tenantId: '1', body: {'pageNo': 1, 'pageSize': 10});
       setState(() {
-        _list.addAll(List.generate(10, (i) => 'xxxxxxxxxxx'));
-        _page++;
+        _page = 2;
+        _maxPage = data.data.product?.total ?? 0;
+        _list = data.data.product?.list ?? [];
+        _bannerList = data.data.banners ?? [];
       });
-    });
+    } catch (e) {
+      log.e(e);
+    }
+  }
+
+  Future<void> _onloadMore() async {
+    try {
+      final data = await DioUtils.instance.client.getProductList(
+          tenantId: '1', body: {'pageNo': _page, 'pageSize': 10});
+      setState(() {
+        _page++;
+        _maxPage = data.data.product?.total ?? 0;
+        final tmp = data.data.product?.list ?? [];
+        _list.addAll(tmp);
+        _bannerList = data.data.banners ?? [];
+      });
+    } catch (e) {
+      log.e(e);
+    }
   }
 
   @override
@@ -52,9 +78,10 @@ class _ProductPageState extends State<ProductPage>
         ),
         body: RefreshListView(
             stateType: _stateType,
-            hasMore: _page < _maxPage,
+            hasMore: _list.length < _maxPage,
             itemCount: _list.length,
             onRefresh: _onRefresh,
+            loadMore: _onloadMore,
             itemBuilder: (_, index) {
               if (index == 0) {
                 return Column(
@@ -63,11 +90,13 @@ class _ProductPageState extends State<ProductPage>
                     Container(
                       margin: const EdgeInsets.only(
                           left: 15.0, right: 15.0, top: 10.0),
-                      child: const AspectRatio(
-                          aspectRatio: 330 / 132,
-                          child: Placeholder(
-                            color: Colors.grey,
-                          )),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                            aspectRatio: 330 / 132, autoPlay: true),
+                        items: _bannerList.map((e) {
+                          return LoadImage(e);
+                        }).toList(),
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.only(left: 15.0, top: 15),
@@ -79,11 +108,12 @@ class _ProductPageState extends State<ProductPage>
                             color: Colors.black),
                       ),
                     ),
-                    ProductItem(callback: (p0) => log.d(p0))
+                    ProductItem(item: _list[index], callback: (p0) => log.d(p0))
                   ],
                 );
               }
-              return ProductItem(callback: (p0) => log.d(p0));
+              return ProductItem(
+                  item: _list[index], callback: (p0) => log.d(p0));
             }));
   }
 
@@ -94,10 +124,13 @@ class _ProductPageState extends State<ProductPage>
 class ProductItem extends StatelessWidget {
   const ProductItem({
     super.key,
+    required this.item,
     required this.callback,
   });
 
-  final GenericTypesCallback<String> callback;
+  final ProductListItem item;
+
+  final GenericTypesCallback<ProductListItem> callback;
 
   @override
   Widget build(BuildContext context) {
@@ -114,16 +147,16 @@ class ProductItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Text(
-                'PointKredit',
-                style: TextStyle(
+              Text(
+                item.productName ?? '',
+                style: const TextStyle(
                     fontSize: Dimens.font_sp18,
                     fontWeight: FontWeight.bold,
                     color: Colours.text),
               ),
               const Spacer(),
               MyButton(
-                  onPressed: () => callback('xxxx'),
+                  onPressed: () => callback(item),
                   text: 'Request',
                   radius: 4,
                   fontSize: Dimens.font_sp15,
@@ -132,14 +165,16 @@ class ProductItem extends StatelessWidget {
             ],
           ),
           Gaps.vGap15,
-          const Text(
-            'Lonan Amount: 50000',
-            style: TextStyle(fontSize: Dimens.font_sp18, color: Colours.text),
+          Text(
+            'Lonan Amount:  ₹${item.defaultLoanAmount}',
+            style: const TextStyle(
+                fontSize: Dimens.font_sp18, color: Colours.text),
           ),
           Gaps.vGap10,
-          const Text(
-            'high amount no mortgage 1 min',
-            style: TextStyle(fontSize: Dimens.font_sp15, color: Colours.text),
+          Text(
+            'high amount no mortgage ${item.disbursementTime}',
+            style: const TextStyle(
+                fontSize: Dimens.font_sp15, color: Colours.text),
           )
         ],
       ),

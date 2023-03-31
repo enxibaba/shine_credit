@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shine_credit/entities/nick_model.dart';
 import 'package:shine_credit/entities/person_auth_model.dart';
 import 'package:shine_credit/entities/uri_info.dart';
 import 'package:shine_credit/pages/account/about_us.dart';
@@ -157,12 +158,15 @@ class AboutUsRoute extends GoRouteData {
   TypedGoRoute<ModifyPwdRoute>(path: ModifyPwdRoute.path),
 ])
 class MineSettingRoute extends GoRouteData {
-  const MineSettingRoute();
+  MineSettingRoute({this.$extra});
+
+  final NickModel? $extra;
+
   static const path = '/mine-setting';
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const MineSettingPage();
+      MineSettingPage($extra);
 }
 
 class ModifyPwdRoute extends GoRouteData {
@@ -186,12 +190,13 @@ class ContactUsRoute extends GoRouteData {
 
 @TypedGoRoute<ChangeNickNameRoute>(path: ChangeNickNameRoute.path)
 class ChangeNickNameRoute extends GoRouteData {
-  const ChangeNickNameRoute();
-  static const path = '/change-nick-name';
+  ChangeNickNameRoute(this.name);
+  final String name;
+  static const path = '/change-nick-name/:name';
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const ChangeNickNamePage();
+      ChangeNickNamePage(name: name);
 }
 
 @TypedGoRoute<RepayMentDetailRoute>(path: RepayMentDetailRoute.path)

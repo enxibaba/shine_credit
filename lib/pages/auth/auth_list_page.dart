@@ -1,34 +1,190 @@
+// ignore_for_file: strict_raw_type, prefer_final_locals
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:liveness_plugin/liveness_plugin.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shine_credit/entities/loan_auth_model.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
-import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/router/routes.dart';
+import 'package:shine_credit/state/home.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
+import 'package:shine_credit/widgets/future_builder_widget.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_card.dart';
 import 'package:shine_credit/widgets/selected_item.dart';
-import 'package:shine_credit/widgets/state_layout.dart';
+import 'package:verify_plugin/verify_plugin.dart';
 
-class AuthListPage extends StatefulWidget {
+class AuthListPage extends ConsumerStatefulWidget {
   const AuthListPage({super.key});
 
   @override
-  State<AuthListPage> createState() => _AuthListPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AuthListPageState();
 }
 
-class _AuthListPageState extends State<AuthListPage>
-    with LivenessDetectionCallback {
+class _AuthListPageState extends ConsumerState<AuthListPage> with RouteAware {
+  final _realPlugin = VerifyPlugin();
+
+  late LoanAuthModel _model;
+
+  /// is start auto auth, when user select face auth, and the feace auth result is true,
+  /// change this value to true, and auto auth other auth
+  bool startAutoAuth = false;
+
+  final GlobalKey<FutureBuilderWidgetState<dynamic>> authListfreshenKey =
+      GlobalKey(debugLabel: 'authListfreshenKey');
+
   @override
   void initState() {
     super.initState();
+    _realPlugin.setMethodCallHandler(onInvoke);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    _realPlugin.setMethodCallHandler(null);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+
+    /// when user back from other page, refresh data
+    /// if current status is start auto auth, auto auth other auth
+    /// so call autoAuth method is refresh data method
+    authListfreshenKey.currentState?.retry();
+  }
+
+  Future<void> autoAuth() async {
+    if (startAutoAuth) {
+      /// wait 300ms, wait page build
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      if (context.mounted) {
+        if (_model.userCertification?.emergencyContact == false) {
+          const LoanAutoStepSecondRoute().push(context);
+          return;
+        }
+
+        if (_model.userCertification?.bandCard == false) {
+          const LoanAutoStepThirdRoute().push(context);
+          return;
+        }
+      }
+    }
+  }
+
+  Future onInvoke(MethodCall call) async {
+    if (call.method == 'detectionResult') {
+      final arguments = call.arguments as Map<dynamic, dynamic>;
+      final status = arguments['status'];
+      if (status == 1) {
+        Uint8List encryptResult = arguments['encryptResult'] as Uint8List;
+        String? filePath = arguments['file'] as String;
+
+        if (filePath != null && encryptResult != null) {
+          final imageBytes = await File(filePath).readAsBytes();
+          ToastUtils.showLoading();
+
+          final result = await DioUtils.instance.client
+              .liveNessCheckResult(tenantId: '1', body: {
+            'b1': encryptResult,
+            'b2': imageBytes,
+          });
+
+          ToastUtils.cancelToast();
+
+          if (result != null &&
+              result.data != null &&
+              result.data.result != null &&
+              result.data.result!) {
+            ToastUtils.show('Matching face success');
+
+            /// when use face auth success:
+            /// 1. change face auth status to true
+            /// 2. change startAutoAuth to true
+            /// 3. start auto auth
+            setState(() {
+              _model.userCertification?.faceAuthentication = true;
+              startAutoAuth = true;
+            });
+
+            autoAuth();
+          } else {
+            ToastUtils.show('Matching face failure');
+          }
+        }
+      } else {
+        ToastUtils.show('Matching face failure');
+      }
+    }
+  }
+
+  /// 向服务器License
+  Future _checkLicense() async {
+    bool auth = _model.userCertification!.authentication;
+
+    if (!auth) {
+      ToastUtils.show('Pleace complete authentication first');
+      return;
+    }
+
+    final status = await Permission.camera.status;
+    if (status.isGranted) {
+      // We didn't ask for permission yet or the permission has been denied before but not permanently.
+      _realPlugin.detection(false);
+      return;
+    }
+
+    // You can request multiple permissions at once.
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+    ].request();
+    if (statuses[Permission.camera] == PermissionStatus.granted) {
+      _realPlugin.detection(false);
+    }
+  }
+
+  /// go to lan
+
+  Future<LoanAuthModel?> requestData() async {
+    final model = await DioUtils.instance.client.userAuthStatus(tenantId: '1');
+    _model = model.data!;
+    autoAuth();
+    return model.data;
+  }
+
+  Future<void> _goLan() async {
+    if (_model.userCertification != null &&
+        _model.userCertification!.allCertification) {
+      final index = ref.read(homeProvider);
+      if (index != 0) {
+        ref.read(homeProvider.notifier).selectIndex(0);
+      }
+      final isBack = await Navigator.maybePop(context);
+      if (!isBack) {
+        await SystemNavigator.pop();
+      }
+    } else {
+      ToastUtils.show('Please complete certification ');
+    }
   }
 
   @override
@@ -39,19 +195,12 @@ class _AuthListPageState extends State<AuthListPage>
         backgroundColor: Colours.app_main,
       ),
       body: SafeArea(
-          child: FutureBuilder(
-        builder:
-            (BuildContext context, AsyncSnapshot<LoanAuthModel?> snapshot) {
-          if (snapshot.hasData) {
-            return _buildBody(snapshot.data!);
-          } else {
-            return StateLayout(
-                type:
-                    snapshot.hasError ? StateType.network : StateType.loading);
-          }
-        },
-        future: requestData(),
-      )),
+          child: FutureBuilderWidget(
+              key: authListfreshenKey,
+              futureFunc: requestData,
+              builder: (context, model) {
+                return _buildBody(model!);
+              })),
     );
   }
 
@@ -72,7 +221,7 @@ class _AuthListPageState extends State<AuthListPage>
                   LoanAuthActionItem(
                       image: 'auth/auth_idcard',
                       title: 'Authentication',
-                      check: loanAuthModel.userCertification!.authentication!,
+                      check: loanAuthModel.userCertification!.authentication,
                       onTap: () =>
                           {const LoanAutoStepFirstRoute().push(context)}),
                   Gaps.vGap15,
@@ -80,82 +229,30 @@ class _AuthListPageState extends State<AuthListPage>
                       image: 'auth/auth_face',
                       title: 'Face Authentication',
                       check:
-                          loanAuthModel.userCertification!.faceAuthentication!,
+                          loanAuthModel.userCertification!.faceAuthentication,
                       onTap: _checkLicense),
                   Gaps.vGap15,
                   LoanAuthActionItem(
                       image: 'auth/auth_contact',
                       title: 'Emergency Contact',
-                      check: loanAuthModel.userCertification!.emergencyContact!,
+                      check: loanAuthModel.userCertification!.emergencyContact,
                       onTap: () =>
                           const LoanAutoStepSecondRoute().push(context)),
                   Gaps.vGap15,
                   LoanAuthActionItem(
                       image: 'auth/auth_bank',
                       title: 'Bank Card',
-                      check: loanAuthModel.userCertification!.bandCard!,
+                      check: loanAuthModel.userCertification!.bandCard,
                       onTap: () =>
                           const LoanAutoStepThirdRoute().push(context)),
                   const Expanded(child: ColoredBox(color: Colours.bg_gray_)),
                   MyDecoratedButton(
-                      onPressed: () => {}, text: 'Get loan', radius: 24)
+                      onPressed: _goLan, text: 'Get loan', radius: 24)
                 ]),
           ),
         )
       ],
     );
-  }
-
-  Future<LoanAuthModel?> requestData() async {
-    final model = await DioUtils.instance.client.userAuthStatus(tenantId: '1');
-    return model.data;
-  }
-
-  Future<String?> getLivenessLicense(bool loading) async {
-    if (loading) {
-      ToastUtils.showLoading();
-    }
-    try {
-      final model =
-          await DioUtils.instance.client.liveNessLicense(tenantId: '1');
-      if (loading) {
-        ToastUtils.cancelToast();
-      }
-      return model.data.license;
-    } catch (e) {
-      if (loading) {
-        ToastUtils.cancelToast();
-      }
-      return null;
-    }
-  }
-
-  Future<void> _checkLicense() async {
-    // if (livenessLicenseKey.isEmpty) {
-    //   final tmp = await getLivenessLicense(true);
-    //   if (tmp.nullSafe.isEmpty) {
-    //     return;
-    //   }
-    // }
-
-    final String? result =
-        await LivenessPlugin.setLicenseAndCheck(Constant.livenessLicenseKey);
-    log.d(result);
-    if ('SUCCESS' == result) {
-      // license is valid
-      startLivenessDetection();
-    } else {
-      // license is invalid, expired/format error /appId is invalid
-    }
-  }
-
-  void startLivenessDetection() {
-    LivenessPlugin.startLivenessDetection(this);
-  }
-
-  @override
-  void onGetDetectionResult(bool isSuccess, Map? resultMap) {
-    log.d('isSuccess: $isSuccess', resultMap?.toString());
   }
 }
 

@@ -8,6 +8,8 @@ part 'router.g.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
 
+RouteObserver routeObserver = RouteObserver();
+
 /// This simple provider caches our GoRouter.
 /// This provider will never rebuild by design.
 @riverpod
@@ -21,5 +23,6 @@ GoRouter router(RouterRef ref) {
     initialLocation: SplashRoute.path,
     routes: notifier.routes,
     redirect: notifier.redirect,
+    observers: [routeObserver],
   );
 }

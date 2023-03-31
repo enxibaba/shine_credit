@@ -77,7 +77,7 @@ class MyDecoratedButton extends StatelessWidget {
           ),
           child: Text(
             text,
-            style: TextStyle(fontSize: fontSize),
+            style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
           )),
     );
   }
@@ -164,7 +164,7 @@ class MyButton extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: fontSize),
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
         ));
   }
 }

@@ -77,7 +77,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 await SystemNavigator.pop();
               }
             },
-            tooltip: 'Back',
             padding: const EdgeInsets.all(12.0),
             icon: LoadAssetImage(backImg),
           )

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
+import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/utils/other_utils.dart';
-import 'package:shine_credit/widgets/change_notifier_manage.dart';
+import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_scroll_view.dart';
+import 'package:sp_util/sp_util.dart';
 
 class ModifyPwdPage extends StatefulWidget {
   const ModifyPwdPage({super.key});
@@ -16,8 +19,7 @@ class ModifyPwdPage extends StatefulWidget {
   State<ModifyPwdPage> createState() => _ModifyPwdPageState();
 }
 
-class _ModifyPwdPageState extends State<ModifyPwdPage>
-    with ChangeNotifierMixin<ModifyPwdPage> {
+class _ModifyPwdPageState extends State<ModifyPwdPage> {
   //定义一个controller
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -27,50 +29,67 @@ class _ModifyPwdPageState extends State<ModifyPwdPage>
   final FocusNode _nodeText2 = FocusNode();
   final FocusNode _nodeText3 = FocusNode();
 
-  bool _clickable = false;
+  late bool hasSetPwd;
 
-  @override
-  Map<ChangeNotifier, List<VoidCallback>?>? changeNotifier() {
-    final List<VoidCallback> callbacks = <VoidCallback>[_verify];
-    return <ChangeNotifier, List<VoidCallback>?>{
-      _oldPasswordController: callbacks,
-      _passwordController: callbacks,
-      _passwordAgainController: callbacks,
-      _nodeText1: null,
-      _nodeText2: null,
-      _nodeText3: null,
-    };
-  }
-
-  void _verify() {
+  Future<void> _setPwd() async {
     final String oldPwd = _oldPasswordController.text;
     final String password = _passwordController.text;
     final String again = _passwordAgainController.text;
-    bool clickable = true;
-    if (oldPwd.isEmpty || oldPwd.length < 6) {
-      clickable = false;
-    }
-    if (password.isEmpty || password.length < 6) {
-      clickable = false;
+
+    if (hasSetPwd && oldPwd.isEmpty) {
+      ToastUtils.show('original password cannot be empty');
+      return;
     }
 
-    if (again.isEmpty || again.length < 6) {
-      clickable = false;
+    if (password.isEmpty) {
+      ToastUtils.show('password cannot be empty');
+      return;
+    }
+
+    if (password.length < 4) {
+      ToastUtils.show('The password must be between 4 and 16 digits long');
+      return;
+    }
+
+    if (again.isEmpty) {
+      ToastUtils.show('confirm password cannot be empty');
+      return;
     }
 
     if (again != password) {
-      clickable = false;
+      ToastUtils.show('The two passwords were entered inconsistently');
+      return;
     }
 
-    /// 状态不一样再刷新，避免不必要的setState
-    if (clickable != _clickable) {
-      setState(() {
-        _clickable = clickable;
+    ToastUtils.showLoading();
+
+    try {
+      final data =
+          await DioUtils.instance.client.settingPwd(tenantId: '1', body: {
+        'password': password,
+        'oldPassword': oldPwd ?? '123456',
       });
+
+      if (data.code == 0) {
+        ToastUtils.show('update Success');
+        SpUtil.putInt(Constant.initPwdStatus, 1);
+        if (context.mounted) {
+          final isBack = await Navigator.maybePop(context);
+          if (!isBack) {
+            await SystemNavigator.pop();
+          }
+        }
+      }
+    } catch (_) {
+      ToastUtils.cancelToast();
     }
   }
 
-  void _setPwd() {}
+  @override
+  void initState() {
+    hasSetPwd = SpUtil.getInt(Constant.initPwdStatus)! == 1;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,23 +103,24 @@ class _ModifyPwdPageState extends State<ModifyPwdPage>
             text: 'OK',
             textColor: Colors.white,
             backgroundColor: Colors.transparent,
-            onPressed: _clickable ? _setPwd : null,
+            onPressed: _setPwd,
           ),
         ),
         body: MyScrollView(
           keyboardConfig: Utils.getKeyboardActionsConfig(context, <FocusNode>[
-            _nodeText1,
+            if (hasSetPwd) _nodeText1,
             _nodeText2,
             _nodeText3,
           ]),
           padding: const EdgeInsets.all(15),
           children: [
-            PwdTextField(
-              hintText: 'Please enter old password',
-              controller: _oldPasswordController,
-              focusNode: _nodeText1,
-            ),
-            Gaps.vGap15,
+            if (hasSetPwd)
+              PwdTextField(
+                hintText: 'Please enter old password',
+                controller: _oldPasswordController,
+                focusNode: _nodeText1,
+              ),
+            if (hasSetPwd) Gaps.vGap15,
             PwdTextField(
               hintText: 'Please enter new password',
               controller: _passwordController,

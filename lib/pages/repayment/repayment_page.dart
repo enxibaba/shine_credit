@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shine_credit/entities/loan_record_model.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
+import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/res/styles.dart';
@@ -19,6 +20,7 @@ import 'package:shine_credit/widgets/my_card.dart';
 import 'package:shine_credit/widgets/my_refresh_list.dart';
 import 'package:shine_credit/widgets/selected_item.dart';
 import 'package:shine_credit/widgets/state_layout.dart';
+import 'package:sp_util/sp_util.dart';
 
 class RepayMentPage extends ConsumerStatefulWidget {
   const RepayMentPage({super.key});
@@ -34,17 +36,22 @@ class LoanRecordSession {
   final List<LoanRecordModel> list;
 }
 
-class _RepayMentPageState extends ConsumerState<RepayMentPage>
-    with AutomaticKeepAliveClientMixin<RepayMentPage> {
+class _RepayMentPageState extends ConsumerState<RepayMentPage> {
   final int _page = 1;
   final int _maxPage = 3;
   final StateType _stateType = StateType.loading;
+  bool showEmpty = false;
 
   List<LoanRecordSession> _list = [];
 
   Future<void> _onRefresh() async {
+    if (SpUtil.getString(Constant.accessToken)!.isEmpty) {
+      setState(() {
+        showEmpty = true;
+      });
+      return;
+    }
     final data = await DioUtils.instance.client.getLoanRecord(tenantId: '1');
-
     // 把 List<LoanRecordModel>  转换成 List<LoanRecordSession>
     final list = <LoanRecordSession>[];
     for (final element in data.data) {
@@ -56,8 +63,10 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage>
         session.list.add(element);
       }
     }
+
     setState(() {
       _list = list;
+      showEmpty = list.isEmpty;
     });
   }
 
@@ -69,7 +78,6 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
         backgroundColor: Colours.bg_gray_,
         appBar: const MyAppBar(
@@ -79,7 +87,7 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage>
         ),
         body: RefreshListView(
             key: const Key('repayment_page'),
-            emptyWidget: const RepayMentEmpty(),
+            emptyWidget: showEmpty ? const RepayMentEmpty() : null,
             padding: const EdgeInsets.all(15),
             stateType: _stateType,
             hasMore: _page < _maxPage,
@@ -93,9 +101,6 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage>
                           .push(context));
             }));
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class RepayMentItem extends StatelessWidget {

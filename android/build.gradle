@@ -15,6 +15,11 @@ allprojects {
     repositories {
          google()
          mavenCentral()
+         maven {
+            url 'https://maven.accuauth.com/repository/maven-releases/'
+            // If your gradle version is greater than 7.0, you need to add the following configuration to allow pulling aar via http
+            allowInsecureProtocol = true
+         }
     }
 }
 

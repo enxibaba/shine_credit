@@ -6,6 +6,7 @@
 //  Copyright © 2023年 JSONConverter. All rights reserved.
 //
 
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'loan_product_model.g.dart';
@@ -22,21 +23,25 @@ class LoanProductModel extends Object {
   factory LoanProductModel.fromJson(Map<String, dynamic> srcJson) =>
       _$LoanProductModelFromJson(srcJson);
 
-  List<LoanAmountDetails>? amountDetails;
+  @JsonKey(name: 'amountDetails', defaultValue: [])
+  List<LoanAmountDetails> amountDetails;
 
   String? failMessage;
 
-  bool? loanStatus;
+  @JsonKey(name: 'loanStatus', defaultValue: false)
+  bool loanStatus;
 
-  List<LoanProduct>? product;
+  @JsonKey(name: 'product', defaultValue: [])
+  List<LoanProduct> product;
 
-  List<num>? tenure;
+  @JsonKey(name: 'tenure', defaultValue: [])
+  List<num> tenure;
 
   Map<String, dynamic> toJson() => _$LoanProductModelToJson(this);
 }
 
 @JsonSerializable()
-class LoanAmountDetails extends Object {
+class LoanAmountDetails extends Object with EquatableMixin {
   LoanAmountDetails(
     this.amount,
     this.check,
@@ -47,11 +52,16 @@ class LoanAmountDetails extends Object {
 
   double? amount;
 
-  bool? check;
+  @JsonKey(name: 'check', defaultValue: false)
+  bool check;
 
-  List<int>? productIds;
+  @JsonKey(name: 'productIds', defaultValue: [])
+  List<int> productIds;
 
   Map<String, dynamic> toJson() => _$LoanAmountDetailsToJson(this);
+
+  @override
+  List<Object?> get props => [amount, productIds];
 }
 
 @JsonSerializable()

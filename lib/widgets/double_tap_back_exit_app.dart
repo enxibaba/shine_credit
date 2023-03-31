@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
 
-/// 双击返回退出
+/// double tap back exit app
 class DoubleTapBackExitApp extends StatefulWidget {
   const DoubleTapBackExitApp({
     super.key,
@@ -34,7 +34,7 @@ class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
     if (_lastTime == null ||
         DateTime.now().difference(_lastTime!) > widget.duration) {
       _lastTime = DateTime.now();
-      ToastUtils.show('再次点击退出应用');
+      ToastUtils.show('click again exit app');
       return Future.value(false);
     }
     ToastUtils.cancelToast();

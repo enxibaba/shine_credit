@@ -6,6 +6,8 @@
 //  Copyright © 2023年 JSONConverter. All rights reserved.
 //
 
+// ignore_for_file: use_if_null_to_convert_nulls_to_bools
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_config_model.g.dart';

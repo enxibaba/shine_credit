@@ -47,17 +47,19 @@ class AuthUserCertification extends Object {
   factory AuthUserCertification.fromJson(Map<String, dynamic> srcJson) =>
       _$AuthUserCertificationFromJson(srcJson);
 
-  @JsonKey(name: 'authentication')
-  bool? authentication;
+  @JsonKey(name: 'authentication', defaultValue: false)
+  bool authentication;
 
-  @JsonKey(name: 'bandCard')
-  bool? bandCard;
+  @JsonKey(name: 'bandCard', defaultValue: false)
+  bool bandCard;
 
-  @JsonKey(name: 'emergencyContact')
-  bool? emergencyContact;
+  @JsonKey(name: 'emergencyContact', defaultValue: false)
+  bool emergencyContact;
 
-  @JsonKey(name: 'faceAuthentication')
-  bool? faceAuthentication;
+  @JsonKey(name: 'faceAuthentication', defaultValue: false)
+  bool faceAuthentication;
 
   Map<String, dynamic> toJson() => _$AuthUserCertificationToJson(this);
+
+  bool get allCertification => authentication && bandCard && emergencyContact && faceAuthentication;
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../res/colors.dart';
 import '../res/gaps.dart';
 import '../res/styles.dart';
 import '../utils/device_utils.dart';
@@ -37,17 +36,7 @@ class BaseDialog extends StatelessWidget {
     final Widget bottomButton = Row(
       children: <Widget>[
         _DialogButton(
-          text: '取消',
-          textColor: Colours.text_gray,
-          onPressed: () => onCancel,
-        ),
-        const SizedBox(
-          height: 48.0,
-          width: 0.6,
-          child: VerticalDivider(),
-        ),
-        _DialogButton(
-          text: '确定',
+          text: 'sure',
           textColor: Theme.of(context).primaryColor,
           onPressed: onPressed,
         ),

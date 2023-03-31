@@ -9,7 +9,7 @@ class ToastUtils {
     EasyLoading.dismiss();
   }
 
-  static void showLoading({String msg = 'loading...'}) {
+  static void showLoading({String msg = 'Please wait a moment...'}) {
     EasyLoading.show(status: msg);
   }
 }

@@ -1,15 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/router/router.dart';
-import 'package:shine_credit/utils/device_utils.dart';
 import 'package:shine_credit/utils/handle_error_utils.dart';
+import 'package:shine_credit/utils/state_logger.dart';
 import 'package:sp_util/sp_util.dart';
-
-import 'utils/state_logger.dart';
 
 final log = Logger(
   printer: PrettyPrinter(),
@@ -17,21 +18,15 @@ final log = Logger(
 
 Future<void> main() async {
   // 确保初始化完成
-  WidgetsFlutterBinding.ensureInitialized();
+  // ignore: prefer_final_locals
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  if (Device.isAndroid) {
-    const SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
-      /// 透明状态栏
-      statusBarColor: Colours.app_main,
-      systemNavigationBarColor: Colours.app_main,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    );
-    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  }
-
   await SpUtil.getInstance();
+
+  configLoading();
 
   /// 异常处理
   handleError(() => runApp(
@@ -47,14 +42,21 @@ Future<void> main() async {
       ));
 }
 
-// 这里我们使用Rivderpod提供的 "ConsumerWidget" 而不是flutter自带的 "StatelessWidget"。
+void configLoading() {
+  EasyLoading.instance
+    ..maskType = EasyLoadingMaskType.black
+    ..fontSize = 16.0
+    ..textPadding = const EdgeInsets.only(bottom: 30)
+    ..textColor = Colors.white;
+}
+
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-
+    FlutterNativeSplash.remove();
     return MaterialApp.router(
       builder: (BuildContext context, Widget? child) {
         child = MediaQuery(

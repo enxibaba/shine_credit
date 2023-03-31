@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:shine_credit/entities/person_auth_model.dart';
 import 'package:shine_credit/net/http_utils.dart';
@@ -7,7 +7,6 @@ import 'package:shine_credit/pages/auth/widgets/auth_detial_header.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
-import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
@@ -267,7 +266,10 @@ class _AuthStepFirstDetailState extends State<AuthStepFirstDetail> {
         .updateAdJustInfo(tenantId: '1', info: tmp);
     if (data.code == 0 && context.mounted) {
       ToastUtils.cancelToast();
-      GoRouter.of(context).pushReplacementNamed(LoanAutoRoute.path);
+      final isBack = await Navigator.maybePop(context);
+      if (!isBack) {
+        await SystemNavigator.pop();
+      }
     }
   }
 }

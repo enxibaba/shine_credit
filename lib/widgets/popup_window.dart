@@ -1,12 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-///create by elileo on 2018/12/21
 ///https://github.com/elileo1/flutter_travel_friends/blob/master/lib/widget/PopupWindow.dart
-///
-/// weilu update：
-/// 1.去除了IntrinsicWidth限制，添加了默认蒙版。
-/// 2.简化position计算。
 const Duration _kWindowDuration = Duration.zero;
 const double _kWindowCloseIntervalEnd = 2.0 / 3.0;
 const double _kWindowScreenPadding = 0.001;

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:shine_credit/res/gaps.dart';
 
 class MyScrollView extends StatelessWidget {
   /// 注意：同时存在底部按钮与keyboardConfig配置时，为保证软键盘弹出高度正常。需要在`Scaffold`使用 `resizeToAvoidBottomInset: defaultTargetPlatform != TargetPlatform.iOS,`
@@ -64,7 +65,9 @@ class MyScrollView extends StatelessWidget {
       contents = Column(
         children: <Widget>[
           Expanded(child: contents),
-          SafeArea(top: false, child: bottomButton!)
+          SafeArea(top: false, child: bottomButton!),
+          Gaps.vGap16,
+          Padding(padding: MediaQuery.of(context).viewInsets),
         ],
       );
     }

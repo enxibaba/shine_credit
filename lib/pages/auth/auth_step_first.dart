@@ -52,7 +52,7 @@ class _AuthStepFirstState extends State<AuthStepFirst> {
   var _bankCardFrontKey = UniqueKey();
 
   Future<void> _ocrImageInfo() async {
-    ToastUtils.showLoading(msg: 'Loading...');
+    ToastUtils.showLoading();
 
     final List<Map<String, String>> dataList = [];
 

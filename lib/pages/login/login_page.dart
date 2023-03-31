@@ -99,6 +99,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
     final String password = _passwordController.text;
     ToastUtils.showLoading();
 
+    /// 保存用户号码
+    SpUtil.putString(Constant.phone, name);
+
     if (_isLogin) {
       ref
           .watch(authNotifierProvider.notifier)
@@ -226,6 +229,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
               focusNode: _nodeText2),
         ),
       ),
+      Gaps.vGap32
     ];
   }
 }

@@ -14,6 +14,7 @@ class Constant {
   static const String keyGuide = 'keyGuide';
   static const String isAgree = 'isAgree';
   static const String phone = 'phone';
+  static const String initPwdStatus = 'INIT_PWD_STATUS';
   static const String userId = 'userId';
   static const String accessToken = 'accessToken';
   static const String refreshToken = 'refreshToken';

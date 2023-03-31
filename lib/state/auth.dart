@@ -45,6 +45,7 @@ class AuthNotifier extends _$AuthNotifier {
 
   /// Mock of a request performed on logout (might be common, or not, whatevs).
   Future<void> logout() async {
+    await removeUserInfo();
     await Future.delayed(networkRoundTripTime);
     state = const AsyncValue<User>.data(User.signedOut());
   }

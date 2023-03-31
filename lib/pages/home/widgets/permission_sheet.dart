@@ -25,6 +25,7 @@ class PermissionSheet extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: const <Widget>[
+                    Gaps.vGap16,
                     Text(Constant.privacyTitle),
                     Gaps.vGap16,
                     PermissionListTitle(

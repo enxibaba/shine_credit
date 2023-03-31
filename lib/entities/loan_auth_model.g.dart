@@ -28,10 +28,10 @@ Map<String, dynamic> _$LoanAuthModelToJson(LoanAuthModel instance) =>
 AuthUserCertification _$AuthUserCertificationFromJson(
         Map<String, dynamic> json) =>
     AuthUserCertification(
-      json['authentication'] as bool?,
-      json['bandCard'] as bool?,
-      json['emergencyContact'] as bool?,
-      json['faceAuthentication'] as bool?,
+      json['authentication'] as bool? ?? false,
+      json['bandCard'] as bool? ?? false,
+      json['emergencyContact'] as bool? ?? false,
+      json['faceAuthentication'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$AuthUserCertificationToJson(
