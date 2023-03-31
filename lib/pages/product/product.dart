@@ -1,11 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shine_credit/entities/product_model.dart';
 import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/state/home.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
@@ -13,17 +15,17 @@ import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_refresh_list.dart';
 import 'package:shine_credit/widgets/state_layout.dart';
 
-class ProductPage extends StatefulWidget {
+class ProductPage extends ConsumerStatefulWidget {
   const ProductPage({super.key});
 
   @override
-  State<ProductPage> createState() => _ProductPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProductPageState();
 }
 
-class _ProductPageState extends State<ProductPage>
+class _ProductPageState extends ConsumerState<ProductPage>
     with AutomaticKeepAliveClientMixin<ProductPage> {
   int _page = 1;
-  num _maxPage = 3;
+  num _maxPage = 10;
   final StateType _stateType = StateType.loading;
 
   List<ProductListItem> _list = [];
@@ -85,35 +87,43 @@ class _ProductPageState extends State<ProductPage>
             itemBuilder: (_, index) {
               if (index == 0) {
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 10.0),
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                            aspectRatio: 330 / 132, autoPlay: true),
-                        items: _bannerList.map((e) {
-                          return LoadImage(e);
-                        }).toList(),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 10.0),
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                              aspectRatio: 330 / 132, autoPlay: true),
+                          items: _bannerList.map((e) {
+                            return LoadImage(e);
+                          }).toList(),
+                        ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 15.0, top: 15),
-                      child: Text(
-                        'Product List',
-                        style: TextStyle(
-                            fontSize: Dimens.font_sp18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 15.0, top: 15),
+                        child: Text(
+                          'Product List',
+                          style: TextStyle(
+                              fontSize: Dimens.font_sp18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                        ),
                       ),
-                    ),
-                    ProductItem(item: _list[index], callback: (p0) => log.d(p0))
-                  ],
-                );
+                      ProductItem(
+                          item: _list[index],
+                          callback: (p0) => {
+                                log.d(p0),
+                                ref.read(homeProvider.notifier).selectIndex(0)
+                              })
+                    ]);
               }
               return ProductItem(
-                  item: _list[index], callback: (p0) => log.d(p0));
+                  item: _list[index],
+                  callback: (p0) => {
+                        log.d(p0),
+                        ref.read(homeProvider.notifier).selectIndex(0)
+                      });
             }));
   }
 

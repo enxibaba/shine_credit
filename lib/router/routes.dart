@@ -20,6 +20,7 @@ import 'package:shine_credit/pages/home/splash_page.dart';
 import 'package:shine_credit/pages/home/webview_page.dart';
 import 'package:shine_credit/pages/login/login_page.dart';
 import 'package:shine_credit/pages/repayment/repayment_detail.dart';
+import 'package:shine_credit/pages/repayment/rollover_payment.dart';
 
 part 'routes.g.dart';
 
@@ -199,7 +200,10 @@ class ChangeNickNameRoute extends GoRouteData {
       ChangeNickNamePage(name: name);
 }
 
-@TypedGoRoute<RepayMentDetailRoute>(path: RepayMentDetailRoute.path)
+@TypedGoRoute<RepayMentDetailRoute>(path: RepayMentDetailRoute.path, routes: [
+  TypedGoRoute<RolloverPayMentDetailRoute>(
+      path: RolloverPayMentDetailRoute.path),
+])
 class RepayMentDetailRoute extends GoRouteData {
   const RepayMentDetailRoute(this.id);
   final String id;
@@ -208,4 +212,14 @@ class RepayMentDetailRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       RepayMentDetail(id: state.params['id'] ?? '');
+}
+
+class RolloverPayMentDetailRoute extends GoRouteData {
+  const RolloverPayMentDetailRoute(this.id);
+  final String id;
+  static const path = 'rollover-payment-detail/:id';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      RolloverPayMent(id: state.params['id'] ?? '');
 }

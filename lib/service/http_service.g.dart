@@ -193,7 +193,7 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<ApiResult<LoanProductModel>> loanProductList(
+  Future<ApiResult<LoanProductModel?>> loanProductList(
       {required tenantId}) async {
     const _extra = <String, dynamic>{'showErrorMsg': false};
     final queryParameters = <String, dynamic>{};
@@ -213,9 +213,11 @@ class _RestClient implements RestClient {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResult<LoanProductModel>.fromJson(
+    final value = ApiResult<LoanProductModel?>.fromJson(
       _result.data!,
-      (json) => LoanProductModel.fromJson(json as Map<String, dynamic>),
+      (json) => json == null
+          ? null
+          : LoanProductModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
@@ -795,6 +797,70 @@ class _RestClient implements RestClient {
     final value = ApiResult<LoanProduct>.fromJson(
       _result.data!,
       (json) => LoanProduct.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<RolloverPayMentModel?>> rolloverPayMentDetail({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<RolloverPayMentModel>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/repay/getDeferDetails',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<RolloverPayMentModel?>.fromJson(
+      _result.data!,
+      (json) => json == null
+          ? null
+          : RolloverPayMentModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResult<RepayMentUrl>> initiateRepayment({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<RepayMentUrl>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/repay/initiateRepayment',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<RepayMentUrl>.fromJson(
+      _result.data!,
+      (json) => RepayMentUrl.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

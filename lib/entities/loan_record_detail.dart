@@ -112,9 +112,9 @@ class LoanRecordDetail extends Object {
   }
 
   //展示还款按钮
-  bool get repayHide {
+  bool get repayShow {
     // 0,1,2,3,4,5,6,7,8,9,11
-    return status == 0 ||
+    if (status == 0 ||
         status == 1 ||
         status == 2 ||
         status == 3 ||
@@ -124,7 +124,11 @@ class LoanRecordDetail extends Object {
         status == 7 ||
         status == 8 ||
         status == 9 ||
-        status == 11;
+        status == 11) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   //展示展期按钮

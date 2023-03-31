@@ -106,4 +106,10 @@ class HttpApi {
 
   /// apply order
   static const String applyOrder = 'app-api/loan/applyOrder';
+
+  /// repay order
+  static const String initiateRepayment = 'app-api/repay/initiateRepayment';
+
+  /// get roll over payMent detail
+  static const String rolloverPayMentDetail = 'app-api/repay/getDeferDetails';
 }

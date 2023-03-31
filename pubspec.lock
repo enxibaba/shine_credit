@@ -321,6 +321,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.5"
+  facebook_app_events:
+    dependency: "direct main"
+    description:
+      name: facebook_app_events
+      sha256: b67b786041686ef564fec025275bae0546bd6c762ee2efa333b0ead7149d6750
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.18.3"
   fake_async:
     dependency: transitive
     description:

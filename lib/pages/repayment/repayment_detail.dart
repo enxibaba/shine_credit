@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shine_credit/entities/loan_record_detail.dart';
+import 'package:shine_credit/entities/uri_info.dart';
+import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
-
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/router/router.dart';
+import 'package:shine_credit/router/routes.dart';
+import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/future_builder_widget.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
@@ -19,16 +23,56 @@ class RepayMentDetail extends StatefulWidget {
   State<RepayMentDetail> createState() => _RepayMentDetailState();
 }
 
-class _RepayMentDetailState extends State<RepayMentDetail> {
+class _RepayMentDetailState extends State<RepayMentDetail> with RouteAware {
+  final GlobalKey<FutureBuilderWidgetState<dynamic>> repayMentDetailFreshenKey =
+      GlobalKey(debugLabel: 'repayMentDetailFreshenKey');
+
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    repayMentDetailFreshenKey.currentState?.retry();
   }
 
   Future<LoanRecordDetail?> requstData() async {
     final data = await DioUtils.instance.client
         .getRepayMentDetail(tenantId: '1', body: {'orderId': widget.id});
     return data.data;
+  }
+
+  Future<void> repayMent() async {
+    ToastUtils.showLoading();
+
+    try {
+      final data = await DioUtils.instance.client.initiateRepayment(
+          tenantId: '1', body: {'orderId': widget.id, 'type': 1});
+      final url = data.data.fileUrl ?? '';
+
+      if (url.isNotEmpty && context.mounted) {
+        final info = UriInfo('Payment', url);
+        WebViewRoute(info.encodingJsonString()).push(context);
+      }
+    } catch (e) {
+      log.e(e);
+    } finally {
+      ToastUtils.cancelToast();
+    }
   }
 
   @override
@@ -41,6 +85,7 @@ class _RepayMentDetailState extends State<RepayMentDetail> {
         backgroundColor: Colours.bg_gray_,
         body: SafeArea(
             child: FutureBuilderWidget(
+                key: repayMentDetailFreshenKey,
                 futureFunc: requstData,
                 builder: (context, data) {
                   return CustomScrollView(slivers: [
@@ -150,27 +195,40 @@ class _RepayMentDetailState extends State<RepayMentDetail> {
                                       ])),
                               const Expanded(
                                   child: ColoredBox(color: Colours.bg_gray_)),
-                              MyDecoratedButton(
-                                  onPressed: () => {},
-                                  text: 'Confirmed payment',
-                                  radius: 24),
+                              IgnorePointer(
+                                ignoring: !(data?.repayShow ?? false),
+                                child: Opacity(
+                                  opacity: (data?.repayShow ?? false) ? 1 : 0.4,
+                                  child: MyDecoratedButton(
+                                      onPressed: repayMent,
+                                      text: 'Confirmed payment',
+                                      radius: 24),
+                                ),
+                              ),
                               Gaps.vGap15,
-                              OutlinedButton(
-                                  style: ButtonStyle(
-                                      minimumSize: MaterialStateProperty.all(
-                                          const Size(double.infinity, 48)),
-                                      side: MaterialStateProperty.all(
-                                          const BorderSide(
-                                              color: Colours.app_main)),
-                                      shape: MaterialStateProperty.all(
-                                          const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(24))))),
-                                  onPressed: () => {},
-                                  child: const Text('Detay payment',
-                                      style: TextStyle(
-                                          color: Colours.app_main,
-                                          fontSize: Dimens.font_sp18)))
+                              IgnorePointer(
+                                ignoring: !(data?.extensionShow ?? false),
+                                child: Opacity(
+                                  opacity:
+                                      (data?.extensionShow ?? false) ? 1 : 0.4,
+                                  child: OutlinedButton(
+                                      style: ButtonStyle(
+                                          minimumSize: MaterialStateProperty.all(
+                                              const Size(double.infinity, 48)),
+                                          side: MaterialStateProperty.all(
+                                              const BorderSide(
+                                                  color: Colours.app_main)),
+                                          shape: MaterialStateProperty.all(
+                                              const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(24))))),
+                                      onPressed: () =>
+                                          RolloverPayMentDetailRoute(widget.id),
+                                      child: const Text('Detay payment',
+                                          style:
+                                              TextStyle(color: Colours.app_main, fontSize: Dimens.font_sp18))),
+                                ),
+                              )
                             ])))
                   ]);
                 })));

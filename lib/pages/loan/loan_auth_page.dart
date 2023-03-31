@@ -46,7 +46,7 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
     });
   }
 
-  Future<LoanProductModel> requestData() async {
+  Future<LoanProductModel?> requestData() async {
     final data = await DioUtils.instance.client.loanProductList(tenantId: '1');
     loanProductModel = data.data;
     return data.data;
@@ -104,7 +104,7 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colours.bg_gray_,
-        body: FutureBuilderWidget<LoanProductModel>(
+        body: FutureBuilderWidget(
             futureFunc: requestData,
             builder: (context, data) {
               return CustomScrollView(slivers: [
@@ -128,7 +128,7 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
                         ),
                       ),
                       LoanAuthHeader(
-                          model: data, callback: (p0) => _selectProduct = p0),
+                          model: data!, callback: (p0) => _selectProduct = p0),
                     ],
                   ),
                   Gaps.vGap16,
@@ -267,7 +267,7 @@ class ApplySuccessDialog extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
-                            color: Colours.bg_gray_,
+                            color: Colours.app_main_bg,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Padding(

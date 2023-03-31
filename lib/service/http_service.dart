@@ -16,7 +16,9 @@ import 'package:shine_credit/entities/nick_model.dart';
 import 'package:shine_credit/entities/no_auth_loan_model.dart';
 import 'package:shine_credit/entities/person_auth_model.dart';
 import 'package:shine_credit/entities/product_model.dart';
+import 'package:shine_credit/entities/repay_ment_url.dart';
 import 'package:shine_credit/entities/repayment_index_model.dart';
+import 'package:shine_credit/entities/rollover_pay_ment_model.dart';
 import 'package:shine_credit/entities/upload_file_model.dart';
 import 'package:shine_credit/net/http_api.dart';
 import 'package:shine_credit/service/api_result.dart';
@@ -61,7 +63,7 @@ abstract class RestClient {
 
   @POST(HttpApi.loanProductList)
   @Extra({'showErrorMsg': false})
-  Future<ApiResult<LoanProductModel>> loanProductList({
+  Future<ApiResult<LoanProductModel?>> loanProductList({
     @Header('tenant-id') required String tenantId,
   });
 
@@ -180,6 +182,20 @@ abstract class RestClient {
   @POST(HttpApi.applyOrder)
   @Extra({'showErrorMsg': true})
   Future<ApiResult<LoanProduct>> applyOrder({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST(HttpApi.rolloverPayMentDetail)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<RolloverPayMentModel?>> rolloverPayMentDetail({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST(HttpApi.initiateRepayment)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<RepayMentUrl>> initiateRepayment({
     @Header('tenant-id') required String tenantId,
     @Body() required Map<String, dynamic> body,
   });

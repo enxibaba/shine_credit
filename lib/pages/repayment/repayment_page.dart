@@ -51,23 +51,27 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage> {
       });
       return;
     }
-    final data = await DioUtils.instance.client.getLoanRecord(tenantId: '1');
-    // 把 List<LoanRecordModel>  转换成 List<LoanRecordSession>
-    final list = <LoanRecordSession>[];
-    for (final element in data.data) {
-      final session = list
-          .firstWhereOrNull((element2) => element2.title == element.applyTime);
-      if (session == null) {
-        list.add(LoanRecordSession(element.applyTime.nullSafe, [element]));
-      } else {
-        session.list.add(element);
+    try {
+      final data = await DioUtils.instance.client.getLoanRecord(tenantId: '1');
+      // 把 List<LoanRecordModel>  转换成 List<LoanRecordSession>
+      final list = <LoanRecordSession>[];
+      for (final element in data.data) {
+        final session = list.firstWhereOrNull(
+            (element2) => element2.title == element.applyTime);
+        if (session == null) {
+          list.add(LoanRecordSession(element.applyTime.nullSafe, [element]));
+        } else {
+          session.list.add(element);
+        }
       }
-    }
 
-    setState(() {
-      _list = list;
-      showEmpty = list.isEmpty;
-    });
+      setState(() {
+        _list = list;
+        showEmpty = list.isEmpty;
+      });
+    } catch (e) {
+      throw Exception('error');
+    }
   }
 
   @override

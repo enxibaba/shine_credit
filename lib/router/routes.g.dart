@@ -319,6 +319,12 @@ extension $ChangeNickNameRouteExtension on ChangeNickNameRoute {
 GoRoute get $repayMentDetailRoute => GoRouteData.$route(
       path: '/repayment-detail/:id',
       factory: $RepayMentDetailRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'rollover-payment-detail/:id',
+          factory: $RolloverPayMentDetailRouteExtension._fromState,
+        ),
+      ],
     );
 
 extension $RepayMentDetailRouteExtension on RepayMentDetailRoute {
@@ -329,6 +335,24 @@ extension $RepayMentDetailRouteExtension on RepayMentDetailRoute {
 
   String get location => GoRouteData.$location(
         '/repayment-detail/${Uri.encodeComponent(id)}',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+extension $RolloverPayMentDetailRouteExtension on RolloverPayMentDetailRoute {
+  static RolloverPayMentDetailRoute _fromState(GoRouterState state) =>
+      RolloverPayMentDetailRoute(
+        state.params['id']!,
+      );
+
+  String get location => GoRouteData.$location(
+        '/repayment-detail/${Uri.encodeComponent(id)}/rollover-payment-detail/${Uri.encodeComponent(id)}',
       );
 
   void go(BuildContext context) => context.go(location);
