@@ -45,6 +45,7 @@ class _LoanPageState extends ConsumerState<LoanPage>
         SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
       }
     });
+    super.initState();
   }
 
   @override

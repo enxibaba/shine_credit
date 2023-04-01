@@ -41,7 +41,6 @@ class _LoanAuthHeaderState extends State<LoanAuthHeader> {
 
     if (widget.model.amountDetails.isNotEmpty) {
       _selectProduct = widget.model.amountDetails.first;
-      widget.callback(_selectProduct);
     }
   }
 

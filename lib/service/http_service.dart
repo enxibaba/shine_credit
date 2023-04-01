@@ -181,7 +181,7 @@ abstract class RestClient {
 
   @POST(HttpApi.applyOrder)
   @Extra({'showErrorMsg': true})
-  Future<ApiResult<LoanProduct>> applyOrder({
+  Future<ApiResult<ApplyProductModel>> applyOrder({
     @Header('tenant-id') required String tenantId,
     @Body() required Map<String, dynamic> body,
   });

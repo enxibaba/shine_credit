@@ -217,7 +217,7 @@ class RepayMentDetailRoute extends GoRouteData {
 class RolloverPayMentDetailRoute extends GoRouteData {
   const RolloverPayMentDetailRoute(this.id);
   final String id;
-  static const path = 'rollover-payment-detail/:id';
+  static const path = 'rollover-payment';
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>

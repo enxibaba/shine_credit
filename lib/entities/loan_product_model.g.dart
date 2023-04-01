@@ -46,6 +46,19 @@ Map<String, dynamic> _$LoanAmountDetailsToJson(LoanAmountDetails instance) =>
       'productIds': instance.productIds,
     };
 
+ApplyProductModel _$ApplyProductModelFromJson(Map<String, dynamic> json) =>
+    ApplyProductModel(
+      (json['productList'] as List<dynamic>?)
+              ?.map((e) => LoanProduct.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+
+Map<String, dynamic> _$ApplyProductModelToJson(ApplyProductModel instance) =>
+    <String, dynamic>{
+      'productList': instance.productList,
+    };
+
 LoanProduct _$LoanProductFromJson(Map<String, dynamic> json) => LoanProduct(
       json['check'] as bool?,
       (json['defaultLoanAmount'] as num?)?.toDouble(),

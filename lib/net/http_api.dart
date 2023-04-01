@@ -2,7 +2,7 @@ class HttpApi {
   /// 正式环境BaseUrl
   static const String baseUrlProd = 'http://api.shineloa.com/';
 
-  static const String baseUrlPTest = 'http://147.139.7.97:48080/';
+  static const String baseUrlPTest = 'http://172.20.10.6:48080/';
 
   /// 测试环境BaseUrl
   static const String baseUrlTest = 'http://testapi.shineloa.com/';

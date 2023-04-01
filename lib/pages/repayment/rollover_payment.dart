@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shine_credit/entities/rollover_pay_ment_model.dart';
 import 'package:shine_credit/entities/uri_info.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/router/routes.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/future_builder_widget.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
@@ -55,7 +55,7 @@ class _RolloverPayMentState extends State<RolloverPayMent> with RouteAware {
     return data.data;
   }
 
-  Future<void> repayMent() async {
+  Future<void> repaymentRequest() async {
     ToastUtils.showLoading();
 
     try {
@@ -68,7 +68,7 @@ class _RolloverPayMentState extends State<RolloverPayMent> with RouteAware {
         WebViewRoute(info.encodingJsonString()).push(context);
       }
     } catch (e) {
-      log.e(e);
+      AppUtils.log.e(e);
     } finally {
       ToastUtils.cancelToast();
     }
@@ -78,7 +78,7 @@ class _RolloverPayMentState extends State<RolloverPayMent> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const MyAppBar(
-          title: 'Rollover',
+          centerTitle: 'Rollover',
           backgroundColor: Colours.app_main,
         ),
         body: SafeArea(
@@ -144,7 +144,7 @@ class _RolloverPayMentState extends State<RolloverPayMent> with RouteAware {
                         child: Padding(
                       padding: const EdgeInsetsDirectional.all(16),
                       child: MyDecoratedButton(
-                        onPressed: repayMent,
+                        onPressed: repaymentRequest,
                         text: 'Immediate repayment',
                       ),
                     ))

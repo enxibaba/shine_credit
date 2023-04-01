@@ -321,7 +321,7 @@ GoRoute get $repayMentDetailRoute => GoRouteData.$route(
       factory: $RepayMentDetailRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
-          path: 'rollover-payment-detail/:id',
+          path: 'rollover-payment',
           factory: $RolloverPayMentDetailRouteExtension._fromState,
         ),
       ],
@@ -352,7 +352,7 @@ extension $RolloverPayMentDetailRouteExtension on RolloverPayMentDetailRoute {
       );
 
   String get location => GoRouteData.$location(
-        '/repayment-detail/${Uri.encodeComponent(id)}/rollover-payment-detail/${Uri.encodeComponent(id)}',
+        '/repayment-detail/${Uri.encodeComponent(id)}/rollover-payment',
       );
 
   void go(BuildContext context) => context.go(location);

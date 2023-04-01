@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shine_credit/main.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 
 /// Useful to log state change in our application
 /// Read the logs and you'll better understand what's going on under the hood
@@ -13,7 +13,7 @@ class StateLogger extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    log.d('''
+    AppUtils.log.d('''
 {
   provider: ${provider.name ?? provider.runtimeType},
   oldValue: $previousValue,

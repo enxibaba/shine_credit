@@ -53,21 +53,43 @@ class MyScrollView extends StatelessWidget {
               ? TapOutsideBehavior.opaqueDismiss
               : TapOutsideBehavior.none,
           child: contents);
-    } else {
-      contents = SingleChildScrollView(
-        padding: padding,
-        physics: physics,
-        child: contents,
-      );
-    }
 
-    if (bottomButton != null) {
-      contents = Column(
-        children: <Widget>[
-          Expanded(child: contents),
-          SafeArea(top: false, child: bottomButton!),
-          Gaps.vGap16,
-          Padding(padding: MediaQuery.of(context).viewInsets),
+      if (bottomButton != null) {
+        contents = Column(
+          children: <Widget>[
+            Expanded(child: contents),
+            SafeArea(top: false, child: bottomButton!),
+          ],
+        );
+      }
+    } else {
+      contents = CustomScrollView(
+        physics: physics,
+        slivers: <Widget>[
+          if (padding != null) ...[
+            SliverPadding(
+                padding: padding!, sliver: SliverToBoxAdapter(child: contents)),
+            SliverPadding(
+                padding: padding!,
+                sliver: SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(
+                      children: <Widget>[
+                        const Spacer(),
+                        SafeArea(top: false, child: bottomButton ?? Gaps.empty),
+                      ],
+                    )))
+          ] else ...[
+            SliverToBoxAdapter(child: contents),
+            SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  children: <Widget>[
+                    const Spacer(),
+                    SafeArea(top: false, child: bottomButton ?? Gaps.empty),
+                  ],
+                ))
+          ]
         ],
       );
     }

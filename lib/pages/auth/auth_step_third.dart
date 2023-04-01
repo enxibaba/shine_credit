@@ -10,6 +10,7 @@ import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/utils/theme_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
@@ -19,8 +20,6 @@ import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_card.dart';
 import 'package:shine_credit/widgets/my_scroll_view.dart';
 import 'package:shine_credit/widgets/selected_item.dart';
-
-import '../../main.dart';
 
 class AuthStepThird extends StatefulWidget {
   const AuthStepThird({super.key});
@@ -141,8 +140,8 @@ class _AuthStepThirdState extends State<AuthStepThird> {
         }
       }
     } catch (e) {
-        log.d(e);
-        ToastUtils.show('something error, please try later');
+      AppUtils.log.d(e);
+      ToastUtils.show('something error, please try later');
     }
   }
 
@@ -162,6 +161,8 @@ class _AuthStepThirdState extends State<AuthStepThird> {
             ]),
             padding: const EdgeInsets.all(15),
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            bottomButton:
+                MyDecoratedButton(onPressed: _verify, text: 'Next', radius: 24),
             children: [
               const AuthDetailHeader(),
               Gaps.vGap15,
@@ -225,8 +226,6 @@ class _AuthStepThirdState extends State<AuthStepThird> {
                           fontSize: Dimens.font_sp15, color: Colours.red)),
                 ],
               ),
-              Gaps.vGap15,
-              MyDecoratedButton(onPressed: _verify, text: 'Next', radius: 24),
             ]));
   }
 }

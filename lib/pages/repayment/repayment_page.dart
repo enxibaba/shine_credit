@@ -11,6 +11,7 @@ import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/res/styles.dart';
 import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/state/home.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/list_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
@@ -38,8 +39,8 @@ class LoanRecordSession {
 
 class _RepayMentPageState extends ConsumerState<RepayMentPage> {
   final int _page = 1;
-  final int _maxPage = 3;
-  final StateType _stateType = StateType.loading;
+  final int _maxPage = 0;
+  StateType _stateType = StateType.loading;
   bool showEmpty = false;
 
   List<LoanRecordSession> _list = [];
@@ -52,6 +53,12 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage> {
       return;
     }
     try {
+      if (_list.isEmpty) {
+        setState(() {
+          _stateType = StateType.loading;
+        });
+      }
+
       final data = await DioUtils.instance.client.getLoanRecord(tenantId: '1');
       // 把 List<LoanRecordModel>  转换成 List<LoanRecordSession>
       final list = <LoanRecordSession>[];
@@ -64,13 +71,17 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage> {
           session.list.add(element);
         }
       }
-
       setState(() {
         _list = list;
         showEmpty = list.isEmpty;
       });
     } catch (e) {
-      throw Exception('error');
+      AppUtils.log.e(e.toString());
+      setState(() {
+        _list = [];
+        _stateType = StateType.network;
+        showEmpty = false;
+      });
     }
   }
 
@@ -91,8 +102,8 @@ class _RepayMentPageState extends ConsumerState<RepayMentPage> {
         ),
         body: RefreshListView(
             key: const Key('repayment_page'),
-            emptyWidget: showEmpty ? const RepayMentEmpty() : null,
             padding: const EdgeInsets.all(15),
+            emptyWidget: showEmpty ? const RepayMentEmpty() : null,
             stateType: _stateType,
             hasMore: _page < _maxPage,
             itemCount: _list.length,

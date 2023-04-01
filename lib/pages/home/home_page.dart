@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/state/home.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/device_utils.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -37,8 +37,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           'deviceType': Device.platformName,
           'innerVersionord': packageInfo.buildNumber,
         }, tenantId: '1', appCode: 0)
-        .then((value) => log.d(value))
-        .catchError((error) => log.d(error));
+        .then((value) => AppUtils.log.d(value))
+        .catchError((error) => AppUtils.log.d(error));
   }
 
   @override

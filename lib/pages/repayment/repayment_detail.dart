@@ -8,6 +8,7 @@ import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/router/routes.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/future_builder_widget.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
@@ -69,7 +70,7 @@ class _RepayMentDetailState extends State<RepayMentDetail> with RouteAware {
         WebViewRoute(info.encodingJsonString()).push(context);
       }
     } catch (e) {
-      log.e(e);
+      AppUtils.log.e(e);
     } finally {
       ToastUtils.cancelToast();
     }
@@ -215,18 +216,17 @@ class _RepayMentDetailState extends State<RepayMentDetail> with RouteAware {
                                       style: ButtonStyle(
                                           minimumSize: MaterialStateProperty.all(
                                               const Size(double.infinity, 48)),
-                                          side: MaterialStateProperty.all(
-                                              const BorderSide(
-                                                  color: Colours.app_main)),
+                                          side: MaterialStateProperty.all(const BorderSide(
+                                              color: Colours.app_main)),
                                           shape: MaterialStateProperty.all(
                                               const RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.all(
                                                       Radius.circular(24))))),
                                       onPressed: () =>
-                                          RolloverPayMentDetailRoute(widget.id),
+                                          RolloverPayMentDetailRoute(widget.id)
+                                              .push(context),
                                       child: const Text('Detay payment',
-                                          style:
-                                              TextStyle(color: Colours.app_main, fontSize: Dimens.font_sp18))),
+                                          style: TextStyle(color: Colours.app_main, fontSize: Dimens.font_sp18))),
                                 ),
                               )
                             ])))

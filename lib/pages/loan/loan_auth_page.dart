@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shine_credit/entities/auth_config_model.dart';
 import 'package:shine_credit/entities/loan_product_model.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/pages/loan/widgets/loan_auth_header.dart';
 import 'package:shine_credit/pages/loan/widgets/loan_tips_bar.dart';
@@ -11,6 +10,8 @@ import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/state/home.dart';
+import 'package:shine_credit/utils/app_utils.dart';
+import 'package:shine_credit/utils/device_utils.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
@@ -34,25 +35,33 @@ class LoanAuthPage extends ConsumerStatefulWidget {
 class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
   LoanProductModel? loanProductModel;
 
-  late LoanAmountDetails _selectProduct;
+  LoanAmountDetails? _selectProduct;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      /// 设置状态栏Icon 颜色
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-      requestData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (Device.isAndroid) {
+        final SystemUiOverlayStyle systemUiOverlayStyle =
+            SystemUiOverlayStyle.light.copyWith(
+          statusBarColor: Colours.app_main,
+        );
+        SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+      }
+      AppUtils.facebookAppEvents
+          .setUserID(SpUtil.getString(Constant.phone) ?? '');
     });
   }
 
   Future<LoanProductModel?> requestData() async {
     final data = await DioUtils.instance.client.loanProductList(tenantId: '1');
     loanProductModel = data.data;
+    _selectProduct ??= loanProductModel?.amountDetails.first;
     return data.data;
   }
 
   void _loanTipsCallBack() {
+    AppUtils.log.d('loanTipsCallBack');
     if (loanProductModel != null) {
       if (loanProductModel!.loanStatus) {
         applyProduct();
@@ -76,26 +85,27 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
         'coordinate': 'unknown',
         'appCode': 0,
         'mobile': SpUtil.getString(Constant.phone),
-        'productIds': _selectProduct.productIds,
+        'productIds': _selectProduct?.productIds ?? [],
       });
-
+      ToastUtils.cancelToast();
       if (data.data != null) {
-        showApplySuccessDialog(data.data);
+        showApplySuccessDialog(data.data.productList);
       }
     } catch (e) {
-      log.e(e.toString());
-    } finally {
-      ToastUtils.cancelToast();
+      AppUtils.log.e(e.toString());
     }
   }
 
-  void showApplySuccessDialog(LoanProduct model) {
+  void showApplySuccessDialog(List<LoanProduct> models) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return ApplySuccessDialog(
-            model: model,
-            callback: () => ref.read(homeProvider.notifier).selectIndex(1));
+            models: models,
+            callback: () {
+              Navigator.of(context).pop();
+              ref.read(homeProvider.notifier).selectIndex(1);
+            });
       },
     );
   }
@@ -167,22 +177,29 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
                                               fontWeight: FontWeight.w600)),
                                       Gaps.hGap24,
                                       RoundCheckBox(
-                                          checkedColor:
-                                              Colours.app_main.withOpacity(0.1),
-                                          size: 16,
-                                          isChecked: item.check,
-                                          onTap: (value) {
-                                            setState(() {
-                                              item.check = value;
-                                            });
-                                          }),
+                                          size: 18,
+                                          uncheckedWidget: const LoadAssetImage(
+                                              'un_check_circle',
+                                              width: 18,
+                                              height: 18),
+                                          checkedWidget: const LoadAssetImage(
+                                              'checked_icon',
+                                              width: 18,
+                                              height: 18),
+                                          isChecked: _selectProduct != null &&
+                                                  _selectProduct!
+                                                      .productIds.isNotEmpty
+                                              ? _selectProduct!.productIds
+                                                  .contains(item.id)
+                                              : item.check,
+                                          onTap: (_) => {}),
                                       Gaps.hGap4,
                                     ],
                                   ),
                                 ),
                               )),
                           const Spacer(),
-                          LoanTipsBar(onTap: _loanTipsCallBack),
+                          LoanTipsBar(onTap: () => _loanTipsCallBack()),
                           Gaps.vGap16
                         ],
                       ),
@@ -212,9 +229,9 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
 
 class ApplySuccessDialog extends StatelessWidget {
   const ApplySuccessDialog(
-      {super.key, required this.model, required this.callback});
+      {super.key, required this.models, required this.callback});
 
-  final LoanProduct model;
+  final List<LoanProduct> models;
 
   final VoidCallback callback;
 
@@ -267,7 +284,7 @@ class ApplySuccessDialog extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
-                            color: Colours.app_main_bg,
+                            color: Colours.bg_gray_,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Padding(
@@ -294,17 +311,17 @@ class ApplySuccessDialog extends StatelessWidget {
                     ),
                   ),
                   Gaps.vGap24,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(model.productName ?? '',
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 18)),
-                      Text('₹ ${model.defaultLoanAmount ?? ''}',
-                          style: const TextStyle(
-                              color: Colours.app_main, fontSize: 18)),
-                    ],
-                  ),
+                  ...models.map((model) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(model.productName ?? '',
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 18)),
+                          Text('₹ ${model.defaultLoanAmount ?? ''}',
+                              style: const TextStyle(
+                                  color: Colours.app_main, fontSize: 18)),
+                        ],
+                      )),
                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 60, vertical: 24),

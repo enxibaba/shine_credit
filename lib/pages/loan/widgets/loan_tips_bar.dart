@@ -16,8 +16,8 @@ class LoanTipsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onTap,
+    return GestureDetector(
+      onTap: () => onTap(),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         padding: const EdgeInsets.only(left: 15),

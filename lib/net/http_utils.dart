@@ -12,6 +12,7 @@ import 'package:shine_credit/net/interceptor.dart';
 import 'package:shine_credit/net/pretty_dio_logger.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/service/http_service.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:sp_util/sp_util.dart';
 
@@ -97,7 +98,7 @@ class DioUtils {
   RestClient get client => _client;
 
   Future<LoginModel?> getToken() async {
-    log.d('start refresh token');
+    AppUtils.log.d('start refresh token');
     final Map<String, String> params = <String, String>{};
     params['refreshToken'] = SpUtil.getString(Constant.refreshToken).nullSafe;
     final client = HttpClient();
@@ -125,7 +126,7 @@ class DioUtils {
         return model;
       }
     } catch (e) {
-      log.e('-----------getToken error------------', e.toString());
+      AppUtils.log.e('-----------getToken error------------', e.toString());
       return null;
     } finally {
       client.close();

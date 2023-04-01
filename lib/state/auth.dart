@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shine_credit/entities/login_model.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:sp_util/sp_util.dart';
 
 import '../entities/user.dart';
+import '../utils/app_utils.dart';
 
 part 'auth.g.dart';
 
@@ -112,7 +112,7 @@ class AuthNotifier extends _$AuthNotifier {
     final accessToken = SpUtil.getString(Constant.accessToken)!;
     final refreshToken = SpUtil.getString(Constant.refreshToken)!;
     final accessTokenExpire = SpUtil.getInt(Constant.accessTokenExpire)!;
-    log.e(
+    AppUtils.log.e(
         'userId: $userId accessToken: $accessToken refreshToken: $refreshToken');
     if (accessToken.isEmpty) {
       throw const UnauthorizedException(

@@ -771,7 +771,7 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<ApiResult<LoanProduct>> applyOrder({
+  Future<ApiResult<ApplyProductModel>> applyOrder({
     required tenantId,
     required body,
   }) async {
@@ -782,7 +782,7 @@ class _RestClient implements RestClient {
     final _data = <String, dynamic>{};
     _data.addAll(body);
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResult<LoanProduct>>(Options(
+        _setStreamType<ApiResult<ApplyProductModel>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -794,9 +794,9 @@ class _RestClient implements RestClient {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResult<LoanProduct>.fromJson(
+    final value = ApiResult<ApplyProductModel>.fromJson(
       _result.data!,
-      (json) => LoanProduct.fromJson(json as Map<String, dynamic>),
+      (json) => ApplyProductModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

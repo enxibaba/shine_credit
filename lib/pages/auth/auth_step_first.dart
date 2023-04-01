@@ -8,6 +8,7 @@ import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/router/routes.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/load_image.dart';
@@ -121,7 +122,7 @@ class _AuthStepFirstState extends State<AuthStepFirst> {
         }
       }
     } catch (e) {
-      log.e(e);
+     AppUtils.log.e(e);
     }
   }
 

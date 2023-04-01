@@ -8,6 +8,7 @@ import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/router/routes.dart';
+import 'package:shine_credit/utils/device_utils.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/widgets/future_builder_widget.dart';
 import 'package:shine_credit/widgets/load_image.dart';
@@ -15,9 +16,9 @@ import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_card.dart';
 
 class LoanUnAuthPage extends ConsumerStatefulWidget {
-  LoanUnAuthPage(this.authConfigModel, {super.key});
+  const LoanUnAuthPage(this.authConfigModel, {super.key});
 
-  AuthConfigModel? authConfigModel;
+  final AuthConfigModel? authConfigModel;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoanUnAuthPageState();
@@ -27,9 +28,14 @@ class _LoanUnAuthPageState extends ConsumerState<LoanUnAuthPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      /// 设置状态栏Icon 颜色
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (Device.isAndroid) {
+        final SystemUiOverlayStyle systemUiOverlayStyle =
+            SystemUiOverlayStyle.light.copyWith(
+          statusBarColor: Colours.app_main,
+        );
+        SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+      }
     });
   }
 

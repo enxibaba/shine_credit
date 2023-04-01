@@ -65,6 +65,20 @@ class LoanAmountDetails extends Object with EquatableMixin {
 }
 
 @JsonSerializable()
+class ApplyProductModel extends Object {
+  ApplyProductModel(
+    this.productList,
+  );
+  factory ApplyProductModel.fromJson(Map<String, dynamic> srcJson) =>
+      _$ApplyProductModelFromJson(srcJson);
+
+  @JsonKey(name: 'productList', defaultValue: [])
+  List<LoanProduct> productList;
+
+  Map<String, dynamic> toJson() => _$ApplyProductModelToJson(this);
+}
+
+@JsonSerializable()
 class LoanProduct extends Object {
   LoanProduct(
     this.check,

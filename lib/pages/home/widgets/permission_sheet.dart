@@ -7,6 +7,7 @@ import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/res/styles.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 
 class PermissionSheet extends StatelessWidget {
   const PermissionSheet({super.key, this.action});
@@ -86,9 +87,9 @@ class _BottomToolBarState extends State<BottomToolBar> {
     for (final element in _promiseList) {
       final status = await element.request();
       if (status.isGranted) {
-        log.d('$element Permission granted');
+        AppUtils.log.d('$element Permission granted');
       } else {
-        log.d('$element Permission denied');
+        AppUtils.log.d('$element Permission denied');
       }
     }
 

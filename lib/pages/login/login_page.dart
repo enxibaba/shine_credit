@@ -97,6 +97,12 @@ class _LoginPageState extends ConsumerState<LoginPage>
   Future<void> _login() async {
     final String name = _nameController.text;
     final String password = _passwordController.text;
+
+    if (!_isAgree) {
+      ToastUtils.show('Please agree to the user agreement');
+      return;
+    }
+
     ToastUtils.showLoading();
 
     /// 保存用户号码

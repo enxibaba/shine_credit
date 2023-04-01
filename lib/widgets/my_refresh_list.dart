@@ -49,13 +49,19 @@ class _RefreshListViewState extends State<RefreshListView> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Widget child = RefreshIndicator(
       onRefresh: widget.onRefresh,
       child: widget.itemCount == 0
           ? (widget.emptyWidget != null)
               ? widget.emptyWidget!
-              : StateLayout(type: widget.stateType)
+              : StateLayout(
+                  type: widget.stateType, retryCallback: widget.onRefresh)
           : ListView.builder(
               physics: const BouncingScrollPhysics(),
               itemCount: widget.loadMore == null

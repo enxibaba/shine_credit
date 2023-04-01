@@ -55,7 +55,6 @@ class _AuthStepSecondState extends State<AuthStepSecond> {
   /// 选择联系人电话
   void selectContact(bool isFirst) {
     Permission.contacts.request().then((PermissionStatus status) {
-      log.d(status);
       if (status.isGranted) {
         FlutterContactPicker.pickPhoneContact().then((PhoneContact contact) {
           setState(() {

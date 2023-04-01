@@ -2,18 +2,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shine_credit/entities/product_model.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
-import 'package:shine_credit/state/home.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_refresh_list.dart';
 import 'package:shine_credit/widgets/state_layout.dart';
+
+import '../../state/home.dart';
 
 class ProductPage extends ConsumerStatefulWidget {
   const ProductPage({super.key});
@@ -42,7 +43,7 @@ class _ProductPageState extends ConsumerState<ProductPage>
         _bannerList = data.data.banners ?? [];
       });
     } catch (e) {
-      log.e(e);
+      AppUtils.log.e(e);
     }
   }
 
@@ -58,7 +59,7 @@ class _ProductPageState extends ConsumerState<ProductPage>
         _bannerList = data.data.banners ?? [];
       });
     } catch (e) {
-      log.e(e);
+      AppUtils.log.e(e);
     }
   }
 
@@ -113,7 +114,7 @@ class _ProductPageState extends ConsumerState<ProductPage>
                       ProductItem(
                           item: _list[index],
                           callback: (p0) => {
-                                log.d(p0),
+                                AppUtils.log.d(p0),
                                 ref.read(homeProvider.notifier).selectIndex(0)
                               })
                     ]);
@@ -121,7 +122,7 @@ class _ProductPageState extends ConsumerState<ProductPage>
               return ProductItem(
                   item: _list[index],
                   callback: (p0) => {
-                        log.d(p0),
+                        AppUtils.log.d(p0),
                         ref.read(homeProvider.notifier).selectIndex(0)
                       });
             }));

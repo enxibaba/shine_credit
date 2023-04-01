@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:shine_credit/main.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 
 class ExceptionHandle {
   static const int success = 200;
@@ -34,7 +35,7 @@ class ExceptionHandle {
   };
 
   static NetError handleException(dynamic error) {
-    log.e(error.toString());
+    AppUtils.log.e(error.toString());
     if (error is DioError) {
       if (error.type.errorCode == 0) {
         return _handleException(error.error);

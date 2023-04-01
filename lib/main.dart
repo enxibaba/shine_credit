@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,19 +9,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/router/router.dart';
-import 'package:shine_credit/utils/handle_error_utils.dart';
 import 'package:shine_credit/utils/state_logger.dart';
 import 'package:sp_util/sp_util.dart';
 
-final log = Logger(
-  printer: PrettyPrinter(),
-);
 
 Future<void> main() async {
   // 确保初始化完成
   // ignore: prefer_final_locals
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -28,18 +26,30 @@ Future<void> main() async {
 
   configLoading();
 
-  /// 异常处理
-  handleError(() => runApp(
-        // 为了让widget能够读取到provider，我们需要在整个应用外面套上一个
-        // 名为 "ProviderScope"的widget。
-        // 我们的这些provider会在这里保存。
-        const ProviderScope(
-          observers: [
-            StateLogger(),
-          ],
-          child: MyApp(),
-        ),
-      ));
+  runApp(
+    // 为了让widget能够读取到provider，我们需要在整个应用外面套上一个
+    // 名为 "ProviderScope"的widget。
+    // 我们的这些provider会在这里保存。
+    const ProviderScope(
+      observers: [
+        StateLogger(),
+      ],
+      child: MyApp(),
+    ),
+  );
+
+  // /// 异常处理
+  // handleError(() => runApp(
+  //       // 为了让widget能够读取到provider，我们需要在整个应用外面套上一个
+  //       // 名为 "ProviderScope"的widget。
+  //       // 我们的这些provider会在这里保存。
+  //       const ProviderScope(
+  //         observers: [
+  //           StateLogger(),
+  //         ],
+  //         child: MyApp(),
+  //       ),
+  //     ));
 }
 
 void configLoading() {
