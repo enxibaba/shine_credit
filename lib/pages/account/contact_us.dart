@@ -1,14 +1,41 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
-import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_card.dart';
 
-class ContactUsPage extends StatelessWidget {
+class ContactUsPage extends StatefulWidget {
   const ContactUsPage({super.key});
+
+  @override
+  State<ContactUsPage> createState() => _ContactUsPageState();
+}
+
+class _ContactUsPageState extends State<ContactUsPage> {
+  String _email = '';
+
+  Future<String> getEmail() async {
+    try {
+      final email = await DioUtils.instance.client.getSystemParameters(
+          tenantId: '1', body: {'key': 'com.company.email'});
+      _email = email.data;
+      return email.data;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Future<void> lauchEmail() async {
+    if (_email.isEmpty) {
+      return;
+    }
+    await Utils.launchEmailURL(email: _email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +46,8 @@ class ContactUsPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          MyCard(
+          MySelectCard(
+            onTap: lauchEmail,
             margin: const EdgeInsets.all(15),
             child: Padding(
               padding: const EdgeInsets.all(15),
@@ -30,8 +58,8 @@ class ContactUsPage extends StatelessWidget {
                   Gaps.hGap15,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Contact E-mail',
                         style: TextStyle(
                           fontSize: Dimens.font_sp15,
@@ -39,10 +67,22 @@ class ContactUsPage extends StatelessWidget {
                         ),
                       ),
                       Gaps.vGap4,
-                      Text(Constant.mineEmail,
-                          style: TextStyle(
-                              fontSize: Dimens.font_sp14,
-                              color: Colours.app_main)),
+                      FutureBuilder<String>(
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CupertinoActivityIndicator();
+                            } else if (snapshot.hasData) {
+                              return Text(snapshot.data ?? '',
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colours.app_main));
+                            } else {
+                              return const Text(
+                                '',
+                              );
+                            }
+                          },
+                          future: getEmail()),
                     ],
                   ),
                 ],

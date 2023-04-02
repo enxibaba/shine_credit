@@ -199,6 +199,13 @@ abstract class RestClient {
     @Header('tenant-id') required String tenantId,
     @Body() required Map<String, dynamic> body,
   });
+
+  @POST(HttpApi.getSystemParameters)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<String>> getSystemParameters({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
 }
 
 @JsonSerializable(genericArgumentFactories: true)

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shine_credit/entities/loan_record_detail.dart';
 import 'package:shine_credit/entities/uri_info.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
@@ -64,15 +63,13 @@ class _RepayMentDetailState extends State<RepayMentDetail> with RouteAware {
       final data = await DioUtils.instance.client.initiateRepayment(
           tenantId: '1', body: {'orderId': widget.id, 'type': 1});
       final url = data.data.fileUrl ?? '';
-
+      ToastUtils.cancelToast();
       if (url.isNotEmpty && context.mounted) {
         final info = UriInfo('Payment', url);
         WebViewRoute(info.encodingJsonString()).push(context);
       }
     } catch (e) {
       AppUtils.log.e(e);
-    } finally {
-      ToastUtils.cancelToast();
     }
   }
 

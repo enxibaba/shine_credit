@@ -32,9 +32,9 @@ class _ModifyPwdPageState extends State<ModifyPwdPage> {
   late bool hasSetPwd;
 
   Future<void> _setPwd() async {
-    final String oldPwd = _oldPasswordController.text;
-    final String password = _passwordController.text;
-    final String again = _passwordAgainController.text;
+    final String oldPwd = _oldPasswordController.text.trim();
+    final String password = _passwordController.text.trim();
+    final String again = _passwordAgainController.text.trim();
 
     if (hasSetPwd && oldPwd.isEmpty) {
       ToastUtils.show('original password cannot be empty');

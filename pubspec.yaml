@@ -57,6 +57,7 @@ dependencies:
   flutter_native_splash: ^2.2.19
   flutter_countdown_timer: ^4.1.0
   facebook_app_events: ^0.18.3
+  url_launcher: ^6.1.10
   verify_plugin:
     path: plugins/verify_plugin
   flutter_easyloading:

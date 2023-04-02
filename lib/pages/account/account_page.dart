@@ -52,37 +52,6 @@ class _AccountPageState extends ConsumerState<AccountPage>
     }
   }
 
-  List<Widget> buildActionList() {
-    final list = <Widget>[];
-    for (var index = 0; index < _actionList.length; index++) {
-      list.add(SelectedItem(
-          onTap: () {
-            switch (index) {
-              case 0:
-                const LoanAutoRoute().push(context);
-                break;
-              case 1:
-                const AboutUsRoute().push(context);
-                break;
-              case 2:
-                MineSettingRoute($extra: _model).push(context);
-                break;
-              case 3:
-                const ContactUsRoute().push(context);
-                break;
-            }
-          },
-          leading: LoadAssetImage(_actionList[index]['icon']!,
-              width: 26, height: 26),
-          title: _actionList[index]['title']!));
-
-      if (index != _actionList.length - 1) {
-        list.add(const Divider(height: 0.4, indent: 15, endIndent: 15));
-      }
-    }
-    return list;
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

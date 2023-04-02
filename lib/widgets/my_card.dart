@@ -46,3 +46,44 @@ class MyCard extends StatelessWidget {
     );
   }
 }
+
+class MySelectCard extends StatelessWidget {
+  const MySelectCard(
+      {super.key,
+      required this.child,
+      this.onTap,
+      this.color,
+      this.shadowColor,
+      this.margin,
+      this.radius = 8.0,
+      this.blurRadius = 8.0});
+
+  final Widget child;
+  final Color? color;
+  final Color? shadowColor;
+  final EdgeInsetsGeometry? margin;
+  final double radius;
+  final double blurRadius;
+  final GestureTapCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return MyCard(
+      margin: margin,
+      radius: radius,
+      blurRadius: blurRadius,
+      shadowColor: shadowColor,
+      color: color,
+      child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(radius),
+            onTap: onTap,
+            splashColor: Colours.app_main_light_bg,
+            child: Container(
+              child: child,
+            ),
+          )),
+    );
+  }
+}

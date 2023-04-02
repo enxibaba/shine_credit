@@ -3,8 +3,10 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/utils/theme_utils.dart';
+import 'package:shine_credit/utils/toast_uitls.dart';
 import 'package:shine_credit/widgets/exit_dialog.dart';
 import 'package:sp_util/sp_util.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 typedef GenericTypesCallback<T> = void Function(T);
 
@@ -29,6 +31,23 @@ class Utils {
   //     Toast.show('拨号失败！');
   //   }
   // }
+
+  /// open email
+  /// [email] email address
+  /// [subject] email subject
+  /// [body] email body
+  static Future<void> launchEmailURL(
+      {required String email, String subject = '', String body = ''}) async {
+    final Uri uri = Uri(
+        scheme: 'mailto',
+        path: email,
+        queryParameters: <String, String>{'subject': subject, 'body': body});
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      ToastUtils.show('open email failed');
+    }
+  }
 
   /// 清除用户信息
   static Future<void> clearUserInfo() async {

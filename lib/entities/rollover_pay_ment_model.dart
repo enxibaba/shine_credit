@@ -32,24 +32,24 @@ class RolloverPayMentModel extends Object {
   String expirationTime;
 
   ///延期天数
-  @JsonKey(name: 'extendPaymentPeriod')
-  num? extendPaymentPeriod;
+  @JsonKey(name: 'extendPaymentPeriod', defaultValue: 0)
+  num extendPaymentPeriod;
 
   /// 延期费用
-  @JsonKey(name: 'extendRepaymentFee', defaultValue: '')
-  String extendRepaymentFee;
+  @JsonKey(name: 'extendRepaymentFee', defaultValue: 0)
+  num extendRepaymentFee;
 
   /// 借款金额
-  @JsonKey(name: 'loanAmount', defaultValue: '')
-  String loanAmount;
+  @JsonKey(name: 'loanAmount', defaultValue: 0)
+  num loanAmount;
 
   /// 逾期金额
   @JsonKey(name: 'overdueAmount', defaultValue: '')
   String overdueAmount;
 
   /// 应还款金额总金额
-  @JsonKey(name: 'repaymentAmount', defaultValue: '')
-  String repaymentAmount;
+  @JsonKey(name: 'repaymentAmount', defaultValue: 0)
+  num repaymentAmount;
 
   Map<String, dynamic> toJson() => _$RolloverPayMentModelToJson(this);
 }

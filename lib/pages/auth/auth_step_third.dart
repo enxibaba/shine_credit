@@ -93,9 +93,9 @@ class _AuthStepThirdState extends State<AuthStepThird> {
   }
 
   Future<void> _verify() async {
-    final beneficiaryName = _beneficiaryController.text;
-    final ifscCode = _iFSCController.text;
-    final accountNumber = _accountController.text;
+    final beneficiaryName = _beneficiaryController.text.trim();
+    final ifscCode = _iFSCController.text.trim();
+    final accountNumber = _accountController.text.trim();
 
     if (_bankModel == null) {
       ToastUtils.show('Bank Name can not be empty');

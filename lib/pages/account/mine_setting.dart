@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shine_credit/entities/nick_model.dart';
+import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
@@ -10,6 +12,7 @@ import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/state/auth.dart';
 import 'package:shine_credit/state/home.dart';
 import 'package:shine_credit/utils/image_utils.dart';
+import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
@@ -29,6 +32,8 @@ class MineSettingPage extends ConsumerStatefulWidget {
 class _MineSettingPageState extends ConsumerState<MineSettingPage>
     with RouteAware {
   bool hasSetPwd = SpUtil.getInt(Constant.initPwdStatus)! == 1;
+
+  String _email = '';
 
   @override
   void initState() {
@@ -53,6 +58,24 @@ class _MineSettingPageState extends ConsumerState<MineSettingPage>
     setState(() {
       hasSetPwd = SpUtil.getInt(Constant.initPwdStatus)! == 1;
     });
+  }
+
+  Future<String> getEmail() async {
+    try {
+      final email = await DioUtils.instance.client.getSystemParameters(
+          tenantId: '1', body: {'key': 'com.company.email'});
+      _email = email.data;
+      return email.data;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Future<void> lauchEmail() async {
+    if (_email.isEmpty) {
+      return;
+    }
+    await Utils.launchEmailURL(email: _email);
   }
 
   @override
@@ -103,44 +126,57 @@ class _MineSettingPageState extends ConsumerState<MineSettingPage>
                       ),
                     ),
                     Gaps.vGap15,
-                    MyCard(
+                    MySelectCard(
+                      onTap: lauchEmail,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 20),
                         child: Row(
-                          children: const [
-                            Text('Service Contact Email',
+                          children: [
+                            const Text('Service Contact Email',
                                 style: TextStyle(
                                     fontSize: Dimens.font_sp15,
                                     color: Colours.text)),
-                            Spacer(),
-                            Text(Constant.mineEmail,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colours.app_main))
+                            const Spacer(),
+                            FutureBuilder<String>(
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CupertinoActivityIndicator();
+                                  } else if (snapshot.hasData) {
+                                    return Text(snapshot.data ?? '',
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            color: Colours.app_main));
+                                  } else {
+                                    return const Text(
+                                      '',
+                                    );
+                                  }
+                                },
+                                future: getEmail()),
                           ],
                         ),
                       ),
                     ),
                     Gaps.vGap15,
                     if (isLogin)
-                      InkWell(
+                      MySelectCard(
                         onTap: () => const ModifyPwdRoute().push(context),
-                        child: MyCard(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 20),
-                            child: Row(
-                              children: [
-                                Text(
-                                    hasSetPwd
-                                        ? 'Reset the login password'
-                                        : 'Set a login password',
-                                    style: const TextStyle(
-                                        fontSize: Dimens.font_sp15,
-                                        color: Colours.text)),
-                                const Spacer(),
-                              ],
-                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 20),
+                          child: Row(
+                            children: [
+                              Text(
+                                  hasSetPwd
+                                      ? 'Reset the login password'
+                                      : 'Set a login password',
+                                  style: const TextStyle(
+                                      fontSize: Dimens.font_sp15,
+                                      color: Colours.text)),
+                              const Spacer(),
+                            ],
                           ),
                         ),
                       ),

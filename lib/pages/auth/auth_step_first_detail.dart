@@ -217,28 +217,28 @@ class _AuthStepFirstDetailState extends State<AuthStepFirstDetail> {
   }
 
   Future<void> uploadInfo() async {
-    final String job = _jobController.text;
+    final String job = _jobController.text.trim();
 
     if (job.isEmpty) {
       ToastUtils.show('The Occupation cannot be empty');
       return;
     }
 
-    final String religion = _religionController.text;
+    final String religion = _religionController.text.trim();
 
     if (religion.isEmpty) {
       ToastUtils.show('The religion cannot be empty');
       return;
     }
 
-    final String revenue = _revenueController.text;
+    final String revenue = _revenueController.text.trim();
 
     if (revenue.isEmpty) {
       ToastUtils.show('The revenue cannot be empty');
       return;
     }
 
-    final String email = _emailController.text;
+    final String email = _emailController.text.trim();
 
     if (email.isEmpty) {
       ToastUtils.show('The email cannot be empty');

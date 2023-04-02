@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shine_credit/entities/person_auth_model.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/pages/auth/widgets/auth_detial_header.dart';
 import 'package:shine_credit/res/colors.dart';
@@ -122,7 +121,8 @@ class _AuthStepFirstState extends State<AuthStepFirst> {
         }
       }
     } catch (e) {
-     AppUtils.log.e(e);
+      ToastUtils.cancelToast();
+      AppUtils.log.e(e);
     }
   }
 
@@ -233,7 +233,7 @@ class AuthUploadImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       SelectedImage(
-        source: ImageSource.gallery,
+        source: ImageSource.camera,
         filePathCallback: urlCallBack,
         child: SizedBox(
           width: 103,

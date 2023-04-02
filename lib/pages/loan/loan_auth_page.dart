@@ -37,6 +37,9 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
 
   LoanAmountDetails? _selectProduct;
 
+  final GlobalKey<FutureBuilderWidgetState<dynamic>> loanAuthPagefreshenKey =
+      GlobalKey(debugLabel: 'loanAuthPagefreshenKey');
+
   @override
   void initState() {
     super.initState();
@@ -112,118 +115,137 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(homeProvider, (previous, next) {
+      // 监听homeProvider的变化
+      if (previous != next && next == 0) {
+        loanAuthPagefreshenKey.currentState?.retry();
+      }
+    });
+
+    Future<void> refresh() async {
+      loanAuthPagefreshenKey.currentState?.retry();
+    }
+
     return Scaffold(
         backgroundColor: Colours.bg_gray_,
-        body: FutureBuilderWidget(
-            futureFunc: requestData,
-            builder: (context, data) {
-              return CustomScrollView(slivers: [
-                SliverToBoxAdapter(
-                    child: Column(children: [
-                  Container(
-                    color: Colours.app_main,
-                    height: MediaQuery.of(context).padding.top,
-                  ),
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 100),
-                        child: AspectRatio(
-                          aspectRatio: 360 / 224,
-                          child: LoadAssetImage('home/home_bg',
-                              width: double.infinity,
-                              fit: BoxFit.fill,
-                              format: ImageFormat.png),
+        body: RefreshIndicator(
+          onRefresh: refresh,
+          child: FutureBuilderWidget(
+              key: loanAuthPagefreshenKey,
+              futureFunc: requestData,
+              builder: (context, data) {
+                return CustomScrollView(slivers: [
+                  SliverToBoxAdapter(
+                      child: Column(children: [
+                    Container(
+                      color: Colours.app_main,
+                      height: MediaQuery.of(context).padding.top,
+                    ),
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 100),
+                          child: AspectRatio(
+                            aspectRatio: 360 / 224,
+                            child: LoadAssetImage('home/home_bg',
+                                width: double.infinity,
+                                fit: BoxFit.fill,
+                                format: ImageFormat.png),
+                          ),
                         ),
-                      ),
-                      LoanAuthHeader(
-                          model: data!, callback: (p0) => _selectProduct = p0),
-                    ],
-                  ),
-                  Gaps.vGap16,
-                  MyCard(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    child: SelectedItem(
-                        title: 'orders processing currently',
-                        titleStyle: const TextStyle(
-                            fontSize: 15, color: Colours.text_gray),
-                        onTap: () =>
-                            ref.read(homeProvider.notifier).selectIndex(1)),
-                  ),
-                  Gaps.vGap8,
-                ])),
-                SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Stack(children: [
-                      Column(
-                        children: [
-                          Gaps.vGap8,
-                          ...data.product.map((item) => MyCard(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: SelectedItem(
-                                  title: item.productName ?? '',
-                                  titleStyle: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                  trailing: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text('₹ ${item.defaultLoanAmount ?? ''}',
-                                          style: const TextStyle(
-                                              color: Colours.app_main,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600)),
-                                      Gaps.hGap24,
-                                      RoundCheckBox(
-                                          size: 18,
-                                          uncheckedWidget: const LoadAssetImage(
-                                              'un_check_circle',
-                                              width: 18,
-                                              height: 18),
-                                          checkedWidget: const LoadAssetImage(
-                                              'checked_icon',
-                                              width: 18,
-                                              height: 18),
-                                          isChecked: _selectProduct != null &&
-                                                  _selectProduct!
-                                                      .productIds.isNotEmpty
-                                              ? _selectProduct!.productIds
-                                                  .contains(item.id)
-                                              : item.check,
-                                          onTap: (_) => {}),
-                                      Gaps.hGap4,
-                                    ],
+                        LoanAuthHeader(
+                            model: data!,
+                            callback: (p0) => _selectProduct = p0),
+                      ],
+                    ),
+                    Gaps.vGap16,
+                    MyCard(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SelectedItem(
+                          title: 'orders processing currently',
+                          titleStyle: const TextStyle(
+                              fontSize: 15, color: Colours.text_gray),
+                          onTap: () =>
+                              ref.read(homeProvider.notifier).selectIndex(1)),
+                    ),
+                    Gaps.vGap8,
+                  ])),
+                  SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Stack(children: [
+                        Column(
+                          children: [
+                            Gaps.vGap8,
+                            ...data.product.map((item) => MyCard(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: SelectedItem(
+                                    title: item.productName ?? '',
+                                    titleStyle: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                    trailing: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                            '₹ ${item.defaultLoanAmount ?? ''}',
+                                            style: const TextStyle(
+                                                color: Colours.app_main,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600)),
+                                        Gaps.hGap24,
+                                        RoundCheckBox(
+                                            size: 18,
+                                            uncheckedWidget:
+                                                const LoadAssetImage(
+                                                    'un_check_circle',
+                                                    width: 18,
+                                                    height: 18),
+                                            checkedWidget: const LoadAssetImage(
+                                                'checked_icon',
+                                                width: 18,
+                                                height: 18),
+                                            isChecked: _selectProduct != null &&
+                                                    _selectProduct!
+                                                        .productIds.isNotEmpty
+                                                ? _selectProduct!.productIds
+                                                    .contains(item.id)
+                                                : item.check,
+                                            onTap: (_) => {}),
+                                        Gaps.hGap4,
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              )),
-                          const Spacer(),
-                          LoanTipsBar(onTap: () => _loanTipsCallBack()),
-                          Gaps.vGap16
-                        ],
-                      ),
-                      if (!data.loanStatus)
-                        Container(
-                            color: Colors.black.withOpacity(0.3),
-                            padding: const EdgeInsets.all(16),
-                            width: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.lock_outline,
-                                    color: Colors.white, size: 50),
-                                Gaps.vGap16,
-                                Text(data.failMessage ?? '',
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500))
-                              ],
-                            ))
-                    ])),
-              ]);
-            }));
+                                )),
+                            const Spacer(),
+                            LoanTipsBar(onTap: () => _loanTipsCallBack()),
+                            Gaps.vGap16
+                          ],
+                        ),
+                        if (!data.loanStatus)
+                          Container(
+                              color: Colors.black.withOpacity(0.3),
+                              padding: const EdgeInsets.all(16),
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.lock_outline,
+                                      color: Colors.white, size: 50),
+                                  Gaps.vGap16,
+                                  Text(data.failMessage ?? '',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500))
+                                ],
+                              ))
+                      ])),
+                ]);
+              }),
+        ));
   }
 }
 

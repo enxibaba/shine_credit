@@ -38,7 +38,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
   final FocusNode _nodeText2 = FocusNode();
   bool _clickable = false;
   bool _isAgree = false;
-  bool _isLogin = true;
+  bool _isPwdLogin = true;
 
   @override
   Map<ChangeNotifier, List<VoidCallback>?>? changeNotifier() {
@@ -65,10 +65,11 @@ class _LoginPageState extends ConsumerState<LoginPage>
     final String name = _nameController.text;
     final String password = _passwordController.text;
     bool clickable = true;
-    if (name.isEmpty || name.length < 10) {
+    if (name.isEmpty || name.length < 11) {
       clickable = false;
     }
-    if (password.isEmpty || password.length < 6) {
+
+    if (password.isEmpty || password.length < 4) {
       clickable = false;
     }
 
@@ -87,16 +88,16 @@ class _LoginPageState extends ConsumerState<LoginPage>
   }
 
   void _isLoginChange(bool value) {
-    if (_isLogin != value) {
+    if (_isPwdLogin != value) {
       setState(() {
-        _isLogin = value;
+        _isPwdLogin = value;
       });
     }
   }
 
   Future<void> _login() async {
-    final String name = _nameController.text;
-    final String password = _passwordController.text;
+    final String name = _nameController.text.trim();
+    final String password = _passwordController.text.trim();
 
     if (!_isAgree) {
       ToastUtils.show('Please agree to the user agreement');
@@ -108,7 +109,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
     /// 保存用户号码
     SpUtil.putString(Constant.phone, name);
 
-    if (_isLogin) {
+    if (_isPwdLogin) {
       ref
           .watch(authNotifierProvider.notifier)
           .login(name, password)
@@ -151,14 +152,16 @@ class _LoginPageState extends ConsumerState<LoginPage>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RoundCheckBox(
-                  checkedColor: Colours.app_main.withOpacity(0.1),
-                  size: 16,
-                  isChecked: _isAgree,
-                  onTap: (value) {
-                    _isAgreeChange(value!);
-                  }),
-              Gaps.hGap8,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RoundCheckBox(
+                    checkedColor: Colours.app_main.withOpacity(0.1),
+                    size: 16,
+                    isChecked: _isAgree,
+                    onTap: (value) {
+                      _isAgreeChange(value!);
+                    }),
+              ),
               const Text('Agree'),
               Gaps.hGap4,
               InkWell(
@@ -218,6 +221,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
         child: MyTextField(
             keyName: 'phone',
+            maxLength: 11,
             hintText: 'Please enter mobile number',
             controller: _nameController,
             focusNode: _nodeText1),
@@ -228,9 +232,11 @@ class _LoginPageState extends ConsumerState<LoginPage>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           child: MyTextField(
-              isInputPwd: _isLogin,
-              hintText: _isLogin ? 'Please enter password' : 'Please enter otp',
-              getVCode: _isLogin ? null : _getCode,
+              isInputPwd: _isPwdLogin,
+              maxLength: _isPwdLogin ? 16 : 6,
+              hintText:
+                  _isPwdLogin ? 'Please enter password' : 'Please enter otp',
+              getVCode: _isPwdLogin ? null : _getCode,
               controller: _passwordController,
               focusNode: _nodeText2),
         ),

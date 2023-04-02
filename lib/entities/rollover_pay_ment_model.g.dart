@@ -11,11 +11,11 @@ RolloverPayMentModel _$RolloverPayMentModelFromJson(
     RolloverPayMentModel(
       json['dueTimeAfterExtension'] as String? ?? '',
       json['expirationTime'] as String? ?? '',
-      json['extendPaymentPeriod'] as num?,
-      json['extendRepaymentFee'] as String? ?? '',
-      json['loanAmount'] as String? ?? '',
+      json['extendPaymentPeriod'] as num? ?? 0,
+      json['extendRepaymentFee'] as num? ?? 0,
+      json['loanAmount'] as num? ?? 0,
       json['overdueAmount'] as String? ?? '',
-      json['repaymentAmount'] as String? ?? '',
+      json['repaymentAmount'] as num? ?? 0,
     );
 
 Map<String, dynamic> _$RolloverPayMentModelToJson(

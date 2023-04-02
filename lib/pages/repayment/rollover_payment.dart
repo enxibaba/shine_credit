@@ -62,15 +62,13 @@ class _RolloverPayMentState extends State<RolloverPayMent> with RouteAware {
       final data = await DioUtils.instance.client.initiateRepayment(
           tenantId: '1', body: {'orderId': widget.id, 'type': 2});
       final url = data.data.fileUrl ?? '';
-
+      ToastUtils.cancelToast();
       if (url.isNotEmpty && context.mounted) {
         final info = UriInfo('Payment', url);
         WebViewRoute(info.encodingJsonString()).push(context);
       }
     } catch (e) {
       AppUtils.log.e(e);
-    } finally {
-      ToastUtils.cancelToast();
     }
   }
 
@@ -91,6 +89,7 @@ class _RolloverPayMentState extends State<RolloverPayMent> with RouteAware {
                       child: MyCard(
                           margin: const EdgeInsets.all(15),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Container(
                                   decoration: const BoxDecoration(
@@ -115,39 +114,42 @@ class _RolloverPayMentState extends State<RolloverPayMent> with RouteAware {
                                             color: Colors.white,
                                             fontSize: 23,
                                             fontWeight: FontWeight.bold)),
-                                    RolloverListItem(
-                                        title: 'Loan Amount',
-                                        content: '₹${data?.loanAmount}'),
-                                    RolloverListItem(
-                                        title: 'Expiration Time',
-                                        content: data?.expirationTime ?? ''),
-                                    RolloverListItem(
-                                        title: 'Extend Payment Period',
-                                        content:
-                                            '${data?.extendPaymentPeriod} Days'),
-                                    RolloverListItem(
-                                        title: 'Due Time After Extension',
-                                        content:
-                                            data?.dueTimeAfterExtension ?? ''),
-                                    RolloverListItem(
-                                        title: 'Overdue Amount',
-                                        content: '₹${data?.overdueAmount}'),
-                                    RolloverListItem(
-                                        title: 'Extend Repayment Fee',
-                                        content: '₹${data?.extendRepaymentFee}',
-                                        isShowLine: false),
                                   ])),
+                              RolloverListItem(
+                                  title: 'Loan Amount',
+                                  content: '₹${data?.loanAmount}'),
+                              RolloverListItem(
+                                  title: 'Expiration Time',
+                                  content: data?.expirationTime ?? ''),
+                              RolloverListItem(
+                                  title: 'Extend Payment Period',
+                                  content: '${data?.extendPaymentPeriod} Days'),
+                              RolloverListItem(
+                                  title: 'Due Time After Extension',
+                                  content: '${data?.dueTimeAfterExtension}'),
+                              RolloverListItem(
+                                  title: 'Overdue Amount',
+                                  content: '₹${data?.overdueAmount}'),
+                              RolloverListItem(
+                                  title: 'Extend Repayment Fee',
+                                  content: '₹${data?.extendRepaymentFee}',
+                                  isShowLine: false),
                             ],
                           )),
                     ),
                     SliverFillRemaining(
                         child: Padding(
-                      padding: const EdgeInsetsDirectional.all(16),
-                      child: MyDecoratedButton(
-                        onPressed: repaymentRequest,
-                        text: 'Immediate repayment',
-                      ),
-                    ))
+                            padding: const EdgeInsetsDirectional.all(16),
+                            child: Column(
+                              children: [
+                                const Spacer(),
+                                MyDecoratedButton(
+                                  radius: 24,
+                                  onPressed: repaymentRequest,
+                                  text: 'Immediate repayment',
+                                )
+                              ],
+                            )))
                   ]);
                 })));
   }
