@@ -37,7 +37,7 @@ C82BC52147255DB7904E6BE2D7BF6FC0
   static const String theme = 'AppTheme';
   static const String locale = 'locale';
 
-  static const String appName = 'Shine Credit';
+  static const String appName = 'Lend Ease';
 
   static const String privacyTitle =
       'We will require the access of below data to determine the credit risk, prevent frauds, and check your creditworthiness for instant approval. Please go through each permission that explains how and why we collect the details. We use secure HTTPS APIs and cryptographic techniques to encrypt and transfer your information for the utmost privacy.';
@@ -58,6 +58,6 @@ Warm tips：
 ''';
 
   static const String aboutUs =
-      'Shine Credit is a personal loan App which provide urgent cash assistance with simple and secure processes.Aceloan is an APP which provide no-collateral online loan service. Our clients can obtain the initial credit amount quickly, if repaid the loan on time the credit scores would increase.';
+      'Lend Ease is a personal loan App which provide urgent cash assistance with simple and secure processes.Aceloan is an APP which provide no-collateral online loan service. Our clients can obtain the initial credit amount quickly, if repaid the loan on time the credit scores would increase.';
   static const String mineEmail = 'moxfirst@gmail.com';
 }

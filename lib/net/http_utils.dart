@@ -1,24 +1,21 @@
 // ignore_for_file: prefer_final_locals
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:shine_credit/entities/login_model.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/error_handle.dart';
 import 'package:shine_credit/net/http_api.dart';
 import 'package:shine_credit/net/interceptor.dart';
 import 'package:shine_credit/net/pretty_dio_logger.dart';
 import 'package:shine_credit/res/constant.dart';
+import 'package:shine_credit/service/api_result.dart';
 import 'package:shine_credit/service/http_service.dart';
 import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:sp_util/sp_util.dart';
 
 /// 默认dio配置
-Duration _connectTimeout = const Duration(seconds: 15);
-Duration _receiveTimeout = const Duration(seconds: 15);
+Duration _connectTimeout = const Duration(seconds: 30);
+Duration _receiveTimeout = const Duration(seconds: 30);
 Duration _sendTimeout = const Duration(seconds: 30);
 
 class DioUtils {
@@ -98,39 +95,48 @@ class DioUtils {
   RestClient get client => _client;
 
   Future<LoginModel?> getToken() async {
-    AppUtils.log.d('start refresh token');
-    final Map<String, String> params = <String, String>{};
-    params['refreshToken'] = SpUtil.getString(Constant.refreshToken).nullSafe;
-    final client = HttpClient();
-    client.connectionTimeout = const Duration(seconds: 15);
     try {
-      final uri = Uri.http(HttpApi.baseUrl, HttpApi.refreshToken);
-      HttpClientRequest request = await client.postUrl(uri);
-      request.headers.set('Content-Type', 'application/json');
-      request.headers.set('Accept', 'application/json');
-      request.headers.set('Accept-Charset', 'utf8');
-      request.headers.set('channelCode', 'AB');
-      request.headers.set('gpsAdId', '');
-      final String accessToken =
-          SpUtil.getString(Constant.accessToken).nullSafe;
-      if (accessToken.isNotEmpty) {
-        request.headers.set('Authorization', 'Bearer $accessToken');
+      final result = await tokenDio.post(HttpApi.refreshToken,
+          options: Options(
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Accept-Charset': 'utf8',
+                'channelCode': 'AB',
+                'gpsAdId': '',
+                'Authorization':
+                    'Bearer ${SpUtil.getString(Constant.accessToken).nullSafe}'
+              },
+              responseType: ResponseType.json,
+              receiveTimeout: const Duration(seconds: 15),
+              sendTimeout: const Duration(seconds: 15)),
+          data: {
+            'refreshToken': SpUtil.getString(Constant.refreshToken).nullSafe
+          });
+
+      final tmp = ApiResult<dynamic>.fromJson(
+          result.data as Map<String, dynamic>, (p0) => p0);
+
+      if (tmp.isSuccess && tmp.data != null) {
+        try {
+          final loginModel =
+              LoginModel.fromJson(tmp.data as Map<String, dynamic>);
+          return loginModel;
+        } catch (e) {
+          return null;
+        }
+      } else {
+        return null;
       }
-      request.add(utf8.encode(json.encode(params)));
-      HttpClientResponse response = await request.close();
-      if (response.statusCode == 200) {
-        final stringData = await response.transform(utf8.decoder).join();
-        final jsonDic = json.decode(stringData) as Map<String, dynamic>;
-        final model =
-            LoginModel.fromJson(jsonDic['data'] as Map<String, dynamic>);
-        return model;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        AppUtils.log.e(e.response?.data ?? 'Emptry Error data');
+        AppUtils.log.e(e.response?.headers ?? 'Emptry Error headers');
+      } else {
+        AppUtils.log.e(e.message);
       }
-    } catch (e) {
-      AppUtils.log.e('-----------getToken error------------', e.toString());
+      AppUtils.log.e(e.response?.data ?? 'Emptry Error data');
       return null;
-    } finally {
-      client.close();
     }
-    return null;
   }
 }

@@ -25,7 +25,7 @@ class PermissionListTitle extends StatelessWidget {
           icon,
           width: 30,
           height: 30,
-          format: ImageFormat.webp,
+          format: ImageFormat.png,
         ),
         Gaps.hGap16,
         Expanded(

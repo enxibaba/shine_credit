@@ -1,17 +1,14 @@
 import 'dart:async';
 
-import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/utils/state_logger.dart';
 import 'package:sp_util/sp_util.dart';
-
 
 Future<void> main() async {
   // 确保初始化完成
@@ -77,7 +74,7 @@ class MyApp extends ConsumerWidget {
       },
       debugShowCheckedModeBanner: false,
       routerConfig: router,
-      title: 'Shine Credit',
+      title: 'Lend Ease',
       theme: ThemeData(
         primaryColor: Colours.app_main,
       ),

@@ -6,6 +6,7 @@ import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/state/home.dart';
 import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/device_utils.dart';
+import 'package:shine_credit/widgets/double_tap_back_exit_app.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -50,24 +51,26 @@ class _HomePageState extends ConsumerState<HomePage> {
       _pageController.jumpToPage(next);
     });
 
-    return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          selectedFontSize: Dimens.font_sp10,
-          unselectedFontSize: Dimens.font_sp10,
-          enableFeedback: true,
-          items: barItemList,
-          currentIndex: ref.watch(homeProvider),
-          type: BottomNavigationBarType.fixed,
-          onTap: (index) {
-            _pageController.jumpToPage(index);
-          },
-        ),
-        body: PageView(
-          physics: const NeverScrollableScrollPhysics(), // 禁止滑动
-          controller: _pageController,
-          onPageChanged: (int index) =>
-              ref.watch(homeProvider.notifier).selectIndex(index),
-          children: pageList,
-        ));
+    return DoubleTapBackExitApp(
+      child: Scaffold(
+          bottomNavigationBar: BottomNavigationBar(
+            selectedFontSize: Dimens.font_sp10,
+            unselectedFontSize: Dimens.font_sp10,
+            enableFeedback: true,
+            items: barItemList,
+            currentIndex: ref.watch(homeProvider),
+            type: BottomNavigationBarType.fixed,
+            onTap: (index) {
+              _pageController.jumpToPage(index);
+            },
+          ),
+          body: PageView(
+            physics: const NeverScrollableScrollPhysics(), // 禁止滑动
+            controller: _pageController,
+            onPageChanged: (int index) =>
+                ref.watch(homeProvider.notifier).selectIndex(index),
+            children: pageList,
+          )),
+    );
   }
 }

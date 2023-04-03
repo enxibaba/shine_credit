@@ -94,6 +94,14 @@ class MyScrollView extends StatelessWidget {
       );
     }
 
-    return contents;
+    return GestureDetector(
+        onTap: () {
+          final FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus &&
+              currentFocus.focusedChild != null) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        },
+        child: contents);
   }
 }

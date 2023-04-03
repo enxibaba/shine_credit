@@ -65,7 +65,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
     final String name = _nameController.text;
     final String password = _passwordController.text;
     bool clickable = true;
-    if (name.isEmpty || name.length < 11) {
+    if (name.isEmpty || name.length < 10) {
       clickable = false;
     }
 
@@ -221,7 +221,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
         child: MyTextField(
             keyName: 'phone',
-            maxLength: 11,
+            maxLength: 10,
             hintText: 'Please enter mobile number',
             controller: _nameController,
             focusNode: _nodeText1),
@@ -267,8 +267,21 @@ class LoginHeader extends StatelessWidget {
             child: Column(
               children: [
                 Gaps.vGap24,
-                const LoadAssetImage('logo',
-                    width: 75, height: 75, format: ImageFormat.webp),
+                Container(
+                  width: 75,
+                  height: 75,
+                  decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colours.app_main,
+                            offset: Offset(1.0, 0),
+                            blurRadius: 1)
+                      ],
+                      image: DecorationImage(
+                          image: ImageUtils.getAssetImage('logo',
+                              format: ImageFormat.png)),
+                      borderRadius: BorderRadius.circular(10.0)),
+                ),
                 Gaps.vGap10,
                 const Text(Constant.appName,
                     style: TextStyle(

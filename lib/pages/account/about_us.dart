@@ -4,7 +4,6 @@ import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/utils/image_utils.dart';
-import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_card.dart';
 
@@ -25,22 +24,32 @@ class AboutUsPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               child: Column(
-                children: const [
-                  SizedBox(
-                      width: 75,
-                      height: 75,
-                      child: LoadAssetImage('logo',
-                          width: 75, height: 75, format: ImageFormat.webp)),
+                children: [
+                  Container(
+                    width: 75,
+                    height: 75,
+                    decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colours.app_main_bg,
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 5)
+                        ],
+                        image: DecorationImage(
+                            image: ImageUtils.getAssetImage('logo',
+                                format: ImageFormat.png)),
+                        borderRadius: BorderRadius.circular(10.0)),
+                  ),
                   Gaps.vGap10,
-                  Text(
-                    'Shine Credit',
+                  const Text(
+                    Constant.appName,
                     style: TextStyle(
                         fontSize: Dimens.font_sp18,
                         color: Colours.text,
                         fontWeight: FontWeight.bold),
                   ),
                   Gaps.vGap24,
-                  Text(Constant.aboutUs,
+                  const Text(Constant.aboutUs,
                       style: TextStyle(
                           fontSize: Dimens.font_sp14,
                           color: Colours.text_regular)),

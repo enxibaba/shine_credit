@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shine_credit/res/colors.dart';
+import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/utils/image_utils.dart';
@@ -61,7 +62,7 @@ class _AuthDetailHeaderState extends State<AuthDetailHeader> {
                       ),
                       Gaps.vGap8,
                       Text(
-                        'Shine Credit is very concerned about the protection of customer data. ',
+                        '${Constant.appName} is very concerned about the protection of customer data. ',
                         style: TextStyle(
                           color: Colours.text_gray,
                           fontSize: Dimens.font_sp12,

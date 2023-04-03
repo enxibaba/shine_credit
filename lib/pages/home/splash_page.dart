@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shine_credit/pages/home/widgets/permission_sheet.dart';
+import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
 import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/utils/theme_utils.dart';
 import 'package:shine_credit/widgets/fractionally_aligned_sized_box.dart';
-import 'package:shine_credit/widgets/load_image.dart';
 import 'package:sp_util/sp_util.dart';
 
 import '../../utils/device_utils.dart';
@@ -18,12 +18,10 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
       await Device.initDeviceInfo();
       _initSplash();
     });
@@ -77,11 +75,23 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: context.backgroundColor,
-        body: const FractionallyAlignedSizedBox(
+        body: FractionallyAlignedSizedBox(
             heightFactor: 0.2,
             widthFactor: 0.2,
             leftFactor: 0.4,
             bottomFactor: 0,
-            child: LoadAssetImage('logo', format: ImageFormat.webp)));
+            child: Container(
+              decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colours.app_main_bg,
+                        offset: Offset(0.0, 1.0),
+                        blurRadius: 5)
+                  ],
+                  image: DecorationImage(
+                      image: ImageUtils.getAssetImage('logo',
+                          format: ImageFormat.png)),
+                  borderRadius: BorderRadius.circular(10.0)),
+            )));
   }
 }
