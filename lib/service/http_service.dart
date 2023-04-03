@@ -29,6 +29,13 @@ part 'http_service.g.dart';
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
+  @POST(HttpApi.sendCode)
+  @Extra({'showErrorMsg': true})
+  Future<ApiResult<bool>> sendCode({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
+
   @POST(HttpApi.loginByPwd)
   @Extra({'showErrorMsg': true})
   Future<ApiResult<LoginModel?>> logWithPassword({

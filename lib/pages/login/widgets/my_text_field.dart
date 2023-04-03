@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/device_utils.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/widgets/load_image.dart';
@@ -93,8 +94,10 @@ class _MyTextFieldState extends State<MyTextField> {
       _subscription = Stream.periodic(const Duration(seconds: 1), (int i) => i)
           .take(_second)
           .listen((int i) {
+        AppUtils.log.d(i);
         setState(() {
           _currentSecond = _second - i - 1;
+          AppUtils.log.d(_currentSecond);
           _clickable = _currentSecond < 1;
         });
       });
@@ -203,10 +206,10 @@ class _MyTextFieldState extends State<MyTextField> {
               ),
             ),
           ),
-          child: const Text(
-            'otp',
-            style:
-                TextStyle(color: Colours.app_main, fontSize: Dimens.font_sp15),
+          child: Text(
+            _clickable ? 'otp' : '$_currentSecond s',
+            style: const TextStyle(
+                color: Colours.app_main, fontSize: Dimens.font_sp15),
           ),
         ),
       );

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shine_credit/entities/uri_info.dart';
 import 'package:shine_credit/net/http_api.dart';
+import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/pages/login/widgets/header_bar.dart';
 import 'package:shine_credit/pages/login/widgets/my_text_field.dart';
 import 'package:shine_credit/res/colors.dart';
@@ -126,8 +127,32 @@ class _LoginPageState extends ConsumerState<LoginPage>
     }
   }
 
-  Future<bool> _getCode() {
-    return Future<bool>.value(true);
+  Future<bool> _getCode() async {
+    final String name = _nameController.text.trim();
+
+    if (name.isEmpty || name.length < 10) {
+      ToastUtils.show('Please enter the correct phone number');
+      return Future<bool>.value(false);
+    }
+
+    try {
+      ToastUtils.showLoading();
+      final tmp = await DioUtils.instance.client.sendCode(tenantId: '1', body: {
+        'mobile': name,
+        'scene': 1,
+        'type': 1,
+      });
+
+      if (tmp.data) {
+        ToastUtils.cancelToast();
+        return Future<bool>.value(true);
+      } else {
+        return Future<bool>.value(false);
+      }
+    } catch (e) {
+      ToastUtils.cancelToast();
+      return Future<bool>.value(false);
+    }
   }
 
   @override

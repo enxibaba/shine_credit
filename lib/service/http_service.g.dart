@@ -41,6 +41,37 @@ class _RestClient implements RestClient {
   String? baseUrl;
 
   @override
+  Future<ApiResult<bool>> sendCode({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': true};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ApiResult<bool>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/member/auth/send-sms-code',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<bool>.fromJson(
+      _result.data!,
+      (json) => json as bool,
+    );
+    return value;
+  }
+
+  @override
   Future<ApiResult<LoginModel?>> logWithPassword({required info}) async {
     const _extra = <String, dynamic>{'showErrorMsg': true};
     final queryParameters = <String, dynamic>{};
