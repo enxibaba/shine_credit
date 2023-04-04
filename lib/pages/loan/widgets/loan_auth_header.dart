@@ -158,13 +158,13 @@ class _LoanAuthHeaderState extends State<LoanAuthHeader> {
               ProductSelectItem(
                 selected: true,
                 model: _selectProduct,
-                callback: (_) => _selectProductAction(),
+                //(_) => _selectProductAction(),
               ),
             if (widget.model.tenure.isNotEmpty)
               DaysSelectItem(
                 selected: false,
                 days: _selectDays,
-                callback: (_) => _selectDaysAction(),
+                // callback: (_) => _selectDaysAction(),
               ),
             Expanded(
               child: FutureBuilderWidget(
@@ -248,11 +248,11 @@ class DaysSelectItem extends StatelessWidget {
   const DaysSelectItem({
     super.key,
     required this.days,
-    required this.callback,
     required this.selected,
+    this.callback,
   });
 
-  final GenericTypesCallback<num> callback;
+  final GenericTypesCallback<num>? callback;
 
   final num days;
 
@@ -268,7 +268,7 @@ class DaysSelectItem extends StatelessWidget {
       child: Material(
         type: MaterialType.transparency,
         child: InkWell(
-          onTap: () => callback(days),
+          onTap: callback != null ? () => callback!(days) : null,
           child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 15),
               child: Row(
@@ -285,8 +285,9 @@ class DaysSelectItem extends StatelessWidget {
                           fontSize: Dimens.font_sp15,
                           fontWeight: FontWeight.bold)),
                   Gaps.hGap15,
-                  const LoadAssetImage('home/arrow_forward_right',
-                      fit: BoxFit.fill, width: 20, height: 20),
+                  if (callback != null)
+                    const LoadAssetImage('home/arrow_forward_right',
+                        fit: BoxFit.fill, width: 20, height: 20),
                 ],
               )),
         ),
@@ -300,14 +301,14 @@ class ProductSelectItem extends StatelessWidget {
     super.key,
     required this.selected,
     required this.model,
-    required this.callback,
+    this.callback,
   });
 
   final LoanAmountDetails model;
 
   final bool selected;
 
-  final GenericTypesCallback<LoanAmountDetails> callback;
+  final GenericTypesCallback<LoanAmountDetails>? callback;
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +321,7 @@ class ProductSelectItem extends StatelessWidget {
         type: MaterialType.transparency,
         child: InkWell(
           borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-          onTap: () => callback(model),
+          onTap: callback != null ? () => callback!(model) : null,
           splashColor: Colours.button_disabled,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -348,9 +349,10 @@ class ProductSelectItem extends StatelessWidget {
                     const TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
               ),
               Gaps.hGap15,
-              const LoadAssetImage('home/arrow_forward_right',
-                  fit: BoxFit.fill, width: 20, height: 20),
-              Gaps.hGap15,
+              if (callback != null)
+                const LoadAssetImage('home/arrow_forward_right',
+                    fit: BoxFit.fill, width: 20, height: 20),
+              if (callback != null) Gaps.hGap15,
             ],
           ),
         ),

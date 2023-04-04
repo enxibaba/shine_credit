@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 
 class FutureBuilderWidget<T> extends StatefulWidget {
@@ -128,6 +129,6 @@ class FutureBuilderWidgetState<T> extends State<FutureBuilderWidget<T>> {
   }
 
   void _handleError(e) {
-    print('Error: $e');
+    AppUtils.log.e('Error: $e');
   }
 }

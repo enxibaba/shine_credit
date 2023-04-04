@@ -63,7 +63,7 @@ class _RefreshListViewState extends State<RefreshListView> {
               : StateLayout(
                   type: widget.stateType, retryCallback: widget.onRefresh)
           : ListView.builder(
-              physics: const BouncingScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               itemCount: widget.loadMore == null
                   ? widget.itemCount
                   : widget.itemCount + 1,
