@@ -1,21 +1,23 @@
 class HttpApi {
   /// 正式环境BaseUrl
-  static const String baseUrlProd = 'http://api.shineloa.com/';
+  static const String baseUrlProd = 'https://api.lendeasehub.com/';
 
   static const String baseUrlPTest = 'http://147.139.7.97:48080/';
 
   /// 测试环境BaseUrl
   static const String baseUrlTest = 'http://testapi.shineloa.com/';
 
-  static const String baseUrl = baseUrlPTest;
+  static const String baseUrl = baseUrlProd;
+
+  static const String staticUrl = 'https://www.lendeasehub.com/';
 
   /// 隐私政策
   static const String privacyPolicyUri =
-      '${baseUrl}yudao-admin/protocol/privacyPolicy.html';
+      '${staticUrl}protocol/permissions.html';
 
   /// 用户协议
   static const String userAgreementUri =
-      '${baseUrl}yudao-admin/protocol/registrationAgreement.html';
+      '${staticUrl}protocol/registrationAgreement.html';
 
   static const String users = 'users/simplezhli';
 

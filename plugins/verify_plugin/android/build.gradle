@@ -1,4 +1,4 @@
-group 'com.tpay.loan.credit.product.verify_plugin'
+group 'com.galong.lend.ease.hub.verify_plugin'
 version '1.0-SNAPSHOT'
 
 buildscript {

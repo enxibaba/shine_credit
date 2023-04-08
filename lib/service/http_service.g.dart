@@ -33,7 +33,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://147.139.7.97:48080/';
+    baseUrl ??= 'https://api.lendeasehub.com/';
   }
 
   final Dio _dio;
@@ -130,7 +130,7 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<ApiResult<dynamic>> checkUpdate({
+  Future<ApiResult<UpdateModel>> checkUpdate({
     required body,
     required tenantId,
     required appCode,
@@ -144,8 +144,8 @@ class _RestClient implements RestClient {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<ApiResult<dynamic>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResult<UpdateModel>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -157,9 +157,9 @@ class _RestClient implements RestClient {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResult<dynamic>.fromJson(
+    final value = ApiResult<UpdateModel>.fromJson(
       _result.data!,
-      (json) => json as dynamic,
+      (json) => UpdateModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

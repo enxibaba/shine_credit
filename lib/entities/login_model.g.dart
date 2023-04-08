@@ -11,6 +11,7 @@ LoginModel _$LoginModelFromJson(Map<String, dynamic> json) => LoginModel(
       json['expiresTime'] as int?,
       json['refreshToken'] as String?,
       json['userId'] as int?,
+      json['type'] as String?,
     );
 
 Map<String, dynamic> _$LoginModelToJson(LoginModel instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$LoginModelToJson(LoginModel instance) =>
       'expiresTime': instance.expiresTime,
       'refreshToken': instance.refreshToken,
       'userId': instance.userId,
+      'type': instance.type,
     };

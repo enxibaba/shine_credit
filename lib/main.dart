@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shine_credit/net/global_http_overrides.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/router/router.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/state_logger.dart';
 import 'package:sp_util/sp_util.dart';
 
@@ -20,6 +24,8 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   await SpUtil.getInstance();
+
+  HttpOverrides.global = GlobalHttpOverrides();
 
   configLoading();
 
@@ -57,11 +63,52 @@ void configLoading() {
     ..textColor = Colors.white;
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  late AppLinks _appLinks;
+  StreamSubscription<Uri>? _linkSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    AppUtils.facebookAppEvents.setAutoLogAppEventsEnabled(true);
+    AppUtils.facebookFirstInstallApp();
+    initDeepLinks();
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> initDeepLinks() async {
+    _appLinks = AppLinks();
+
+    // Check initial link if app was in cold state (terminated)
+    final appLink = await _appLinks.getInitialAppLink();
+    if (appLink != null) {
+      AppUtils.log.d('getInitialAppLink: $appLink');
+      openAppLink(appLink);
+    }
+
+    // Handle link when app is in warm state (front or background)
+    _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
+      AppUtils.log.d('onAppLink: $uri');
+      openAppLink(uri);
+    });
+  }
+
+  void openAppLink(Uri uri) {}
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     FlutterNativeSplash.remove();
     return MaterialApp.router(

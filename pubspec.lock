@@ -25,6 +25,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.11.2"
+  app_links:
+    dependency: "direct main"
+    description:
+      name: app_links
+      sha256: d572dcdff49c4cfcfa6f315e2683e518ec6eb54e084d01e51d9631a4dcc1b5e8
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.4.2"
   archive:
     dependency: transitive
     description:
@@ -153,6 +161,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.2.1"
+  change_app_package_name:
+    dependency: "direct dev"
+    description:
+      name: change_app_package_name
+      sha256: f9ebaf68a4b5a68c581492579bb68273c523ef325fbf9ce2f1b57fb136ad023b
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.0"
   characters:
     dependency: transitive
     description:
@@ -1367,10 +1383,10 @@ packages:
     dependency: "direct main"
     description:
       name: webview_flutter
-      sha256: "9ba213434f13e760ea0f175fbc4d6bb6aeafd7dfc6c7d973f15d3e47a5d6686e"
+      sha256: "47663d51a9061451aa3880a214ee9a65dcbb933b77bc44388e194279ab3ccaf6"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.5"
+    version: "4.0.7"
   webview_flutter_android:
     dependency: transitive
     description:

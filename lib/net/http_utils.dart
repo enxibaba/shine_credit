@@ -29,7 +29,6 @@ class DioUtils {
     );
 
     _dio = Dio(options);
-
     _dio.interceptors.add(TokenInterceptor());
     _dio.interceptors.add(QueuedInterceptorsWrapper(
       onResponse: (response, handler) async {

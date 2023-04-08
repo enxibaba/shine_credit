@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/pages/home/widgets/permission_list_title.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/constant.dart';
@@ -32,25 +31,25 @@ class PermissionSheet extends StatelessWidget {
                     PermissionListTitle(
                       title: 'Contacts',
                       tips: Constant.privacyTitle,
-                      icon: 'logo',
+                      icon: 'launch_log',
                     ),
                     Gaps.vGap16,
                     PermissionListTitle(
                       title: 'Phone',
                       tips: Constant.phoneTips,
-                      icon: 'logo',
+                      icon: 'launch_log',
                     ),
                     Gaps.vGap16,
                     PermissionListTitle(
                       title: 'Camera',
                       tips: Constant.cameraTips,
-                      icon: 'logo',
+                      icon: 'launch_log',
                     ),
                     Gaps.vGap16,
                     PermissionListTitle(
                       title: 'Storage',
                       tips: Constant.storageTips,
-                      icon: 'logo',
+                      icon: 'launch_log',
                     ),
                   ],
                 )),

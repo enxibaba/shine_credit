@@ -1,4 +1,4 @@
-package com.tpay.loan.credit.product
+package com.galong.lend.ease.hub
 
 import android.app.Application
 import com.liveness.dflivenesslibrary.DFProductResult

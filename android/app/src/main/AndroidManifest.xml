@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tpay.loan.credit.product">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.galong.lend.ease.hub">
     <uses-permission
         android:name="android.permission.INTERNET"/>
     <!-- Permissions options for the `camera` group -->
@@ -15,6 +16,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:label="Lend Ease"
+        android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:name=".MyApplication"
         android:icon="@mipmap/launcher_icon">
@@ -37,6 +39,25 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Deep Links -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
+                <data android:scheme="lendease" android:host="page" />
+            </intent-filter>
+ 
+             <!-- App Links -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="true"/>
+            <intent-filter android:autoVerify="true"
+                tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" android:host="www.lendease.com"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
@@ -45,6 +66,7 @@
             android:value="2"/>
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
    	    <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4"/>
@@ -59,6 +81,7 @@
             android:value="portrait"/>
     </application>
     <!-- Provide required visibility configuration for API level 30 and above -->
+    <queries><provider android:authorities="com.facebook.katana.provider.PlatformProvider" /></queries>
     <queries>
     <!-- If your app checks for SMS support -->
         <intent>

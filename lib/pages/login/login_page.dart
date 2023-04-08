@@ -20,7 +20,6 @@ import 'package:shine_credit/widgets/change_notifier_manage.dart';
 import 'package:shine_credit/widgets/load_image.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_scroll_view.dart';
-import 'package:shine_credit/widgets/round_check_box.dart';
 import 'package:sp_util/sp_util.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -92,6 +91,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
     if (_isPwdLogin != value) {
       setState(() {
         _isPwdLogin = value;
+        _passwordController.text = '';
       });
     }
   }
@@ -177,15 +177,17 @@ class _LoginPageState extends ConsumerState<LoginPage>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RoundCheckBox(
-                    checkedColor: Colours.app_main.withOpacity(0.1),
-                    size: 16,
-                    isChecked: _isAgree,
-                    onTap: (value) {
-                      _isAgreeChange(value!);
-                    }),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _isAgreeChange(!_isAgree),
+                child: Container(
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 10, top: 16, bottom: 16),
+                    child: _isAgree
+                        ? const LoadAssetImage('checked_icon',
+                            width: 16, height: 15)
+                        : const LoadAssetImage('un_check_circle',
+                            width: 16, height: 15)),
               ),
               const Text('Agree'),
               Gaps.hGap4,
@@ -212,7 +214,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
               )
             ],
           ),
-          Gaps.vGap16,
           MyDecoratedButton(
               radius: 24,
               text: 'Request',

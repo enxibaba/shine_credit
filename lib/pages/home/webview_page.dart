@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/res/gaps.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -28,6 +29,8 @@ class _WebViewPageState extends State<WebViewPage> {
   void initState() {
     super.initState();
     _controller = WebViewController()
+      ..setUserAgent(
+          'Mozilla/5.0 (Linux; Android 8.1.0; Pixel XL Build/OPM4.171019.021.P1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Mobile Safari/537.36')
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
@@ -35,14 +38,19 @@ class _WebViewPageState extends State<WebViewPage> {
             if (!mounted) {
               return;
             }
-            debugPrint('WebView is loading (progress : $progress%)');
+            AppUtils.log.d('WebView is loading (progress : $progress%)');
             setState(() {
               _progressValue = progress;
             });
           },
         ),
-      )
-      ..loadRequest(Uri.parse(widget.url));
+      );
+
+    if (widget.url.startsWith('http')) {
+      _controller.loadRequest(Uri.parse(widget.url));
+    } else {
+      _controller.loadFlutterAsset(widget.url);
+    }
   }
 
   @override

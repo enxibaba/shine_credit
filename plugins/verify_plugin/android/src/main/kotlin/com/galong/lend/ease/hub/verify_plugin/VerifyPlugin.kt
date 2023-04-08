@@ -1,4 +1,4 @@
-package com.tpay.loan.credit.product.verify_plugin
+package com.galong.lend.ease.hub.verify_plugin
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK

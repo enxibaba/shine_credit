@@ -68,6 +68,10 @@ class AuthNotifier extends _$AuthNotifier {
         await SpUtil.putString(Constant.accessToken, user.accessToken!);
         await SpUtil.putString(Constant.refreshToken, user.refreshToken!);
         await SpUtil.putInt(Constant.accessTokenExpire, user.expiresTime!);
+        if (user.type.nullSafe == 'register') {
+          /// 完成注册
+          await AppUtils.completedRegistration(user.userId!.toString());
+        }
         return User.signedIn(
             userId: user.userId!,
             refreshToken: user.refreshToken!,
@@ -88,7 +92,6 @@ class AuthNotifier extends _$AuthNotifier {
         'androidId': ''
       });
       final LoginModel? user = response.data;
-
       if (user != null &&
           user.accessToken != null &&
           user.accessToken!.isNotEmpty) {

@@ -42,7 +42,6 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _goLogin() {
-    // const LoginRoute().go(context);
     const HomeRoute().go(context);
   }
 

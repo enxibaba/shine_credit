@@ -90,9 +90,18 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
         'mobile': SpUtil.getString(Constant.phone),
         'productIds': _selectProduct?.productIds ?? [],
       });
-      ToastUtils.cancelToast();
-      if (data.data != null) {
+
+      if (data.data != null && data.data.productList.isNotEmpty) {
+        final LoanProduct product = data.data.productList.first;
+        await AppUtils.facebookAddToCart(
+            product.id.toString(),
+            product.productName.nullSafe,
+            'Rupee',
+            product.defaultLoanAmount ?? 0);
+        ToastUtils.cancelToast();
         showApplySuccessDialog(data.data.productList);
+      } else {
+        ToastUtils.cancelToast();
       }
     } catch (e) {
       AppUtils.log.e(e.toString());

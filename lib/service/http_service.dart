@@ -19,6 +19,7 @@ import 'package:shine_credit/entities/product_model.dart';
 import 'package:shine_credit/entities/repay_ment_url.dart';
 import 'package:shine_credit/entities/repayment_index_model.dart';
 import 'package:shine_credit/entities/rollover_pay_ment_model.dart';
+import 'package:shine_credit/entities/update_model.dart';
 import 'package:shine_credit/entities/upload_file_model.dart';
 import 'package:shine_credit/net/http_api.dart';
 import 'package:shine_credit/service/api_result.dart';
@@ -50,7 +51,7 @@ abstract class RestClient {
 
   @POST(HttpApi.checkUpdate)
   @Extra({'showErrorMsg': true})
-  Future<ApiResult<dynamic>> checkUpdate({
+  Future<ApiResult<UpdateModel>> checkUpdate({
     @Body() required Map<String, dynamic> body,
     @Header('tenant-id') required String tenantId,
     @Header('appCode') required int appCode,

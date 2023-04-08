@@ -1,4 +1,4 @@
-package com.tpay.loan.credit.product
+package com.galong.lend.ease.hub
 
 import android.graphics.Color;
 import android.os.Bundle

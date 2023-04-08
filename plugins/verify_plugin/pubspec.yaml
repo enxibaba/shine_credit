@@ -5,7 +5,7 @@ homepage:
 
 environment:
   sdk: '>=2.19.3 <3.0.0'
-  flutter: ">=2.5.0"
+  flutter: '>=2.5.0'
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-
+  change_app_package_name: ^1.1.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -35,7 +35,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.tpay.loan.credit.product.verify_plugin
+        package: com.galong.lend.ease.hub.verify_plugin
         pluginClass: VerifyPlugin
       ios:
         pluginClass: VerifyPlugin
