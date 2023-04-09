@@ -52,7 +52,7 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
         SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
       }
       AppUtils.facebookAppEvents
-          .setUserID(SpUtil.getString(Constant.phone) ?? '');
+          .setUserID(SpUtil.getString(Constant.userId) ?? '');
     });
   }
 

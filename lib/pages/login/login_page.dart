@@ -13,6 +13,7 @@ import 'package:shine_credit/res/dimens.dart';
 import 'package:shine_credit/res/gaps.dart';
 import 'package:shine_credit/router/routes.dart';
 import 'package:shine_credit/state/auth.dart';
+import 'package:shine_credit/utils/app_utils.dart';
 import 'package:shine_credit/utils/image_utils.dart';
 import 'package:shine_credit/utils/other_utils.dart';
 import 'package:shine_credit/utils/toast_uitls.dart';
@@ -54,6 +55,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
   @override
   void initState() {
     super.initState();
+    AppUtils.facebookAppEvents.clearUserID();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       /// 设置状态栏Icon 颜色
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
