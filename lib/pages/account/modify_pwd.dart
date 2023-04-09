@@ -67,7 +67,7 @@ class _ModifyPwdPageState extends State<ModifyPwdPage> {
       final data =
           await DioUtils.instance.client.settingPwd(tenantId: '1', body: {
         'password': password,
-        'oldPassword': oldPwd ?? '123456',
+        'oldPassword': oldPwd.isEmpty ? '123456' : oldPwd,
       });
 
       if (data.code == 0) {

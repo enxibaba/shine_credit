@@ -11,7 +11,6 @@ import 'package:shine_credit/net/global_http_overrides.dart';
 import 'package:shine_credit/res/colors.dart';
 import 'package:shine_credit/router/router.dart';
 import 'package:shine_credit/utils/app_utils.dart';
-import 'package:shine_credit/utils/state_logger.dart';
 import 'package:sp_util/sp_util.dart';
 
 Future<void> main() async {
@@ -34,9 +33,9 @@ Future<void> main() async {
     // 名为 "ProviderScope"的widget。
     // 我们的这些provider会在这里保存。
     const ProviderScope(
-      observers: [
-        StateLogger(),
-      ],
+      // observers: [
+      //   StateLogger(),
+      // ],
       child: MyApp(),
     ),
   );
