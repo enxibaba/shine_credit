@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shine_credit/entities/diction_model.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/pages/auth/widgets/auth_detial_header.dart';
 import 'package:shine_credit/res/colors.dart';

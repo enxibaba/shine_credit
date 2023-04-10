@@ -126,7 +126,7 @@ class ErrorMessageInterceptor extends Interceptor {
     //获取请求的extra参数，根据参数判断是否需要toast异常信息
     final bool showError = err.requestOptions.extra['showErrorMsg'] as bool;
     if (showError) {
-      ToastUtils.show('net work error, ');
+      ToastUtils.show('net work error');
     } else {
       ToastUtils.cancelToast();
     }
