@@ -29,7 +29,9 @@ class Constant {
   static const String privacyTitle =
       'We will require the access of below data to determine the credit risk, prevent frauds, and check your creditworthiness for instant approval. Please go through each permission that explains how and why we collect the details. We use secure HTTPS APIs and cryptographic techniques to encrypt and transfer your information for the utmost privacy.';
   static const String contactsTips =
-      'Collect, monitor contacts and accounts information to detect references and to auto fill data during sign up or loan application processes.Also,review &amp; upload contact to diagnosis server （our server https://api.pointkredit.com) to prevent fraudster and defaulter.';
+      'Collect, monitor contacts and accounts information to detect references and to auto fill data during sign up or loan application processes.Also,review &amp; upload contact to diagnosis server （our server https://api.lendeasehub.com) to prevent fraudster and defaulter.';
+  static const String smsTips =
+      "We access the user's financial transactional SMS and upload on our server（our server https://api.lendeasehub.com） only to monitor the income of the user, track and analyze financial expenses and determine the creditworthiness of the customer for instant credit disbursal. We do not access or store your personal SMS.";
   static const String phoneTips =
       'Collect and monitor specific information about your device including your hardware model, operating System and version, unique device identifier, user profile information, wi- fi information, mobile network Information to uniquely identify the devices and ensure that unauthorised devices are not able to act on your behalf helping us to prevent frauds.';
   static const String cameraTips =

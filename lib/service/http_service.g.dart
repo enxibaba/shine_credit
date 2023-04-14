@@ -927,6 +927,37 @@ class _RestClient implements RestClient {
     return value;
   }
 
+  @override
+  Future<ApiResult<dynamic>> uploadReportData({
+    required tenantId,
+    required body,
+  }) async {
+    const _extra = <String, dynamic>{'showErrorMsg': false};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'tenant-id': tenantId};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ApiResult<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'app-api/mobile/collectdata/report',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResult<dynamic>.fromJson(
+      _result.data!,
+      (json) => json as dynamic,
+    );
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

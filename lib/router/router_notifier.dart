@@ -74,7 +74,7 @@ class RouterNotifier extends _$RouterNotifier implements Listenable {
   }
 
   /// Our application routes. Obtained through code generation
-  List<GoRoute> get routes => $appRoutes;
+  List<RouteBase> get routes => $appRoutes;
 
   /// Adds [GoRouter]'s listener as specified by its [Listenable].
   /// [GoRouteInformationProvider] uses this method on creation to handle its

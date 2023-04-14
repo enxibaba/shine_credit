@@ -14,7 +14,6 @@ import 'package:shine_credit/widgets/my_app_bar.dart';
 import 'package:shine_credit/widgets/my_button.dart';
 import 'package:shine_credit/widgets/my_card.dart';
 
-
 class RepayMentDetail extends StatefulWidget {
   const RepayMentDetail({super.key, required this.id});
 
@@ -177,7 +176,7 @@ class _RepayMentDetailState extends State<RepayMentDetail> with RouteAware {
                                                 RepayMentInfoItem(
                                                     title: 'Repaid Date',
                                                     content:
-                                                        '₹${data?.repaidDate}'),
+                                                        '${data?.repaidDate}'),
                                                 const Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: 15),

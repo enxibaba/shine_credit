@@ -33,10 +33,6 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-
-  # Specify 'AAINetwork' and 'AAILiveness'
-  pod 'AAINetwork', :path=> './liveness/AAINetwork-V1.0.0/'
-  pod 'AAILiveness', :path=> './liveness/AAILivenessSDK-V2.0.3/'
 end
 
 post_install do |installer|

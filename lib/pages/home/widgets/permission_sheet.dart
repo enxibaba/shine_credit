@@ -35,6 +35,12 @@ class PermissionSheet extends StatelessWidget {
                     ),
                     Gaps.vGap16,
                     PermissionListTitle(
+                      title: 'Sms',
+                      tips: Constant.smsTips,
+                      icon: 'launch_log',
+                    ),
+                    Gaps.vGap16,
+                    PermissionListTitle(
                       title: 'Phone',
                       tips: Constant.phoneTips,
                       icon: 'launch_log',
@@ -80,6 +86,7 @@ class _BottomToolBarState extends State<BottomToolBar> {
     Permission.contacts,
     Permission.camera,
     Permission.photos,
+    Permission.sms
   ];
 
   Future<void> requestPermission() async {

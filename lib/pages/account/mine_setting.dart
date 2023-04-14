@@ -137,17 +137,23 @@ class _MineSettingPageState extends ConsumerState<MineSettingPage>
                                 style: TextStyle(
                                     fontSize: Dimens.font_sp15,
                                     color: Colours.text)),
-                            const Spacer(),
+                            Gaps.hGap10,
                             FutureBuilder<String>(
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     return const CupertinoActivityIndicator();
                                   } else if (snapshot.hasData) {
-                                    return Text(snapshot.data ?? '',
-                                        style: const TextStyle(
-                                            fontSize: 15,
-                                            color: Colours.app_main));
+                                    return Expanded(
+                                      child: FittedBox(
+                                        fit: BoxFit.fill,
+                                        child: Text(snapshot.data ?? '',
+                                            textAlign: TextAlign.right,
+                                            style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colours.app_main)),
+                                      ),
+                                    );
                                   } else {
                                     return const Text(
                                       '',

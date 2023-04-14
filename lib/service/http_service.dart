@@ -214,6 +214,13 @@ abstract class RestClient {
     @Header('tenant-id') required String tenantId,
     @Body() required Map<String, dynamic> body,
   });
+
+  @POST(HttpApi.uploadReportData)
+  @Extra({'showErrorMsg': false})
+  Future<ApiResult<dynamic>> uploadReportData({
+    @Header('tenant-id') required String tenantId,
+    @Body() required Map<String, dynamic> body,
+  });
 }
 
 @JsonSerializable(genericArgumentFactories: true)

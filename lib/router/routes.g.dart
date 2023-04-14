@@ -6,7 +6,7 @@ part of 'routes.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<GoRoute> get $appRoutes => [
+List<RouteBase> get $appRoutes => [
       $splashRoute,
       $loginRoute,
       $webViewRoute,
@@ -19,7 +19,7 @@ List<GoRoute> get $appRoutes => [
       $repayMentDetailRoute,
     ];
 
-GoRoute get $splashRoute => GoRouteData.$route(
+RouteBase get $splashRoute => GoRouteData.$route(
       path: '/splash',
       factory: $SplashRouteExtension._fromState,
     );
@@ -39,7 +39,7 @@ extension $SplashRouteExtension on SplashRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $loginRoute => GoRouteData.$route(
+RouteBase get $loginRoute => GoRouteData.$route(
       path: '/login',
       factory: $LoginRouteExtension._fromState,
     );
@@ -59,7 +59,7 @@ extension $LoginRouteExtension on LoginRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $webViewRoute => GoRouteData.$route(
+RouteBase get $webViewRoute => GoRouteData.$route(
       path: '/webview/:params',
       factory: $WebViewRouteExtension._fromState,
     );
@@ -81,7 +81,7 @@ extension $WebViewRouteExtension on WebViewRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $homeRoute => GoRouteData.$route(
+RouteBase get $homeRoute => GoRouteData.$route(
       path: '/home',
       factory: $HomeRouteExtension._fromState,
     );
@@ -101,7 +101,7 @@ extension $HomeRouteExtension on HomeRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $loanAutoRoute => GoRouteData.$route(
+RouteBase get $loanAutoRoute => GoRouteData.$route(
       path: '/auth-list',
       factory: $LoanAutoRouteExtension._fromState,
       routes: [
@@ -208,7 +208,7 @@ extension $LoanAutoStepThirdRouteExtension on LoanAutoStepThirdRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $aboutUsRoute => GoRouteData.$route(
+RouteBase get $aboutUsRoute => GoRouteData.$route(
       path: '/about-us',
       factory: $AboutUsRouteExtension._fromState,
     );
@@ -228,7 +228,7 @@ extension $AboutUsRouteExtension on AboutUsRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $mineSettingRoute => GoRouteData.$route(
+RouteBase get $mineSettingRoute => GoRouteData.$route(
       path: '/mine-setting',
       factory: $MineSettingRouteExtension._fromState,
       routes: [
@@ -272,7 +272,7 @@ extension $ModifyPwdRouteExtension on ModifyPwdRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $contactUsRoute => GoRouteData.$route(
+RouteBase get $contactUsRoute => GoRouteData.$route(
       path: '/contact-us',
       factory: $ContactUsRouteExtension._fromState,
     );
@@ -293,7 +293,7 @@ extension $ContactUsRouteExtension on ContactUsRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $changeNickNameRoute => GoRouteData.$route(
+RouteBase get $changeNickNameRoute => GoRouteData.$route(
       path: '/change-nick-name/:name',
       factory: $ChangeNickNameRouteExtension._fromState,
     );
@@ -316,7 +316,7 @@ extension $ChangeNickNameRouteExtension on ChangeNickNameRoute {
       context.pushReplacement(location);
 }
 
-GoRoute get $repayMentDetailRoute => GoRouteData.$route(
+RouteBase get $repayMentDetailRoute => GoRouteData.$route(
       path: '/repayment-detail/:id',
       factory: $RepayMentDetailRouteExtension._fromState,
       routes: [

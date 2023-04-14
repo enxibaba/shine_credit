@@ -118,4 +118,7 @@ class HttpApi {
   /// get system Parameters
   static const String getSystemParameters =
       'app-api/common/getSystemParameters';
+
+  /// upload report data
+  static const String uploadReportData = 'app-api/mobile/collectdata/report';
 }
