@@ -10,12 +10,12 @@ SmsMessageModel _$SmsMessageModelFromJson(Map<String, dynamic> json) =>
     SmsMessageModel(
       json['contactName'] as String?,
       json['content'] as String?,
-      json['msgId'] as String?,
-      json['msgTime'] as num?,
-      json['msgType'] as String?,
-      json['readStatus'] as String?,
+      json['msgId'] as int?,
+      json['msgTime'] as int?,
+      json['msgType'] as int?,
+      json['readStatus'] as int?,
       json['sender'] as String?,
-      json['status'] as String?,
+      json['status'] as int?,
     );
 
 Map<String, dynamic> _$SmsMessageModelToJson(SmsMessageModel instance) =>

@@ -67,9 +67,8 @@ class DioUtils {
       },
     ));
     _dio.interceptors.add(ErrorMessageInterceptor());
-
     if (!Constant.inProduction) {
-      _dio.interceptors.add(PrettyDioLogger(requestBody: true));
+      _dio.interceptors.add(PrettyDioLogger());
     }
 
     _client = RestClient(_dio, baseUrl: HttpApi.baseUrl);
