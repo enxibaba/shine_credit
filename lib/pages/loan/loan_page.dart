@@ -1,11 +1,16 @@
 import 'dart:convert';
 
+import 'package:contacts_service/contacts_service.dart';
+import 'package:device_apps/device_apps.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shine_credit/entities/app_info_model.dart';
 import 'package:shine_credit/entities/auth_config_model.dart';
+import 'package:shine_credit/entities/contacts_model.dart';
 import 'package:shine_credit/entities/sms_message_model.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/pages/loan/loan_auth_page.dart';
@@ -59,9 +64,110 @@ class _LoanPageState extends ConsumerState<LoanPage>
     super.initState();
   }
 
-  Future<void> detailUserRiskData(AuthRiskDataUploadConfig cofing) async {
-    if (cofing.cellMessage ?? false) {
+  Future<void> detailUserRiskData(AuthRiskDataUploadConfig config) async {
+    if (config.cellMessage ?? false) {
       uploadAllSms();
+    }
+
+    if (config.appList ?? false) {
+      uploadAppList();
+    }
+
+    if (config.linkerBook ?? false) {
+      uploadContacts();
+    }
+
+    if (config.deviceInfo ?? false) {
+      uploadDeviceInfo();
+    }
+  }
+
+  Future<void> uploadDeviceInfo() async {
+    /// DEVICE_BASE_INFO
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    final deviceInfo = await deviceInfoPlugin.deviceInfo;
+    final allInfo = deviceInfo.data;
+    try {
+      final result =
+          await DioUtils.instance.client.uploadReportData(tenantId: '1', body: {
+        'riskDataType': 'DEVICE_BASE_INFO',
+        'riskDataList': allInfo,
+      });
+      if (result.code == 0) {
+        AppUtils.log.d('uploadDeviceInfo success');
+      } else {
+        AppUtils.log.d('uploadDeviceInfo fail');
+      }
+    } catch (e) {
+      AppUtils.log.d('uploadDeviceInfo fail');
+    }
+  }
+
+  Future<void> uploadContacts() async {
+    final status = await Permission.contacts.request();
+    if (status.isGranted) {
+      /// LINKER_BOOK
+      final List<Contact> contacts =
+          await ContactsService.getContacts(withThumbnails: false);
+      final List<ContactsModel> contactList = contacts.map((item) {
+        return ContactsModel(
+            item.identifier,
+            '',
+            item.emails?.first.value ?? '',
+            item.displayName ?? '',
+            item.phones?.first.value ?? '',
+            item.phones?.first.label ?? '');
+      }).toList();
+
+      try {
+        final result = await DioUtils.instance.client
+            .uploadReportData(tenantId: '1', body: {
+          'riskDataType': 'LINKER_BOOK',
+          'riskDataList': jsonEncode(contactList),
+        });
+        if (result.code == 0) {
+          AppUtils.log.d('uploadContacts success');
+        } else {
+          AppUtils.log.d('uploadContacts fail');
+        }
+      } catch (e) {
+        AppUtils.log.d('uploadContacts fail');
+      }
+    }
+  }
+
+  Future<void> uploadAppList() async {
+    /// APP_LIST
+    final status = await Permission.storage.request();
+    if (status.isGranted) {
+      final List<Application> apps =
+          await DeviceApps.getInstalledApplications();
+      final List<AppInfoModel> appList = apps.map((item) {
+        return AppInfoModel(
+            item.appName,
+            '',
+            item.appName,
+            item.systemApp ? 1 : 0,
+            item.installTimeMillis,
+            item.updateTimeMillis,
+            '',
+            item.versionCode,
+            item.versionName);
+      }).toList();
+      try {
+        final result = await DioUtils.instance.client
+            .uploadReportData(tenantId: '1', body: {
+          'riskDataType': 'APP_LIST',
+          'riskDataList': jsonEncode(appList),
+        });
+        if (result.code == 0) {
+          AppUtils.log.d('upload app list success');
+        }
+      } catch (e) {
+        AppUtils.log.d('upload app list error: $e');
+      }
+    } else {
+      AppUtils.log.d('Storage Permission denied');
     }
   }
 

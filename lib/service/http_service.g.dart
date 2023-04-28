@@ -33,7 +33,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://api.lendeasehub.com/';
+    baseUrl ??= 'http://147.139.33.203:48080/';
   }
 
   final Dio _dio;
