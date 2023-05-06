@@ -91,7 +91,7 @@ class _LoanPageState extends ConsumerState<LoanPage>
       final result =
           await DioUtils.instance.client.uploadReportData(tenantId: '1', body: {
         'riskDataType': 'DEVICE_BASE_INFO',
-        'riskDataList': allInfo,
+        'riskDataList': json.encode(allInfo),
       });
       if (result.code == 0) {
         AppUtils.log.d('uploadDeviceInfo success');

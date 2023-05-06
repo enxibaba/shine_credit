@@ -39,7 +39,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
   final FocusNode _nodeText2 = FocusNode();
   bool _clickable = false;
   bool _isAgree = false;
-  bool _isPwdLogin = true;
 
   @override
   Map<ChangeNotifier, List<VoidCallback>?>? changeNotifier() {
@@ -89,15 +88,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
     });
   }
 
-  void _isLoginChange(bool value) {
-    if (_isPwdLogin != value) {
-      setState(() {
-        _isPwdLogin = value;
-        _passwordController.text = '';
-      });
-    }
-  }
-
   Future<void> _login() async {
     final String name = _nameController.text.trim();
     final String password = _passwordController.text.trim();
@@ -112,21 +102,12 @@ class _LoginPageState extends ConsumerState<LoginPage>
     /// 保存用户号码
     SpUtil.putString(Constant.phone, name);
 
-    if (_isPwdLogin) {
-      ref
-          .watch(authNotifierProvider.notifier)
-          .login(name, password)
-          .whenComplete(() => {
-                ToastUtils.cancelToast(),
-              });
-    } else {
-      ref
-          .watch(authNotifierProvider.notifier)
-          .loginWithCode(name, password)
-          .whenComplete(() => {
-                ToastUtils.cancelToast(),
-              });
-    }
+    ref
+        .watch(authNotifierProvider.notifier)
+        .loginWithCode(name, password)
+        .whenComplete(() => {
+              ToastUtils.cancelToast(),
+            });
   }
 
   Future<bool> _getCode() async {
@@ -233,7 +214,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
       ),
       const LoginHeader(),
       Container(color: Colours.app_main, height: 1),
-      HeaderBar(callback: (value) => _isLoginChange(value)),
+      HeaderBar(callback: (_) => {}),
       const Padding(
         padding: EdgeInsets.only(left: 25.0, top: 15.0),
         child: Text(
@@ -260,11 +241,10 @@ class _LoginPageState extends ConsumerState<LoginPage>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           child: MyTextField(
-              isInputPwd: _isPwdLogin,
-              maxLength: _isPwdLogin ? 16 : 6,
-              hintText:
-                  _isPwdLogin ? 'Please enter password' : 'Please enter otp',
-              getVCode: _isPwdLogin ? null : _getCode,
+              isInputPwd: true,
+              maxLength: 6,
+              hintText: 'Please enter otp',
+              getVCode: _getCode,
               controller: _passwordController,
               focusNode: _nodeText2),
         ),
