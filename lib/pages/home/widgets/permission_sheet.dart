@@ -84,9 +84,10 @@ class _BottomToolBarState extends State<BottomToolBar> {
 
   final _promiseList = [
     Permission.contacts,
-    Permission.camera,
+    Permission.sms,
     Permission.photos,
-    Permission.sms
+    Permission.camera,
+    Permission.storage
   ];
 
   Future<void> requestPermission() async {

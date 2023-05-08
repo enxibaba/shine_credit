@@ -7,7 +7,7 @@ class HttpApi {
   /// 测试环境BaseUrl
   static const String baseUrlTest = 'http://testapi.shineloa.com/';
 
-  static const String baseUrl = baseUrlTest;
+  static const String baseUrl = baseUrlProd;
 
   static const String staticUrl = 'https://www.lendeasehub.com/';
 
