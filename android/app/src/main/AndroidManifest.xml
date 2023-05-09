@@ -10,8 +10,6 @@
     <uses-permission
         android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
-    <!-- Permission options for the 'app list' -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <!-- Permissions options for the `storage` group -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -83,6 +81,11 @@
             android:name="notch.config"
             android:value="portrait"/>
     </application>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN"/>
+        </intent>
+    </queries>
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries><provider android:authorities="com.facebook.katana.provider.PlatformProvider" /></queries>
     <queries>
