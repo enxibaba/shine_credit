@@ -1,0 +1,2 @@
+-dontwarn com.dfsdk.**
+-keep class com.dfsdk.** { *; }
