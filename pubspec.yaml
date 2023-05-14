@@ -62,6 +62,7 @@ dependencies:
     flutter_sms_inbox: ^1.0.1
     device_apps: ^2.2.0
     contacts_service: ^0.6.3
+    flutter_image_compress: ^2.0.3
     verify_plugin:
         path: plugins/verify_plugin
     flutter_easyloading:

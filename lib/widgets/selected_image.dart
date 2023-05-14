@@ -39,8 +39,11 @@ class SelectedImageState extends State<SelectedImage> {
 
   Future<void> _getImage() async {
     try {
-      pickedFile =
-          await _picker.pickImage(source: widget.source ?? ImageSource.gallery);
+      pickedFile = await _picker.pickImage(
+          source: widget.source ?? ImageSource.gallery,
+          maxWidth: 1920,
+          maxHeight: 1080,
+          imageQuality: 90);
       if (pickedFile != null) {
         setState(() {
           _imageProvider = FileImage(File(pickedFile!.path));

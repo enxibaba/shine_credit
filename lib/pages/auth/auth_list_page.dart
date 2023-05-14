@@ -1,9 +1,8 @@
 // ignore_for_file: strict_raw_type, prefer_final_locals
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shine_credit/entities/loan_auth_model.dart';
@@ -100,7 +99,8 @@ class _AuthListPageState extends ConsumerState<AuthListPage> with RouteAware {
         String? filePath = arguments['file'] as String;
 
         if (filePath != null && encryptResult != null) {
-          final imageBytes = await File(filePath).readAsBytes();
+          final imageBytes =
+              await FlutterImageCompress.compressWithFile(filePath);
           ToastUtils.showLoading();
 
           final result = await DioUtils.instance.client
