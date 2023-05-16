@@ -94,15 +94,15 @@ class _AuthListPageState extends ConsumerState<AuthListPage> with RouteAware {
     if (call.method == 'detectionResult') {
       final arguments = call.arguments as Map<dynamic, dynamic>;
       final status = arguments['status'];
-      if (status == 1) {
-        Uint8List encryptResult = arguments['encryptResult'] as Uint8List;
-        String? filePath = arguments['file'] as String;
+      Uint8List encryptResult = arguments['encryptResult'] as Uint8List;
+      String? filePath = arguments['file'] as String;
 
-        if (filePath != null && encryptResult != null) {
-          final imageBytes =
-              await FlutterImageCompress.compressWithFile(filePath);
-          ToastUtils.showLoading();
+      if (status == 1 && filePath != null && encryptResult != null) {
+        final imageBytes =
+            await FlutterImageCompress.compressWithFile(filePath);
+        ToastUtils.showLoading();
 
+        try {
           final result = await DioUtils.instance.client
               .liveNessCheckResult(tenantId: '1', body: {
             'b1': encryptResult,
@@ -130,6 +130,9 @@ class _AuthListPageState extends ConsumerState<AuthListPage> with RouteAware {
           } else {
             ToastUtils.show('Matching face failure');
           }
+        } catch (e) {
+          ToastUtils.cancelToast();
+          ToastUtils.show('Something went wrong, Please try again later');
         }
       } else {
         ToastUtils.show('Matching face failure');
