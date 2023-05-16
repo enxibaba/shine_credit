@@ -13,7 +13,7 @@ ContactsModel _$ContactsModelFromJson(Map<String, dynamic> json) =>
       json['email'] as String?,
       json['name'] as String?,
       json['phone'] as String?,
-      json['times'] as int?,
+      json['times'] == null ? null : DateTime.parse(json['times'] as String),
     );
 
 Map<String, dynamic> _$ContactsModelToJson(ContactsModel instance) =>
@@ -23,5 +23,5 @@ Map<String, dynamic> _$ContactsModelToJson(ContactsModel instance) =>
       'email': instance.email,
       'name': instance.name,
       'phone': instance.phone,
-      'times': instance.times,
+      'times': instance.times?.toIso8601String(),
     };

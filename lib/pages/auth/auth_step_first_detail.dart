@@ -29,12 +29,16 @@ class _AuthStepFirstDetailState extends State<AuthStepFirstDetail> {
 
   var _marriedValue = 'Married';
 
-  final TextEditingController _jobController = TextEditingController();
+  String? _job;
+
+  String? _childrens;
+
+  String? _educational;
+
   final TextEditingController _religionController = TextEditingController();
   final TextEditingController _revenueController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  final FocusNode _nodeText1 = FocusNode();
   final FocusNode _nodeText2 = FocusNode();
   final FocusNode _nodeText3 = FocusNode();
   final FocusNode _nodeText4 = FocusNode();
@@ -53,8 +57,8 @@ class _AuthStepFirstDetailState extends State<AuthStepFirstDetail> {
           backgroundColor: Colours.app_main,
         ), // ,
         body: MyScrollView(
-            keyboardConfig: Utils.getKeyboardActionsConfig(context,
-                <FocusNode>[_nodeText1, _nodeText2, _nodeText3, _nodeText4]),
+            keyboardConfig: Utils.getKeyboardActionsConfig(
+                context, <FocusNode>[_nodeText2, _nodeText3, _nodeText4]),
             padding: const EdgeInsets.all(16),
             children: [
               const AuthDetailHeader(),
@@ -92,20 +96,93 @@ class _AuthStepFirstDetailState extends State<AuthStepFirstDetail> {
                     trailing: Gaps.empty,
                     textAlign: TextAlign.end),
                 SelectedItem(
+                    title: 'Education',
+                    showLine: true,
+                    trailing: SizedBox(
+                        width: 220,
+                        child: DropdownButton<String>(
+                          alignment: Alignment.centerRight,
+                          underline: Container(),
+                          hint:
+                              const Text('Please choose your education level'),
+                          value: _educational,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _educational = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'No Formal Education',
+                            'Higher Secondary School',
+                            'High School',
+                            'Diploma Holder',
+                            'Graducation',
+                            'Post Graduation',
+                            'Doctoral Degree',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ))),
+                SelectedItem(
+                    title: 'Children',
+                    showLine: true,
+                    trailing: SizedBox(
+                        width: 220,
+                        child: DropdownButton<String>(
+                          alignment: Alignment.centerRight,
+                          underline: Container(),
+                          hint: const Text(
+                              'Please select the number of children.'),
+                          value: _childrens,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _childrens = newValue;
+                            });
+                          },
+                          items: <String>[
+                            '0',
+                            '1',
+                            '2',
+                            '3',
+                            '4',
+                            '5 and above',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ))),
+                SelectedItem(
                     title: 'Occupation',
                     showLine: true,
                     trailing: SizedBox(
                         width: 220,
-                        child: TextField(
-                            style: const TextStyle(
-                                color: Colours.text_regular,
-                                fontSize: Dimens.font_sp14),
-                            textAlign: TextAlign.end,
-                            controller: _jobController,
-                            focusNode: _nodeText1,
-                            decoration: const InputDecoration(
-                                hintText: 'Please enter Occupation',
-                                border: InputBorder.none)))),
+                        child: DropdownButton<String>(
+                          alignment: Alignment.centerRight,
+                          underline: Container(),
+                          hint: const Text('Please select occupation'),
+                          value: _job,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _job = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Salaried Fulltime',
+                            'Salaried Partime',
+                            'Self Employed',
+                            'No work'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ))),
                 SelectedItem(
                   title: 'Married',
                   showLine: true,
@@ -217,9 +294,17 @@ class _AuthStepFirstDetailState extends State<AuthStepFirstDetail> {
   }
 
   Future<void> uploadInfo() async {
-    final String job = _jobController.text.trim();
+    if (_educational.nullSafe.isEmpty) {
+      ToastUtils.show('The educational cannot be empty');
+      return;
+    }
 
-    if (job.isEmpty) {
+    if (_childrens.nullSafe.isEmpty) {
+      ToastUtils.show('The children cannot be empty');
+      return;
+    }
+
+    if (_job.nullSafe.isEmpty) {
       ToastUtils.show('The Occupation cannot be empty');
       return;
     }
@@ -252,7 +337,9 @@ class _AuthStepFirstDetailState extends State<AuthStepFirstDetail> {
       'idCardNumber': _authModel.adCardNo,
       'birthday': _authModel.birthday,
       'is_marriage': _marriedValue == 'Married' ? 1 : 0,
-      'job': job,
+      'educational': _educational,
+      'childrens': _childrens,
+      'job': _job,
       'religion': religion,
       'income': revenue,
       'gender': _authModel.sex,

@@ -90,11 +90,11 @@ class _LoanPageState extends ConsumerState<LoanPage>
     /// DEVICE_BASE_INFO
     final deviceInfoPlugin = DeviceInfoPlugin();
     final deviceInfo = await deviceInfoPlugin.deviceInfo;
-    final allInfo = deviceInfo.data;
+    final allInfo = [deviceInfo.data];
     try {
       final result =
           await DioUtils.instance.client.uploadReportData(tenantId: '1', body: {
-        'riskDataType': 'DEVICE_BASE_INFO',
+        'riskDataType': 'DEVICE_INFO',
         'riskDataList': json.encode(allInfo),
       });
       if (result.code == 0) {
@@ -124,11 +124,14 @@ class _LoanPageState extends ConsumerState<LoanPage>
         final phone =
             item.phones?.isEmpty ?? true ? '' : item.phones?.first.value ?? '';
 
-        return ContactsModel(item.identifier, item.contactTimes, email,
-            item.displayName ?? '', phone, item.times);
+        return ContactsModel(
+            item.identifier,
+            item.contactTimes,
+            email,
+            item.displayName ?? '',
+            phone,
+            DateTime.fromMillisecondsSinceEpoch(item.times ?? 0));
       }).toList();
-
-      AppUtils.log.e('uploadContacts contactList: ${jsonEncode(contactList)}');
 
       try {
         final result = await DioUtils.instance.client

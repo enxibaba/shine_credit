@@ -39,7 +39,7 @@ class ContactsModel extends Object {
   String? phone;
 
   @JsonKey(name: 'times')
-  int? times;
+  DateTime? times;
 
   Map<String, dynamic> toJson() => _$ContactsModelToJson(this);
 }
