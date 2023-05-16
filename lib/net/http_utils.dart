@@ -14,9 +14,9 @@ import 'package:shine_credit/utils/other_utils.dart';
 import 'package:sp_util/sp_util.dart';
 
 /// 默认dio配置
-Duration _connectTimeout = const Duration(seconds: 30);
-Duration _receiveTimeout = const Duration(seconds: 30);
-Duration _sendTimeout = const Duration(seconds: 30);
+Duration _connectTimeout = const Duration(seconds: 60);
+Duration _receiveTimeout = const Duration(seconds: 60);
+Duration _sendTimeout = const Duration(seconds: 60);
 
 class DioUtils {
   factory DioUtils() => _singleton;

@@ -27,7 +27,7 @@ class ContactsModel extends Object {
   String? contactsId;
 
   @JsonKey(name: 'contactTimes')
-  String? contactTimes;
+  int? contactTimes;
 
   @JsonKey(name: 'email')
   String? email;
@@ -39,7 +39,7 @@ class ContactsModel extends Object {
   String? phone;
 
   @JsonKey(name: 'times')
-  String? times;
+  int? times;
 
   Map<String, dynamic> toJson() => _$ContactsModelToJson(this);
 }
