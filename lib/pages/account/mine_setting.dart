@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shine_credit/entities/nick_model.dart';
 import 'package:shine_credit/net/http_utils.dart';
 import 'package:shine_credit/res/colors.dart';
@@ -81,6 +82,7 @@ class _MineSettingPageState extends ConsumerState<MineSettingPage>
   @override
   Widget build(BuildContext context) {
     final isLogin = ref.watch(isLoginProvider);
+
     return Scaffold(
         appBar: const MyAppBar(
             centerTitle: 'My settings', backgroundColor: Colours.app_main),
@@ -112,15 +114,28 @@ class _MineSettingPageState extends ConsumerState<MineSettingPage>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 20),
                         child: Row(
-                          children: const [
-                            Text('Version Number',
+                          children:  [
+                            const Text('Version Number',
                                 style: TextStyle(
                                     fontSize: Dimens.font_sp15,
                                     color: Colours.text)),
-                            Spacer(),
-                            Text('1.0.0',
-                                style: TextStyle(
-                                    fontSize: 15, color: Colours.text_gray))
+                            const Spacer(),
+                            FutureBuilder<PackageInfo>(
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CupertinoActivityIndicator();
+                                  } else if (snapshot.hasData) {
+                                    return  Text('${snapshot.data?.version}',
+                                        style:const TextStyle(
+                                            fontSize: 15, color: Colours.text_gray));
+                                  } else {
+                                    return const Text(
+                                      '',
+                                    );
+                                  }
+                                },
+                                future: PackageInfo.fromPlatform()),
                           ],
                         ),
                       ),

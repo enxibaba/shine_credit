@@ -6,7 +6,6 @@ part 'liveness_check_result.g.dart';
 class LivenessCheckResult extends Object {
   LivenessCheckResult(
     this.result,
-    this.score,
   );
   factory LivenessCheckResult.fromJson(Map<String, dynamic> srcJson) =>
       _$LivenessCheckResultFromJson(srcJson);
@@ -14,8 +13,8 @@ class LivenessCheckResult extends Object {
   @JsonKey(name: 'result')
   bool? result;
 
-  @JsonKey(name: 'score')
-  int? score;
+  // @JsonKey(name: 'score')
+  // int? score;
 
   Map<String, dynamic> toJson() => _$LivenessCheckResultToJson(this);
 }

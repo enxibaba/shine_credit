@@ -106,8 +106,8 @@ class DioUtils {
                     'Bearer ${SpUtil.getString(Constant.accessToken).nullSafe}'
               },
               responseType: ResponseType.json,
-              receiveTimeout: const Duration(seconds: 15),
-              sendTimeout: const Duration(seconds: 15)),
+              receiveTimeout: _receiveTimeout,
+              sendTimeout: _sendTimeout),
           data: {
             'refreshToken': SpUtil.getString(Constant.refreshToken).nullSafe
           });

@@ -2,7 +2,7 @@ class HttpApi {
   /// 正式环境BaseUrl
   static const String baseUrlProd = 'https://api.lendeasehub.com/';
 
-  static const String baseUrlPTest = 'http://192.168.31.162:48080/';
+  static const String baseUrlPTest = 'http://192.168.0.105:48080/';
 
   /// 测试环境BaseUrl
   static const String baseUrlTest = 'http://testapi.shineloa.com/';
