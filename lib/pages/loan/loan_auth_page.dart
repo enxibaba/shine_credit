@@ -116,10 +116,15 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
             callback: () {
               Navigator.of(context).pop();
               ref.read(homeProvider.notifier).selectIndex(1);
+            },
+            closeCallBack: () {
+              Navigator.of(context).pop();
+              loanAuthPagefreshenKey.currentState?.retry();
             });
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -259,11 +264,16 @@ class _LoanAuthPageState extends ConsumerState<LoanAuthPage> {
 
 class ApplySuccessDialog extends StatelessWidget {
   const ApplySuccessDialog(
-      {super.key, required this.models, required this.callback});
+      {super.key,
+      required this.models,
+      required this.callback,
+      required this.closeCallBack});
 
   final List<LoanProduct> models;
 
   final VoidCallback callback;
+
+  final VoidCallback closeCallBack;
 
   @override
   Widget build(BuildContext context) {
@@ -285,7 +295,7 @@ class ApplySuccessDialog extends StatelessWidget {
                             topRight: Radius.circular(10)),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Column(children: const [
+                      child: const Column(children: [
                         LoadAssetImage('apply_success', width: 60, height: 60),
                         Gaps.vGap10,
                         Text('Applied successfully',
@@ -317,11 +327,11 @@ class ApplySuccessDialog extends StatelessWidget {
                             color: Colours.bg_gray_,
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 8.5),
                             child: Row(
-                              children: const [
+                              children: [
                                 LoadAssetImage('count_down',
                                     width: 30, height: 30),
                                 Gaps.hGap12,
@@ -367,7 +377,7 @@ class ApplySuccessDialog extends StatelessWidget {
                 ])),
         Gaps.vGap18,
         InkWell(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () => closeCallBack(),
             child: const LoadAssetImage('apply_close', width: 30, height: 30))
       ],
     );

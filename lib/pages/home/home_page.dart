@@ -190,3 +190,6 @@ class UpdateDialog extends StatelessWidget {
 // 3、非强制更新时，点击取消按钮，关闭弹窗
 // 4、点击确定按钮，关闭弹窗，跳转到应用商店
 // 5、美观的UI
+// 6、适配暗黑模式
+
+

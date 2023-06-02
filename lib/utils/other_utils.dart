@@ -89,7 +89,7 @@ class Utils {
   // }
 
   static String decodeUriParams(String title, String url) {
-    Map<String, dynamic> params = {title: title, url: url};
+    final Map<String, dynamic> params = {title: title, url: url};
     return params.toString();
   }
 }

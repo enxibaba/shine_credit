@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:shine_credit/main.dart';
 import 'package:shine_credit/utils/app_utils.dart';
 
 class ExceptionHandle {

@@ -78,10 +78,10 @@ class _LoanUnAuthPageState extends ConsumerState<LoanUnAuthPage> {
                         format: ImageFormat.png),
                   ),
                 ),
-                Positioned(
+                const Positioned(
                   top: 60,
                   child: Column(
-                    children: const [
+                    children: [
                       Text('Loan Amount',
                           style: TextStyle(
                               fontSize: Dimens.font_sp18, color: Colors.white)),

@@ -73,7 +73,9 @@ class PrettyDioLogger extends Interceptor {
     if (requestBody && options.method != 'GET') {
       final dynamic data = options.data;
       if (data != null) {
-        if (data is Map) _printMapAsTable(options.data as Map?, header: 'Body');
+        if (data is Map) {
+          _printMapAsTable(options.data as Map?, header: 'Body');
+        }
         if (data is FormData) {
           final formDataMap = <String, dynamic>{}
             ..addEntries(data.fields)
